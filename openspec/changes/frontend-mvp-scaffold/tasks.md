@@ -1,9 +1,9 @@
 ## 1. .NET 解決方案與專案骨架
 
-- [ ] 1.1 建立 .NET solution 與四個應用專案骨架：`apps/marketing`（Blazor Web App）、`apps/teacher-portal`、`apps/student-portal`、`apps/admin-panel`（皆為 Blazor WebAssembly standalone），驗證方式：`dotnet build` 全部專案成功，四個 app 各自 `dotnet run` 可在不同 port 啟動並顯示預設頁面
-- [ ] 1.2 建立共用專案 `StepGo.UI`（Razor Class Library）、`StepGo.ApiClient`（型別化 HttpClient 包裝層骨架）、`StepGo.PricingRules`（費率常數與試算公式），並在四個 app 中以 project reference 引用，驗證方式：任一 app 參照 `StepGo.UI` 的元件可正確編譯與渲染
-- [ ] 1.3 設定共用 CI pipeline（`dotnet format` 檢查、`dotnet build`、`dotnet test`），驗證方式：CI 設定在本地以對應指令全數通過
-- [ ] 1.4 建立 AWS CDK（C#）專案骨架，定義四個部署目標的 stack 占位（marketing 用 Lambda+API Gateway、三個後台用 S3+CloudFront），驗證方式：`cdk synth` 成功產出 CloudFormation 樣板（可先為空的資源占位）
+- [x] 1.1 建立 .NET solution 與四個應用專案骨架：`apps/marketing`（Blazor Web App）、`apps/teacher-portal`、`apps/student-portal`、`apps/admin-panel`（皆為 Blazor WebAssembly standalone），驗證方式：`dotnet build` 全部專案成功，四個 app 各自 `dotnet run` 可在不同 port 啟動並顯示預設頁面
+- [x] 1.2 建立共用專案 `StepGo.UI`（Razor Class Library）、`StepGo.ApiClient`（型別化 HttpClient 包裝層骨架）、`StepGo.PricingRules`（費率常數與試算公式），並在四個 app 中以 project reference 引用，驗證方式：任一 app 參照 `StepGo.UI` 的元件可正確編譯與渲染
+- [x] 1.3 設定共用 CI pipeline（`dotnet format` 檢查、`dotnet build`、`dotnet test`），驗證方式：CI 設定在本地以對應指令全數通過
+- [x] 1.4 建立 AWS CDK（C#）專案骨架，定義四個部署目標的 stack 占位（marketing 用 Lambda+API Gateway、三個後台用 S3+CloudFront），驗證方式：`cdk synth` 成功產出 CloudFormation 樣板（可先為空的資源占位）
 
 ## 2. 設計系統（StepGo.UI）
 

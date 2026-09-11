@@ -1,0 +1,24 @@
+# .NET build output
+bin/
+obj/
+*.user
+
+# Test results
+[Tt]est[Rr]esult*/
+
+# Node / Tailwind CLI tooling
+node_modules/
+npm-debug.log*
+
+# Tailwind generated output (built from libs/StepGo.UI/Styles/tailwind.css)
+**/wwwroot/css/app.css
+
+# CDK
+cdk.out/
+.cdk.staging/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
