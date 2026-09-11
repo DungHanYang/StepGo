@@ -5,22 +5,22 @@
 ## ADDED Requirements
 
 ### Requirement: 設計代幣集中管理
-系統 SHALL 將色彩、字體、邊框、圓角、間距等設計代幣定義在共用的 Tailwind preset（`packages/ui`）中，供四個應用 extend 使用；任何應用層元件不得直接寫入色碼字面值（hex literal）或自訂字體名稱字串。
+系統 SHALL 將色彩、字體、邊框、圓角、間距等設計代幣定義在一個共用的設計系統模組中，供所有應用引用；任何應用層元件不得直接寫入色碼字面值（hex literal）或自訂字體名稱字串。
 
 #### Scenario: 新元件必須引用共用代幣
 - **WHEN** 開發者在任一應用中建立新的 UI 元件並需要設定文字顏色或背景色
-- **THEN** 該元件必須使用 `packages/ui` 提供的 Tailwind theme class 或 CSS variable，程式碼審查時發現色碼字面值視為未通過
+- **THEN** 該元件必須引用共用設計系統模組提供的代幣（樣式類別或變數），程式碼審查時發現色碼字面值視為未通過
 
 #### Scenario: 老師端與學生端主色一致對應角色
 - **WHEN** 老師後台介面渲染主要互動元件（按鈕、選中狀態）
 - **THEN** 元件使用赭石色系代幣（含 hover 深色）；學生後台的對應元件使用深青色系代幣，兩者皆來自同一份共用 token 定義，不在各自應用內另行定義相近色碼
 
 ### Requirement: 核心元件庫涵蓋跨應用共用元件
-系統 SHALL 在 `packages/ui` 提供 Button、Card、Table、StatusTag、StepIndicator、OwlTip（提示框）、Wizard（多步驟表單容器）等元件，並提供對應的 TypeScript 型別定義。
+系統 SHALL 在共用元件模組中提供 Button、Card、Table、StatusTag、StepIndicator、OwlTip（提示框）、Wizard（多步驟表單容器）等元件，並提供對應的型別定義。
 
 #### Scenario: 老師端與學生端共用同一顆訂單狀態標籤
 - **WHEN** 老師後台顯示某筆訂單的付款狀態為「已付款」，且學生後台同時顯示同一筆訂單的付款狀態
-- **THEN** 兩處畫面皆使用 `packages/ui` 的 `StatusTag` 元件渲染，顏色與文字語意相同，不得各自實作不同的狀態標籤樣式
+- **THEN** 兩處畫面皆使用共用元件模組的 `StatusTag` 元件渲染，顏色與文字語意相同，不得各自實作不同的狀態標籤樣式
 
 #### Scenario: 多步驟流程共用 StepIndicator
 - **WHEN** 老師建立課程精靈（4 步驟）或學生報名付款流程（3 步驟）需要顯示目前所在步驟

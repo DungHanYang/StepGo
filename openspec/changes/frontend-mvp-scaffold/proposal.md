@@ -4,7 +4,7 @@ Design 團隊已交付 26 個高保真畫面（`design/design-handoff/`）與完
 
 ## What Changes
 
-- 建立前端 monorepo 架構決策（apps 拆分、技術棧、共用元件庫、狀態管理、Mock-first 開發策略），對應設計交付文件第十二節「系統架構總覽」的建議。
+- 建立前端架構決策（.NET Blazor 技術棧、應用拆分、共用元件庫、AWS serverless 部署拓樸、Mock-first 開發策略），對應設計交付文件第十二節「系統架構總覽」的建議。
 - 依 26 個設計畫面與業務規則文件，定義六個前端能力（capability）的行為契約：共用設計系統、對外行銷網站、登入註冊、老師後台、學生後台、管理者後台。
 - 排定 MVP 範圍：僅涵蓋設計交付文件第十四節「MVP 範圍界定」中標記 ✅ 的功能；系列課、候補、評價、Rich Menu、老師端 LINE 通知、廣告錢包、分級權限、系統監控儀表板等 Phase 2 功能不在本次規劃內。
 - 本次僅規劃「前端」；後端 API、金流串接、資料庫設計為後續獨立的 change（本次 design.md 會標記前端對後端契約的假設，供後續驗證）。
@@ -24,7 +24,8 @@ Design 團隊已交付 26 個高保真畫面（`design/design-handoff/`）與完
 
 ## Impact
 
-- 新增程式碼：`apps/marketing`、`apps/teacher-portal`、`apps/student-portal`、`apps/admin-panel`、`packages/ui`、`packages/config` 等 monorepo 結構（實際建立於後續 apply 階段，本 change 僅規劃）。
+- 技術棧：.NET 8 Blazor，全站部署在 AWS，目標為全 serverless。`apps/marketing` 採 Blazor Web App（Static SSR，運行於 API Gateway + Lambda，兼顧 SEO）；`apps/teacher-portal`、`apps/student-portal`、`apps/admin-panel` 採 Blazor WebAssembly standalone（純靜態，部署於 S3 + CloudFront，`admin` 另掛 AWS WAF IP allow list）。共用元件與樣式集中在 `StepGo.UI`（Razor Class Library），API 存取集中在 `StepGo.ApiClient`。
+- 新增程式碼：上述四個應用專案 + `StepGo.UI` + `StepGo.ApiClient` 等 .NET 解決方案結構（實際建立於後續 apply 階段，本 change 僅規劃）。
 - 不影響任何既有程式碼（目前 repo 內除設計交付檔案與業務規則文件外沒有其他程式碼）。
-- 依賴：真實後端 API 尚未定義，前端開發將採 Mock-first（本地假資料/MSW），待後端 change 完成後再串接；付款方式（綠界/藍新）的實際串接細節不在本次前端規劃內，Checkout 流程僅規劃其前端可觀察的狀態機。
-- 影響未來的後端規劃：本 change 的 design.md 會列出前端對 API 的假設（如角色導向登入、訂單狀態唯讀、費用試算為前端純計算），供後端 change 對齊或提出修正。
+- 依賴：真實後端 API 尚未定義，前端開發將採 Mock-first（本地 Mock API 專案），待後端 change（.NET on API Gateway + Lambda + DynamoDB）完成後再串接；付款方式（綠界/藍新）的實際串接細節不在本次前端規劃內，Checkout 流程僅規劃其前端可觀察的狀態機。
+- 影響未來的後端規劃：本 change 的 design.md 會列出前端對 API 的假設（如角色導向登入、訂單狀態唯讀、費用試算為前端純計算、認證 token 含角色 claim），供後端 change 對齊或提出修正。
