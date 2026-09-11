@@ -1,0 +1,55 @@
+@page "/directory"
+@using StepGo.AdminPanel.Models
+@using StepGo.AdminPanel.Services
+@using StepGo.UI.Status
+@inject AdminDataStore Store
+
+<PageTitle>老師與課程目錄 — StepGo Admin</PageTitle>
+
+<h1>老師與課程目錄</h1>
+
+<div class="mt-4 flex flex-wrap items-end gap-3">
+    <label class="flex flex-col gap-1 text-sm">
+        關鍵字
+        <input @bind="_keyword" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+    </label>
+    <label class="flex flex-col gap-1 text-sm">
+        驗證狀態
+        <select @bind="_verificationFilter" class="rounded-stepgo border border-stepgo-border px-2 py-1">
+            <option value="">全部</option>
+            @foreach (VerificationStatus status in Enum.GetValues<VerificationStatus>())
+            {
+                <option value="@status">@status.ToDisplay().Label</option>
+            }
+        </select>
+    </label>
+</div>
+
+<div class="mt-4" data-testid="directory-table">
+    <Table TItem="DirectoryEntry" Items="@FilteredEntries" AriaLabel="老師與課程目錄">
+        <HeaderTemplate>
+            <th>老師</th>
+            <th>驗證狀態</th>
+            <th>課程</th>
+            <th>課程狀態</th>
+        </HeaderTemplate>
+        <RowTemplate Context="entry">
+            <td>@entry.TeacherName</td>
+            <td><StatusTag Label="@entry.VerificationStatus.ToDisplay().Label" Variant="@entry.VerificationStatus.ToDisplay().Variant" /></td>
+            <td>@entry.CourseName</td>
+            <td>@entry.CourseStatus</td>
+        </RowTemplate>
+        <EmptyTemplate>找不到符合條件的老師或課程。</EmptyTemplate>
+    </Table>
+</div>
+
+@code {
+    private string _keyword = string.Empty;
+    private string _verificationFilter = string.Empty;
+
+    private IReadOnlyList<DirectoryEntry> FilteredEntries => DirectoryFiltering.Filter(
+        Store.Directory,
+        Enum.TryParse<VerificationStatus>(_verificationFilter, out var v) ? v : null,
+        courseStatus: null,
+        _keyword);
+}
