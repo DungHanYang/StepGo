@@ -1,13 +1,13 @@
 ## 1. 分層骨架與 AWS CDK 基礎設施
 
-- [ ] 1.1 建立 `StepGo.Domain`（entity/value object/repository 介面骨架，暫無其他專案參照）、`StepGo.Contracts`（零依賴的 DTO/enum 專案，依 8 個 capability 分 namespace）兩個專案，驗證方式：`dotnet build` 成功，且用 `dotnet list <StepGo.Contracts.csproj> reference` 確認其專案參照清單為空
-- [ ] 1.2 建立 `StepGo.Application`（use case handler + port 介面，只參照 `StepGo.Domain`）與 `StepGo.Infrastructure`（DynamoDB repository/Cognito/金流/通知等實作，參照 `StepGo.Domain`+`StepGo.Application`）兩個專案，驗證方式：`dotnet build` 成功，且用專案參照檢查工具確認 `StepGo.Domain` 沒有反向參照到這兩者
-- [ ] 1.3 建立 .NET Lambda composition root 專案骨架（依 capability 分組：`StepGo.Api.Identity`、`StepGo.Api.Courses`、`StepGo.Api.Orders`、`StepGo.Api.Payouts`、`StepGo.Api.RefundTickets`、`StepGo.Api.Governance`、`StepGo.Api.Notifications`），各參照 `StepGo.Application`+`StepGo.Infrastructure`+`StepGo.Contracts`，驗證方式：`dotnet build` 全部專案成功，每個專案至少有一個 health check endpoint 可回應 200
-- [ ] 1.4 建立共用的 DynamoDB 存取層輔助類別於 `StepGo.Infrastructure`（封裝 PK/SK 組裝、`TransactWriteItems` 輔助方法），驗證方式：unit test 覆蓋 PK/SK 組裝邏輯與至少一個 transaction 輔助方法的成功/失敗情境
-- [ ] 1.5 建立 CDK（C#）`BackendStack`：DynamoDB `StepGoTable`（含 GSI1、GSI2）、Cognito 老師/學生 User Pool、Cognito Admin User Pool（強制 MFA），驗證方式：`cdk synth` 成功產出對應資源的 CloudFormation 樣板
-- [ ] 1.6 建立 API Gateway HTTP API 與 Cognito JWT authorizer 設定，驗證方式：`cdk synth` 樣板中可見 authorizer 綁定於路由
-- [ ] 1.7 建立 SQS 佇列（金流背景通知緩衝）、EventBridge 自訂 event bus（通知事件）、EventBridge Scheduler（月結撥款）、Step Functions state machine 骨架（退課 SLA 計時），驗證方式：`cdk synth` 成功且各資源可在樣板中查得
-- [ ] 1.8 建立 S3 私有 bucket（身分證照片）與 Secrets Manager 機密骨架（綠界/藍新金鑰、LINE channel secret 占位），驗證方式：`cdk synth` 成功且 bucket 政策為私有（無公開讀取）
+- [x] 1.1 建立 `StepGo.Domain`（entity/value object/repository 介面骨架，暫無其他專案參照）、`StepGo.Contracts`（零依賴的 DTO/enum 專案，依 8 個 capability 分 namespace）兩個專案，驗證方式：`dotnet build` 成功，且用 `dotnet list <StepGo.Contracts.csproj> reference` 確認其專案參照清單為空
+- [x] 1.2 建立 `StepGo.Application`（use case handler + port 介面，只參照 `StepGo.Domain`）與 `StepGo.Infrastructure`（DynamoDB repository/Cognito/金流/通知等實作，參照 `StepGo.Domain`+`StepGo.Application`）兩個專案，驗證方式：`dotnet build` 成功，且用專案參照檢查工具確認 `StepGo.Domain` 沒有反向參照到這兩者
+- [x] 1.3 建立 .NET Lambda composition root 專案骨架（依 capability 分組：`StepGo.Api.Identity`、`StepGo.Api.Courses`、`StepGo.Api.Orders`、`StepGo.Api.Payouts`、`StepGo.Api.RefundTickets`、`StepGo.Api.Governance`、`StepGo.Api.Notifications`），各參照 `StepGo.Application`+`StepGo.Infrastructure`+`StepGo.Contracts`，驗證方式：`dotnet build` 全部專案成功，每個專案至少有一個 health check endpoint 可回應 200
+- [x] 1.4 建立共用的 DynamoDB 存取層輔助類別於 `StepGo.Infrastructure`（封裝 PK/SK 組裝、`TransactWriteItems` 輔助方法），驗證方式：unit test 覆蓋 PK/SK 組裝邏輯與至少一個 transaction 輔助方法的成功/失敗情境
+- [x] 1.5 建立 CDK（C#）`BackendStack`：DynamoDB `StepGoTable`（含 GSI1、GSI2）、Cognito 老師/學生 User Pool、Cognito Admin User Pool（強制 MFA），驗證方式：`cdk synth` 成功產出對應資源的 CloudFormation 樣板
+- [x] 1.6 建立 API Gateway HTTP API 與 Cognito JWT authorizer 設定，驗證方式：`cdk synth` 樣板中可見 authorizer 綁定於路由
+- [x] 1.7 建立 SQS 佇列（金流背景通知緩衝）、EventBridge 自訂 event bus（通知事件）、EventBridge Scheduler（月結撥款）、Step Functions state machine 骨架（退課 SLA 計時），驗證方式：`cdk synth` 成功且各資源可在樣板中查得
+- [x] 1.8 建立 S3 私有 bucket（身分證照片）與 Secrets Manager 機密骨架（綠界/藍新金鑰、LINE channel secret 占位），驗證方式：`cdk synth` 成功且 bucket 政策為私有（無公開讀取）
 
 ## 2. `backend-identity-access`
 
@@ -67,6 +67,6 @@
 
 ## 10. 整合驗收與前端假設比對
 
-- [ ] 10.1 依 design.md 的「前端假設驗證結果」逐項核對 `frontend-mvp-scaffold` 的 Open Questions 是否已解答，並回頭更新該 change 的 design.md，驗證方式：兩份 design.md 的相關章節內容一致，不再互相矛盾
-- [ ] 10.2 產出目前已實作 API 的最小 OpenAPI 描述（供前端 `StepGo.ApiClient` 之後置換 mock 實作），驗證方式：OpenAPI 文件可通過基本 schema 驗證工具檢查
+- [x] 10.1 依 design.md 的「前端假設驗證結果」逐項核對 `frontend-mvp-scaffold` 的 Open Questions 是否已解答，並回頭更新該 change 的 design.md，驗證方式：兩份 design.md 的相關章節內容一致，不再互相矛盾
+- [x] 10.2 產出目前已實作 API 的最小 OpenAPI 描述（供前端 `StepGo.ApiClient` 之後置換 mock 實作），驗證方式：OpenAPI 文件可通過基本 schema 驗證工具檢查
 - [ ] 10.3 以金流商 sandbox 環境執行一次完整的報名下單 → 背景通知 → 費用計算 → 撥款批次的端到端演練，驗證方式：演練記錄顯示每個階段的資料狀態轉換符合對應 spec 的 Scenario 描述

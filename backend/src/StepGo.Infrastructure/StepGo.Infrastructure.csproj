@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\StepGo.Domain\StepGo.Domain.csproj" />
+    <ProjectReference Include="..\StepGo.Application\StepGo.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="4.0.105.2" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.103.7" />
+    <PackageReference Include="AWSSDK.EventBridge" Version="4.0.100.13" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.103.1" />
+    <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.100.13" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.13" />
+    <PackageReference Include="AWSSDK.SQS" Version="4.0.100.13" />
+    <PackageReference Include="AWSSDK.StepFunctions" Version="4.0.100.14" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

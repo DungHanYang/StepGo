@@ -4,7 +4,7 @@
 
 ## What Changes
 
-- 建立後端架構決策：.NET 8 on AWS Lambda + API Gateway（HTTP API）、DynamoDB 單表設計、Cognito 身分驗證、S3 私有物件儲存、EventBridge/Step Functions 處理排程與 SLA 計時、SES/LINE Messaging API 通知、Secrets Manager 存金流商金鑰、AWS CDK（C#）作為 IaC。
+- 建立後端架構決策：.NET 10（Native AOT）on AWS Lambda + API Gateway（HTTP API）、DynamoDB 單表設計、Cognito 身分驗證、S3 私有物件儲存、EventBridge/Step Functions 處理排程與 SLA 計時、SES/LINE Messaging API 通知、Secrets Manager 存金流商金鑰、AWS CDK（C#）作為 IaC。
 - 依業務規則文件，定義八個後端能力（capability）的行為契約：身分與存取、課程與退費規則設定、報名與付款、費用與帳務核算、撥款批次、退課仲裁工單、平台費用與條款治理、通知派送。
 - 排定 MVP 範圍：對齊業務規則文件第十四節「MVP 範圍界定」與前端 change 已排定的範圍，Phase 2 功能（系列課、候補、評價、Rich Menu、廣告錢包、分級權限、自動化銀行 API 撥款、電子發票）不在本次規劃內。
 - 驗證並承接前端 change（`frontend-mvp-scaffold`）design.md 中列出的「前端對後端 API 的假設」，本 change 的每個假設驗證結果記錄在 design.md 的 Decisions 中。

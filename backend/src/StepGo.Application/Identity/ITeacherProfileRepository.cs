@@ -1,0 +1,9 @@
+using StepGo.Domain.Identity;
+
+namespace StepGo.Application.Identity;
+
+public interface ITeacherProfileRepository
+{
+    Task<TeacherProfile?> FindAsync(Guid teacherId, CancellationToken ct);
+    Task SaveAsync(TeacherProfile teacherProfile, CancellationToken ct);
+}
