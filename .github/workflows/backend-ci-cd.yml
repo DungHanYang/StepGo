@@ -1,0 +1,205 @@
+name: Backend CI/CD
+
+# Covers backend/ (DDD layers, 7 API + 5 worker Lambdas, .NET 10 Native AOT)
+# and infra/src/Infra (BackendStack). Frontend has its own pipeline:
+# frontend-ci-cd.yml — see that file for apps/, libs/, infra/StepGo.Infra.
+#
+# Deploy trigger: pushing a git tag.
+#   backend-dev-v*.*.*  -> deploys to dev automatically
+#   backend-v*.*.*       -> deploys to prod, gated by the `backend-production`
+#                           GitHub Environment's required reviewers (configure
+#                           under Settings > Environments)
+# Nobody runs `cdk deploy` locally against dev/prod — the pipeline is the only
+# path to those environments.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "infra/src/**"
+      - "infra/cdk.json"
+      - ".github/workflows/backend-ci-cd.yml"
+  push:
+    tags:
+      - "backend-v*.*.*"
+      - "backend-dev-v*.*.*"
+
+permissions:
+  id-token: write # required for AWS OIDC auth
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }} # TODO: set repo/org variable, e.g. ap-northeast-1
+  # The 12 deployable Lambda projects under backend/src (7 API + 5 worker).
+  # BackendStack.cs (infra/src/Infra/BackendStack.cs) reads each one's AOT
+  # publish output from backend/src/<project>/bin/Release/net10.0/linux-x64/publish,
+  # so every project here must be published before cdk synth/deploy runs.
+  LAMBDA_PROJECTS: >-
+    StepGo.Api.Courses StepGo.Api.Governance StepGo.Api.Identity
+    StepGo.Api.Notifications StepGo.Api.Orders StepGo.Api.Payouts
+    StepGo.Api.RefundTickets StepGo.Worker.NotificationDispatcher
+    StepGo.Worker.OverdueOrderScan StepGo.Worker.PaymentNotificationConsumer
+    StepGo.Worker.PayoutBatchScheduler StepGo.Worker.RefundSlaCheck
+
+jobs:
+  # ---------------------------------------------------------------------
+  # PR checks — build + test the backend solution.
+  # ---------------------------------------------------------------------
+  build-and-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore backend/StepGo.Backend.slnx
+
+      - name: Format check
+        run: dotnet format backend/StepGo.Backend.slnx --verify-no-changes
+
+      - name: Build
+        run: dotnet build backend/StepGo.Backend.slnx --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test backend/StepGo.Backend.slnx --no-build --configuration Release
+
+  # ---------------------------------------------------------------------
+  # PR checks — publish every Lambda project as AOT native code, then
+  # synth the CDK stack against those publish outputs.
+  # ---------------------------------------------------------------------
+  infra-synth:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Publish Lambda projects (Native AOT, linux-x64)
+        run: |
+          for project in $LAMBDA_PROJECTS; do
+            dotnet publish "backend/src/$project" -c Release -r linux-x64 --self-contained
+          done
+
+      - name: cdk synth
+        working-directory: infra
+        run: cdk synth
+
+  # ---------------------------------------------------------------------
+  # Resolve which environment a tag push targets, from the tag name.
+  # ---------------------------------------------------------------------
+  resolve-environment:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.resolve.outputs.environment }}
+    steps:
+      - id: resolve
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ "$TAG" =~ ^backend-dev-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=dev" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" =~ ^backend-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag '$TAG' does not match a known backend deploy pattern (backend-v*.*.* or backend-dev-v*.*.*)" >&2
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------
+  # Deploy to dev — runs automatically, no manual approval.
+  # ---------------------------------------------------------------------
+  deploy-dev:
+    needs: resolve-environment
+    if: needs.resolve-environment.outputs.environment == 'dev'
+    runs-on: ubuntu-latest
+    environment: backend-dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Publish Lambda projects (Native AOT, linux-x64)
+        run: |
+          for project in $LAMBDA_PROJECTS; do
+            dotnet publish "backend/src/$project" -c Release -r linux-x64 --self-contained
+          done
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_BACKEND_DEV }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: cdk deploy (dev)
+        working-directory: infra
+        run: cdk deploy --require-approval never
+
+  # ---------------------------------------------------------------------
+  # Deploy to prod — gated by the `backend-production` GitHub Environment's
+  # required reviewers (configure under Settings > Environments).
+  # ---------------------------------------------------------------------
+  deploy-prod:
+    needs: resolve-environment
+    if: needs.resolve-environment.outputs.environment == 'prod'
+    runs-on: ubuntu-latest
+    environment: backend-production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Publish Lambda projects (Native AOT, linux-x64)
+        run: |
+          for project in $LAMBDA_PROJECTS; do
+            dotnet publish "backend/src/$project" -c Release -r linux-x64 --self-contained
+          done
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_BACKEND_PROD }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: cdk deploy (prod)
+        working-directory: infra
+        run: cdk deploy --require-approval never
