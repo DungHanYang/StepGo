@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#22201c;text-decoration:underline}a:hover{color:#4a463d}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh;align-items:stretch}
+.side{background:#e3dcd1;color:#2b2822;display:flex;flex-direction:column;gap:4px;padding:20px 13px 24px}
+.side .brand{display:flex;align-items:center;gap:10px;color:#2b2822;padding:4px 8px 18px;flex:none}
+.side .account{margin-top:auto;border-top:1px solid #cfc4b2;padding:14px 0 0 8px;display:flex;align-items:center;gap:9px}
+.cols{display:grid;grid-template-columns:minmax(300px,0.85fr) minmax(0,1.35fr);gap:0;align-items:start}
+.queue{border-right:1px solid #ded7c9;min-height:70vh}
+.detail{padding:26px 30px 70px;display:flex;flex-direction:column;gap:22px;min-width:0}
+.pad{padding:22px 30px}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.actionbar{display:flex;gap:11px;flex-wrap:wrap;align-items:center}
+.mobilebar{display:none}
+@media(max-width:1080px){
+ .shell{grid-template-columns:1fr}
+ .side{flex-direction:row;align-items:center;gap:10px;padding:10px 14px;overflow:auto}
+ .side .brand{padding:0 10px 0 0}
+ .side .account{display:none !important}
+ .cols{grid-template-columns:1fr}
+ .queue{border-right:none;border-bottom:1px solid #ded7c9;min-height:0}
+ .detail{padding:22px 22px 96px}
+ .pad{padding:18px 22px}
+}
+@media(max-width:640px){
+ .detail{padding:18px 16px 108px;gap:18px}
+ .pad{padding:15px 16px}
+ .parties{grid-template-columns:1fr}
+ .actionbar{display:none}
+ .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fdfbf6;border-top:1px solid #ded7c9;padding:11px 14px 20px;gap:10px}
+ .mobilebar button{flex:1}
+}
+</style></helmet>
+
+<div class="shell">
+
+<aside class="side">
+<div class="brand">
+<div style="width:32px;height:32px;border-radius:50%;border:1px solid #bfb29c;background:#d2c6b4;display:flex;align-items:center;justify-content:center;font:700 14px 'Noto Serif TC',serif;flex:none;color:#2b2822">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span style="font:700 14px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9px 'EB Garamond',serif;letter-spacing:.2em;color:#8c7f6c">PLATFORM OPS</span>
+</div>
+</div>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a href="{{ n.href }}" style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:{{ n.font }};background:{{ n.bg }};color:{{ n.fg }};flex:none;white-space:nowrap">
+<span style="font:400 12px 'EB Garamond',serif;color:{{ n.dim }};width:14px;flex:none">{{ n.num }}</span>{{ n.label }}
+<sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;background:#8a4b3f;color:#fff;border-radius:99px;font:500 10.5px 'Noto Sans TC';padding:1px 7px">{{ n.badge }}</span></sc-if>
+</a>
+</sc-for>
+<div class="account">
+<div style="width:30px;height:30px;border-radius:50%;background:#d2c6b4;border:1px solid #bfb29c;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;flex:none;color:#2b2822">值</div>
+<div style="display:flex;flex-direction:column;line-height:1.3;min-width:0">
+<span style="font:500 13px 'Noto Sans TC';color:#2b2822">值班客服</span>
+<span style="font:400 10.5px 'Noto Sans TC';color:#8c7f6c">仲裁權限</span>
+</div>
+</div>
+</aside>
+
+<main style="min-width:0;display:flex;flex-direction:column;background:#f7f4ee">
+
+<header class="pad" style="display:flex;align-items:center;gap:14px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<h1 style="font:700 19px 'Noto Serif TC',serif;margin:0">平台仲裁</h1>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">{{ pendingNote }}</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#8a4b3f">受理後 3 個工作日內裁定，裁定結果為最終依據</span>
+</header>
+
+<div class="cols">
+
+<section class="queue" style="display:flex;flex-direction:column;background:#fdfbf6">
+<div style="display:flex;gap:7px;padding:13px 18px;border-bottom:1px solid #ded7c9;overflow:auto">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+<button onClick="{{ f.onClick }}" style="flex:none;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};border-radius:99px;padding:5px 13px;font:400 12.5px 'Noto Sans TC';cursor:pointer">{{ f.label }}</button>
+</sc-for>
+</div>
+<sc-for list="{{ queue }}" as="q" hint-placeholder-count="4">
+<button onClick="{{ q.onClick }}" style="text-align:left;cursor:pointer;border:none;border-bottom:1px solid #ece6da;border-left:3px solid {{ q.mark }};background:{{ q.bg }};padding:15px 18px;display:flex;flex-direction:column;gap:6px;width:100%">
+<div style="display:flex;align-items:center;gap:8px;width:100%">
+<span style="font:500 10.5px 'Noto Sans TC';color:{{ q.stFg }};background:{{ q.stBg }};border-radius:2px;padding:2px 7px">{{ q.status }}</span>
+<span style="margin-left:auto;font:400 11.5px 'Noto Sans TC';color:{{ q.dueFg }}">{{ q.due }}</span>
+</div>
+<span style="font:500 14.5px 'Noto Sans TC';color:#22201c">{{ q.student }} <span style="color:#7c7668;font-weight:400">vs</span> {{ q.teacher }}</span>
+<span style="font:400 12.5px/1.55 'Noto Sans TC';color:#6c6659;text-wrap:pretty">{{ q.course }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">爭議金額 {{ q.amount }} ｜ {{ q.escalated }}</span>
+</button>
+</sc-for>
+</section>
+
+<section class="detail">
+
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<span style="font:500 11px 'Noto Sans TC';color:{{ d.stFg }};background:{{ d.stBg }};border-radius:2px;padding:3px 9px">{{ d.status }}</span>
+<span style="font:400 12.5px ui-monospace,Menlo,monospace;color:#6c6659">{{ d.id }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:{{ d.dueFg }}">{{ d.dueFull }}</span>
+</div>
+<h2 style="font:700 22px/1.35 'Noto Serif TC',serif;margin:0;text-wrap:pretty">「{{ d.courseShort }}」退費爭議</h2>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">{{ d.meta }}</p>
+</div>
+
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:16px 18px;display:flex;gap:11px;align-items:flex-start">
+<span style="width:17px;height:17px;border-radius:50%;border:1px solid #6c6659;color:#6c6659;font:600 10px 'EB Garamond',serif;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px">i</span>
+<span style="font:400 12.5px/1.85 'Noto Sans TC';color:#4a463d;text-wrap:pretty">{{ d.escalateReason }}</span>
+</div>
+
+<div class="parties" style="border:1px solid #ded7c9;border-radius:4px;overflow:hidden">
+<div style="background:#fdf7f0;padding:17px 19px;border-right:1px solid #ded7c9;display:flex;flex-direction:column;gap:8px">
+<span style="font:500 11px 'Noto Sans TC';letter-spacing:.1em;color:#a7622c">老師主張 · {{ d.teacher }}</span>
+<p style="font:400 13.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ d.teacherClaim }}</p>
+</div>
+<div style="background:#f2f6f6;padding:17px 19px;display:flex;flex-direction:column;gap:8px">
+<span style="font:500 11px 'Noto Sans TC';letter-spacing:.1em;color:#2f5560">學生主張 · {{ d.student }}</span>
+<p style="font:400 13.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ d.studentClaim }}</p>
+</div>
+</div>
+
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+<sc-for list="{{ d.facts }}" as="f" hint-placeholder-count="5">
+<div style="padding:15px 18px;border-right:1px solid #ece6da;border-bottom:1px solid #ece6da;display:flex;flex-direction:column;gap:4px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ f.k }}</span>
+<span style="font:500 14px 'Noto Sans TC';color:#22201c">{{ f.v }}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:20px 22px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+<h3 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">依課程退費規則試算（供裁定參考）</h3>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ d.ruleNote }}</span>
+</div>
+<sc-for list="{{ d.calc }}" as="c" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;font:400 13.5px 'Noto Sans TC';border-bottom:1px solid #ece6da;padding-bottom:9px">
+<span style="color:#6c6659">{{ c.k }}</span>
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:{{ c.color }}">{{ c.v }}</span>
+</div>
+</sc-for>
+<div style="display:flex;gap:24px;flex-wrap:wrap;padding-top:6px">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">依規則試算金額</span>
+<span style="font:600 26px 'EB Garamond',serif;color:#22201c">{{ d.ruleAmount }}</span>
+</div>
+</div>
+</div>
+
+<sc-if value="{{ d.isOpen }}" hint-placeholder-val="{{ true }}">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px 22px;display:flex;flex-direction:column;gap:14px">
+<h3 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">做出裁定</h3>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ d.rulings }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.onClick }}" style="text-align:left;cursor:pointer;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:3px;padding:13px 15px;display:flex;flex-direction:column;gap:3px">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c">{{ r.label }}</span>
+<span style="font:400 12.5px/1.6 'Noto Sans TC';color:#6c6659">{{ r.note }}</span>
+</button>
+</sc-for>
+</div>
+<textarea readOnly="{{ true }}" rows="{{ 3 }}" placeholder="裁定理由（雙方都會收到這段說明）" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 13.5px/1.7 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box;resize:none"></textarea>
+<div class="actionbar">
+<button style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 24px;font:500 14px 'Noto Sans TC';cursor:pointer">送出裁定（{{ d.pickedLabel }}）</button>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">送出後系統自動執行退款／維持原狀，雙方將收到通知，不可再申訴。</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ d.isClosed }}" hint-placeholder-val="{{ false }}">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#f2efe6;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<span style="width:7px;height:7px;border-radius:50%;background:#22201c;flex:none"></span>
+<span style="font:500 14px 'Noto Sans TC';color:#22201c">{{ d.closedLine }}</span>
+</div>
+<p style="font:400 13px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ d.closedReason }}</p>
+</div>
+</sc-if>
+
+<div style="border-left:2px solid #22201c;padding:4px 0 4px 16px;font:400 13px/1.85 'Noto Sans TC';color:#6c6659;text-wrap:pretty">仲裁裁定屬平台依<a href="./StepGo Terms.dc.html">合作條款 05</a>作出的最終決定，雙方不得再就同一筆申請提出異議。</div>
+</section>
+</div>
+
+<sc-if value="{{ d.isOpen }}" hint-placeholder-val="{{ true }}">
+<div class="mobilebar">
+<button style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 12px;font:400 14px 'Noto Sans TC';cursor:pointer">維持原決定</button>
+<button style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 12px;font:500 14px 'Noto Sans TC';cursor:pointer">核准學生申請</button>
+</div>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NAV = [
+  { num: "01", label: "待仲裁", href: "#", active: true, badge: "2" },
+  { num: "02", label: "已結案", href: "#" },
+  { num: "03", label: "帳戶審核", href: "./StepGo Teacher Verification.dc.html" },
+  { num: "04", label: "撥款總覽", href: "./StepGo Payout Account.dc.html" },
+  { num: "05", label: "課程管理", href: "./StepGo Courses.dc.html" }
+];
+
+const CASES = [
+  { id:"AB-00042", student:"周思彤", teacher:"陳彥霖", course:"手作木湯匙一日課", courseShort:"手作木湯匙一日課",
+    status:"待裁定", kind:"open", due:"剩 2 天", dueFull:"須於 09/13 前裁定",
+    escalated:"09/11 升級仲裁", amount:"1,800",
+    meta:"報名編號 EN-24788 ｜ 2026/08/15 付款 ｜ 信用卡 ｜ 開課日 2026/10/12",
+    escalateReason:"老師依「7–13 日」級距核准退 70%（1,235 元），學生不接受，主張應全額退費，雙方無法達成共識，由學生申請平台仲裁。",
+    teacherClaim:"退費規則寫在課程頁上，開課前 9 日申請本來就是 70% 級距，我已經照規則處理，也留了候補名額給她，不覺得需要再多退。",
+    studentClaim:"我是因為公司臨時要求出差才取消，不是自己不想上，而且候補名額我用不到。希望能考慮全額退費。",
+    ruleNote:"開課前 9 日 · 課程頁公告「7–13 日退 70%」",
+    calc:[{k:"原繳金額",v:"1,800",color:"#22201c"},{k:"依課程規則比例",v:"70%",color:"#22201c"},{k:"退款處理費",v:"−25",color:"#8a4b3f"}],
+    ruleAmount:"1,235",
+    facts:[
+      { k:"爭議點", v:"退費比例（70% vs 全額）" },
+      { k:"老師原核准金額", v:"NT$ 1,235" },
+      { k:"學生主張金額", v:"NT$ 1,800" },
+      { k:"申請日", v:"09/04" },
+      { k:"升級仲裁日", v:"09/11" }
+    ],
+    rulings:[
+      { label:"維持老師原決定（退 1,235 元）", note:"依課程頁公告的退費規則執行，不額外退費" },
+      { label:"核准學生全額申請（退 1,800 元）", note:"差額 565 元由平台從老師下期撥款中扣回" },
+      { label:"裁定折衷金額", note:"自訂金額，需另外輸入並說明理由" }
+    ] },
+  { id:"AB-00039", student:"許雅涵", teacher:"陳彥霖", course:"週末親子木作：小書架", courseShort:"週末親子木作：小書架",
+    status:"待裁定", kind:"open", due:"剩 1 天", dueFull:"須於 09/12 前裁定",
+    escalated:"09/10 升級仲裁", amount:"2,500",
+    meta:"報名編號 EN-24655 ｜ 2026/07/30 付款 ｜ 信用卡 ｜ 開課日 2026/08/23",
+    escalateReason:"老師以「開課後不退費」拒絕申請，學生主張課程開始前一天已透過站內訊息告知孩子生病無法出席，等同開課前申請，申請平台仲裁重新認定申請時間。",
+    teacherClaim:"她是開課當天才在群組留言說孩子生病，系統上的正式退課申請也是開課後才送出的，時間點就是不符合規則。",
+    studentClaim:"我 08/22 晚上已經在課程的 LINE 群組跟老師說了，只是系統申請晚了一天送出，實際通知時間應該算開課前。",
+    ruleNote:"系統記錄：正式申請時間為開課後",
+    calc:[{k:"原繳金額",v:"2,500",color:"#22201c"},{k:"若採計 LINE 通知時間（開課前 1 日）",v:"退 30%",color:"#22201c"},{k:"若採計系統申請時間（開課後）",v:"不退費",color:"#8a4b3f"}],
+    ruleAmount:"0 ～ 750（依採計時間點）",
+    facts:[
+      { k:"爭議點", v:"申請時間認定（站外通知 vs 系統申請）" },
+      { k:"老師原決定", v:"拒絕，不退費" },
+      { k:"學生主張", v:"應採計站外通知時間，退 30%" },
+      { k:"申請日", v:"08/23（開課後）" },
+      { k:"升級仲裁日", v:"09/10" }
+    ],
+    rulings:[
+      { label:"維持老師原決定（不退費）", note:"僅採計系統正式申請時間，依規則開課後不退" },
+      { label:"採計站外通知時間，退 30%（750 元）", note:"認定 LINE 訊息時間有效，差額由平台扣回老師下期撥款" },
+      { label:"裁定折衷金額", note:"自訂金額，需另外輸入並說明理由" }
+    ] },
+  { id:"AB-00031", student:"何柏勳", teacher:"吳曉恩", course:"植物染基礎：藍染方巾兩件", courseShort:"植物染基礎：藍染方巾兩件",
+    status:"已裁定", kind:"closed", due:"09/03 結案", dueFull:"09/03 裁定完成",
+    escalated:"08/30 升級仲裁", amount:"2,200",
+    meta:"報名編號 EN-24610 ｜ 2026/07/20 付款 ｜ ATM ｜ 開課日 2026/09/08",
+    escalateReason:"老師核准退 50%，學生主張材料已預先採買但尚未領取，應視為未消耗材料，要求提高退費比例，經雙方多次往來仍無共識。",
+    teacherClaim:"染料跟布料是照人數提前備的，就算沒領到，成本已經發生，50% 是我覺得合理的折衷。",
+    studentClaim:"材料我完全沒拿到，也沒使用，希望能再多退一點。",
+    ruleNote:"開課前 9 日 · 課程頁公告「3–13 日退 50%」",
+    calc:[{k:"原繳金額",v:"2,200",color:"#22201c"},{k:"課程規則比例",v:"50%",color:"#22201c"},{k:"退款處理費",v:"−25",color:"#8a4b3f"}],
+    ruleAmount:"1,075",
+    facts:[
+      { k:"爭議點", v:"是否應提高退費比例" },
+      { k:"老師原核准金額", v:"NT$ 1,075" },
+      { k:"學生主張金額", v:"約 NT$ 1,600" },
+      { k:"申請日", v:"08/28" },
+      { k:"升級仲裁日", v:"08/30" }
+    ],
+    closedLine:"裁定：維持課程規則核定的 50% 退費，退款 1,075 元",
+    closedReason:"材料成本是否實際發生屬老師營運範疇，課程頁公告的退費比例已明確涵蓋此情況，平台裁定維持原比例，不另外調整。" }
+];
+
+class Component extends DCLogic {
+  state = { sel: "AB-00042", filter: "open", picked: null };
+  renderVals() {
+    const { filter } = this.state;
+    const list = CASES.filter(c => filter === "all" ? true : c.kind === filter);
+    const sel = list.find(c => c.id === this.state.sel) || list[0] || CASES[0];
+    const st = c => c.status === "待裁定" ? { stBg: "#f6ece2", stFg: "#8a4b3f" } : { stBg: "#e3ecec", stFg: "#2f5560" };
+    const pendingOpen = CASES.filter(c => c.kind === "open").length;
+
+    return {
+      pendingNote: pendingOpen + " 筆待裁定 · 最急剩 1 天",
+      nav: NAV.map(n => ({
+        ...n, hasBadge: !!n.badge, badge: n.badge || "",
+        font: (n.active ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+        bg: n.active ? "#d2c6b4" : "transparent",
+        fg: n.active ? "#22201c" : "#5c5347",
+        dim: n.active ? "#8a4b3f" : "#a89a84"
+      })),
+      filters: [["open","待裁定"],["closed","已結案"],["all","全部"]].map(([k, label]) => ({
+        label, onClick: () => this.setState({ filter: k, picked: null }),
+        border: filter === k ? "#22201c" : "#ded7c9",
+        bg: filter === k ? "#efeade" : "transparent",
+        fg: filter === k ? "#22201c" : "#4a463d"
+      })),
+      queue: list.map(c => ({
+        ...c, ...st(c),
+        onClick: () => this.setState({ sel: c.id, picked: null }),
+        bg: c.id === sel.id ? "#f2efe6" : "#fdfbf6",
+        mark: c.id === sel.id ? "#22201c" : "transparent",
+        dueFg: c.kind === "open" ? "#8a4b3f" : "#6c6659"
+      })),
+      d: { ...sel, ...st(sel), dueFg: sel.kind === "open" ? "#8a4b3f" : "#6c6659",
+        isOpen: sel.kind === "open", isClosed: sel.kind === "closed",
+        pickedLabel: this.state.picked || "請先選擇裁定結果",
+        rulings: (sel.rulings || []).map(r => ({ ...r,
+          onClick: () => this.setState({ picked: r.label }),
+          border: this.state.picked === r.label ? "#22201c" : "#ded7c9",
+          bg: this.state.picked === r.label ? "#f2efe6" : "#fdfbf6"
+        })) }
+    };
+  }
+}
+</script>
+</body>
+</html>

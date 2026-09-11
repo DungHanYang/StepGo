@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#22201c;text-decoration:underline}a:hover{color:#4a463d}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh;align-items:stretch}
+.side{background:#e3dcd1;color:#2b2822;display:flex;flex-direction:column;gap:4px;padding:20px 13px 24px}
+.side .brand{display:flex;align-items:center;gap:10px;color:#2b2822;padding:4px 8px 18px;flex:none}
+.side .account{margin-top:auto;border-top:1px solid #cfc4b2;padding:14px 0 0 8px;display:flex;align-items:center;gap:9px}
+.pad{padding:22px 30px}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.reconcile{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#ded7c9;border:1px solid #ded7c9;border-radius:4px;overflow:hidden}
+@media(max-width:1080px){
+ .shell{grid-template-columns:1fr}
+ .side{flex-direction:row;align-items:center;gap:10px;padding:10px 14px;overflow:auto}
+ .side .brand{padding:0 10px 0 0}
+ .side .account{display:none !important}
+ .pad{padding:18px 22px}
+}
+@media(max-width:640px){
+ .pad{padding:15px 16px}
+ .reconcile{grid-template-columns:1fr}
+}
+</style></helmet>
+
+<div class="shell">
+
+<aside class="side">
+<div class="brand">
+<div style="width:32px;height:32px;border-radius:50%;border:1px solid #bfb29c;background:#d2c6b4;display:flex;align-items:center;justify-content:center;font:700 14px 'Noto Serif TC',serif;flex:none;color:#2b2822">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span style="font:700 14px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9px 'EB Garamond',serif;letter-spacing:.2em;color:#8c7f6c">ADMIN</span>
+</div>
+</div>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a href="{{ n.href }}" style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:{{ n.font }};background:{{ n.bg }};color:{{ n.fg }};flex:none;white-space:nowrap">
+<span style="font:400 12px 'EB Garamond',serif;color:{{ n.dim }};width:14px;flex:none">{{ n.num }}</span>{{ n.label }}
+</a>
+</sc-for>
+<div class="account">
+<div style="width:30px;height:30px;border-radius:50%;background:#d2c6b4;border:1px solid #bfb29c;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;flex:none;color:#2b2822">財</div>
+<div style="display:flex;flex-direction:column;line-height:1.3;min-width:0">
+<span style="font:500 13px 'Noto Sans TC';color:#2b2822">財務／營運</span>
+<span style="font:400 10.5px 'Noto Sans TC';color:#8c7f6c">金流查看權限</span>
+</div>
+</div>
+</aside>
+
+<main style="min-width:0;display:flex;flex-direction:column;background:#f7f4ee">
+
+<header class="pad" style="display:flex;align-items:center;gap:14px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<h1 style="font:700 19px 'Noto Serif TC',serif;margin:0">金流總覽</h1>
+<div style="margin-left:auto;display:flex;gap:7px">
+<sc-for list="{{ ranges }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.onClick }}" style="border:1px solid {{ r.border }};background:{{ r.bg }};color:{{ r.fg }};border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';cursor:pointer">{{ r.label }}</button>
+</sc-for>
+</div>
+</header>
+
+<div class="pad" style="display:flex;flex-direction:column;gap:26px;padding-bottom:60px">
+
+<section class="statgrid">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:17px 19px;display:flex;flex-direction:column;gap:6px">
+<span style="font:400 11.5px 'Noto Sans TC';letter-spacing:.08em;color:#6c6659">{{ s.label }}</span>
+<span style="font:600 27px/1.1 'EB Garamond',serif;color:#22201c">{{ s.value }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:{{ s.noteColor }}">{{ s.note }}</span>
+</div>
+</sc-for>
+</section>
+
+<section style="border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">01</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">資金核對</h2>
+<span style="margin-left:auto;font:500 12px 'Noto Sans TC';color:{{ balanceFg }};background:{{ balanceBg }};border-radius:2px;padding:3px 10px">{{ balanceLabel }}</span>
+</div>
+<div class="reconcile">
+<sc-for list="{{ reconcile }}" as="r" hint-placeholder-count="3">
+<div style="background:#fdfbf6;padding:16px 17px;display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ r.k }}</span>
+<span style="font:600 22px 'EB Garamond',serif;color:#22201c">{{ r.v }}</span>
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ r.note }}</span>
+</div>
+</sc-for>
+</div>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">代收（學生已付）扣掉應付（老師實拿＋平台留存）應等於平台目前代管餘額。有落差時多半是退款處理中或撥款批次尚未入帳所致。</p>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="padding:16px 20px;border-bottom:1px solid #ded7c9;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">02</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">撥款佇列</h2>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ queueNote }}</span>
+<div style="margin-left:auto;display:flex;gap:8px">
+<sc-for list="{{ queueFilters }}" as="f" hint-placeholder-count="3">
+<button onClick="{{ f.onClick }}" style="border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};border-radius:99px;padding:5px 12px;font:400 12.5px 'Noto Sans TC';cursor:pointer">{{ f.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(150px,1.6fr) 90px 90px 90px 90px;gap:9px;padding:11px 20px;background:#efeade;font:500 11.5px 'Noto Sans TC';color:#4a463d;letter-spacing:.04em">
+<span>老師</span><span style="text-align:right">筆數</span><span style="text-align:right">毛額</span><span style="text-align:right">扣除</span><span style="text-align:right">實撥</span>
+</div>
+<sc-for list="{{ payoutQueue }}" as="p" hint-placeholder-count="6">
+<div style="display:grid;grid-template-columns:minmax(150px,1.6fr) 90px 90px 90px 90px;gap:9px;padding:13px 20px;border-top:1px solid #ece6da;align-items:center">
+<div style="min-width:0"><div style="font:500 13.5px 'Noto Sans TC';color:#22201c">{{ p.teacher }}</div><div style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ p.bank }}</div></div>
+<span style="font:400 13px ui-monospace,Menlo,monospace;color:#4a463d;text-align:right">{{ p.count }}</span>
+<span style="font:400 13px ui-monospace,Menlo,monospace;color:#4a463d;text-align:right">{{ p.gross }}</span>
+<span style="font:400 13px ui-monospace,Menlo,monospace;color:#8a4b3f;text-align:right">{{ p.deduct }}</span>
+<span style="font:500 13.5px ui-monospace,Menlo,monospace;color:#22201c;text-align:right">{{ p.net }}</span>
+</div>
+</sc-for>
+<div style="padding:13px 20px;border-top:1px solid #ded7c9;background:#f2efe6;display:flex;justify-content:space-between;align-items:baseline">
+<span style="font:500 13px 'Noto Sans TC';color:#22201c">{{ queueCount }} 位老師 · 下次批次 {{ nextBatch }}</span>
+<span style="font:600 18px 'EB Garamond',serif;color:#22201c">合計 {{ queueTotal }}</span>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">03</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">退款總覽</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+<sc-for list="{{ refundStats }}" as="r" hint-placeholder-count="3">
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:15px 16px;display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ r.k }}</span>
+<span style="font:600 22px 'EB Garamond',serif;color:#22201c">{{ r.v }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const NAV = [
+  { num: "01", label: "金流總覽", href: "#", active: true },
+  { num: "02", label: "費用設定", href: "./StepGo Admin Fees.dc.html" },
+  { num: "03", label: "老師與課程", href: "./StepGo Admin Directory.dc.html" },
+  { num: "04", label: "帳號與權限", href: "./StepGo Admin Accounts.dc.html" },
+  { num: "05", label: "仲裁案件", href: "./StepGo Arbitration.dc.html" },
+  { num: "06", label: "帳戶審核", href: "./StepGo Teacher Verification.dc.html" },
+  { num: "07", label: "操作日誌", href: "./StepGo Admin Audit Log.dc.html" }
+];
+
+class Component extends DCLogic {
+  state = { range: "month", qf: "all" };
+  renderVals() {
+    const { range, qf } = this.state;
+    const queueAll = [
+      { teacher: "陳彥霖", bank: "國泰世華 ****4821", count: 8, gross: "12,800", deduct: "−540", net: "12,260", flag: "ok" },
+      { teacher: "吳曉恩", bank: "玉山 ****0193", count: 3, gross: "6,600", deduct: "−220", net: "6,380", flag: "ok" },
+      { teacher: "林思如", bank: "中國信託 ****7742", count: 5, gross: "9,000", deduct: "−310", net: "8,690", flag: "ok" },
+      { teacher: "許雅涵", bank: "台北富邦 ****2016", count: 2, gross: "480", deduct: "−0", net: "累計中", flag: "hold" },
+      { teacher: "黃柏睿", bank: "中華郵政 ****5502", count: 4, gross: "7,200", deduct: "−260", net: "6,940", flag: "ok" }
+    ];
+    const queue = qf === "hold" ? queueAll.filter(q => q.flag === "hold") : queueAll;
+    return {
+      nav: NAV.map(n => ({
+        ...n,
+        font: (n.active ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+        bg: n.active ? "#d2c6b4" : "transparent",
+        fg: n.active ? "#22201c" : "#5c5347",
+        dim: n.active ? "#a7622c" : "#a89a84"
+      })),
+      ranges: [["week","本週"],["month","本月"],["quarter","本季"]].map(([k, label]) => ({
+        label, onClick: () => this.setState({ range: k }),
+        border: range === k ? "#22201c" : "#ded7c9",
+        bg: range === k ? "#efeade" : "transparent",
+        fg: range === k ? "#22201c" : "#4a463d"
+      })),
+      stats: [
+        { label: "報名總額（毛額）", value: "NT$ 386,200", note: "較上月 +6.2%", noteColor: "#2f5560" },
+        { label: "平台服務費收入", value: "NT$ 38,620", note: "以 10% 費率計算", noteColor: "#6c6659" },
+        { label: "金流手續費（老師負擔）", value: "NT$ 9,840", note: "轉付金流商，非平台收入", noteColor: "#6c6659" },
+        { label: "本月已撥款", value: "NT$ 226,480", note: "22 位老師 · 已完成", noteColor: "#6c6659" }
+      ],
+      balanceLabel: "已核對，無落差", balanceFg: "#2f5560", balanceBg: "#e3ecec",
+      reconcile: [
+        { k: "代收（學生已付）", v: "NT$ 386,200", note: "所有已成立訂單的付款總額" },
+        { k: "應付（老師實拿＋平台留存）", v: "NT$ 386,200", note: "撥款佇列 ＋ 已撥款 ＋ 平台服務費" },
+        { k: "落差", v: "NT$ 0", note: "本期無異常" }
+      ],
+      queueNote: "月結批次 · 10/05 撥出",
+      queueFilters: [["all","全部"],["hold","未達門檻"]].map(([k, label]) => ({
+        label, onClick: () => this.setState({ qf: k }),
+        border: qf === k ? "#22201c" : "#ded7c9",
+        bg: qf === k ? "#efeade" : "transparent",
+        fg: qf === k ? "#22201c" : "#4a463d"
+      })),
+      payoutQueue: queue,
+      queueCount: queue.length, nextBatch: "2026/10/05",
+      queueTotal: "NT$ 34,270",
+      refundStats: [
+        { k: "處理中", v: "3 筆 · NT$ 6,235" },
+        { k: "本月已完成", v: "9 筆 · NT$ 18,940" },
+        { k: "升級仲裁", v: "2 筆" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2f5560;text-decoration:none}a:hover{color:#1f3c45}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.checkcols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:34px;align-items:start}
+@media(max-width:900px){.checkcols{grid-template-columns:1fr}.checkcols aside{position:static !important}}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:10px;color:#22201c">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;flex:none">學</div>
+<span style="font:700 16px 'Noto Serif TC',serif">學步</span>
+</a>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659;border-left:1px solid #ded7c9;padding-left:16px">報名流程</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">安全連線 · 代收轉付</span>
+</header>
+
+<nav style="display:flex;align-items:center;gap:0;padding:26px 0 30px;flex-wrap:wrap">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:11px;padding-right:18px">
+<span style="width:24px;height:24px;border-radius:50%;border:1px solid {{ s.ring }};background:{{ s.bg }};color:{{ s.numFg }};display:flex;align-items:center;justify-content:center;font:500 12px 'EB Garamond',serif;flex:none">{{ s.num }}</span>
+<span style="font:{{ s.font }};color:{{ s.fg }}">{{ s.label }}</span>
+<span style="width:32px;height:1px;background:{{ s.line }};display:block;margin-left:7px"></span>
+</div>
+</sc-for>
+</nav>
+
+<div class="checkcols" style="padding-bottom:70px">
+
+<main style="min-width:0;display:flex;flex-direction:column;gap:24px">
+
+<sc-if value="{{ isInfo }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:24px">
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:18px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0;border-bottom:1px solid #ece6da;padding-bottom:13px">報名人資料</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+<sc-for list="{{ fields }}" as="f" hint-placeholder-count="4">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input value="{{ f.value }}" readOnly="{{ true }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<sc-if value="{{ f.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659">{{ f.hint }}</span></sc-if>
+</label>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:14px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0;border-bottom:1px solid #ece6da;padding-bottom:13px">老師想先知道的事</h2>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">有木工經驗嗎？（選填）</span>
+<textarea readOnly="{{ true }}" rows="{{ 3 }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px/1.7 'Noto Sans TC';color:#6c6659;width:100%;box-sizing:border-box;resize:none">完全沒有，第一次上這類課。</textarea>
+</label>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">這些資料只提供給這門課的老師，用於聯繫與點名。</p>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 26px;display:flex;flex-direction:column;gap:12px">
+<label style="display:flex;gap:11px;align-items:flex-start;cursor:pointer">
+<span style="width:17px;height:17px;border:1px solid #2f5560;border-radius:2px;background:#2f5560;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px">✓</span>
+<span style="font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d">我已閱讀並同意這門課的<a href="./StepGo Terms.dc.html">退費規則</a>與學步的<a href="./StepGo Terms.dc.html">服務條款</a>。開課前 14 日以上可全額退費，退款處理費 25 元。</span>
+</label>
+</section>
+
+<div style="display:flex;gap:12px;align-items:center">
+<button onClick="{{ goPay }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px 26px;font:500 14.5px 'Noto Sans TC';cursor:pointer">下一步：選付款方式 →</button>
+<a href="./StepGo Courses.dc.html" style="font:400 13.5px 'Noto Sans TC';color:#6c6659">回課程頁</a>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPay }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:24px">
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0;border-bottom:1px solid #ece6da;padding-bottom:13px">選擇付款方式</h2>
+<sc-for list="{{ methods }}" as="m" hint-placeholder-count="2">
+<button onClick="{{ m.onClick }}" style="text-align:left;cursor:pointer;border:1px solid {{ m.border }};background:{{ m.bg }};border-radius:4px;padding:18px 20px;display:grid;grid-template-columns:20px minmax(0,1fr);gap:14px;align-items:start;width:100%">
+<span style="width:16px;height:16px;border-radius:50%;border:1px solid {{ m.dotRing }};background:{{ m.dotBg }};display:block;margin-top:3px"></span>
+<div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+<span style="font:500 15.5px 'Noto Sans TC';color:#22201c">{{ m.name }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ m.speed }}</span>
+</div>
+<p style="font:400 13px/1.8 'Noto Sans TC';color:#4a463d;margin:0">{{ m.desc }}</p>
+</div>
+</button>
+</sc-for>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">兩種方式你付的金額完全相同，平台不向學生加收手續費。</p>
+</section>
+
+<sc-if value="{{ showCardForm }}" hint-placeholder-val="{{ false }}">
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0;border-bottom:1px solid #ece6da;padding-bottom:13px">信用卡資訊</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+<sc-for list="{{ cardFields }}" as="f" hint-placeholder-count="4">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input value="{{ f.value }}" readOnly="{{ true }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px ui-monospace,Menlo,monospace;color:#22201c;width:100%;box-sizing:border-box">
+</label>
+</sc-for>
+</div>
+<p style="font:400 12px/1.75 'Noto Sans TC';color:#6c6659;margin:0">卡片資訊由合作金流機構處理並加密傳輸，學步不保存完整卡號。</p>
+</section>
+</sc-if>
+
+<div style="display:flex;gap:12px;align-items:center">
+<button onClick="{{ submitPay }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px 26px;font:500 14.5px 'Noto Sans TC';cursor:pointer">{{ payCta }}</button>
+<button onClick="{{ goInfo }}" style="border:none;background:none;cursor:pointer;font:400 13.5px 'Noto Sans TC';color:#6c6659">← 上一步</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAtm }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<section style="border:1px solid #a7622c;border-radius:4px;background:#fdf7f0;padding:26px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:8px;height:8px;border-radius:50%;background:#a7622c;flex:none"></span>
+<span style="font:500 12px 'Noto Sans TC';letter-spacing:.14em;color:#8a4b3f">名額已保留，尚未成立</span>
+</div>
+<h2 style="font:700 21px/1.4 'Noto Serif TC',serif;margin:0">請在 09/14 23:59 前完成轉帳</h2>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">逾期未入帳，名額會自動釋出給候補。轉帳完成後不需通知老師，系統確認入帳會自動成立報名並寄送通知。</p>
+<div style="display:flex;flex-wrap:wrap;gap:1px;border:1px solid #e2cdb7;border-radius:4px;background:#efe2d3;overflow:hidden;margin-top:4px">
+<sc-for list="{{ atmInfo }}" as="a" hint-placeholder-count="3">
+<div style="flex:1 1 165px;background:#fdfbf6;padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ a.k }}</span>
+<span style="font:{{ a.font }};color:#22201c">{{ a.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:2px">
+<button style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:12px 20px;font:500 13.5px 'Noto Sans TC';cursor:pointer">複製帳號</button>
+<button onClick="{{ goPay }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:12px 18px;font:400 13.5px 'Noto Sans TC';cursor:pointer">改用信用卡付</button>
+<button onClick="{{ simulatePaid }}" style="border:1px solid #2f5560;background:none;color:#2f5560;border-radius:3px;padding:12px 18px;font:400 13.5px 'Noto Sans TC';cursor:pointer">（示範）模擬入帳</button>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:14px">
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">接下來會發生什麼</h2>
+<sc-for list="{{ atmSteps }}" as="s" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;align-items:center;height:100%">
+<span style="width:10px;height:10px;border-radius:50%;background:{{ s.dot }};border:1px solid {{ s.ring }};flex:none;margin-top:5px"></span>
+<span style="width:1px;flex:1;min-height:22px;background:{{ s.line }}"></span>
+</div>
+<div style="padding-bottom:14px;min-width:0">
+<div style="font:{{ s.font }};color:{{ s.fg }}">{{ s.title }}</div>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;text-wrap:pretty">{{ s.note }}</div>
+</div>
+</div>
+</sc-for>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<section style="border:1px solid #2f5560;border-radius:4px;background:#fdfbf6;padding:30px 28px;display:flex;flex-direction:column;gap:14px">
+<div style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2f5560;display:flex;align-items:center;justify-content:center;font-size:19px;color:#2f5560">✓</div>
+<h2 style="font:700 24px/1.35 'Noto Serif TC',serif;margin:0">報名成立</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">{{ doneIntro }}</p>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ece6da;padding-top:16px;margin-top:4px;font:400 13.5px/1.6 'Noto Sans TC'">
+<sc-for list="{{ receipt }}" as="r" hint-placeholder-count="5">
+<div style="display:flex;gap:14px"><span style="color:#6c6659;width:82px;flex:none">{{ r.k }}</span><span style="color:#22201c">{{ r.v }}</span></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:8px">
+<a href="./StepGo Student Dashboard.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC'">前往我的課程 →</a>
+<a href="./StepGo Courses.dc.html" style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:13px 20px;font:400 14px 'Noto Sans TC'">繼續逛課程</a>
+</div>
+</section>
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 26px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font:700 16px 'Noto Serif TC',serif;margin:0">上課前要知道的</h3>
+<sc-for list="{{ nextNotes }}" as="n" hint-placeholder-count="3">
+<div style="display:flex;gap:11px;font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d"><span style="color:#2f5560;flex:none">—</span><span>{{ n }}</span></div>
+</sc-for>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFailed }}" hint-placeholder-val="{{ false }}">
+<section style="border:1px solid #8a4b3f;border-radius:4px;background:#fdf5f2;padding:30px 28px;display:flex;flex-direction:column;gap:14px">
+<div style="width:42px;height:42px;border-radius:50%;border:1.5px solid #8a4b3f;display:flex;align-items:center;justify-content:center;font-size:20px;color:#8a4b3f">!</div>
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0">付款未完成</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">發卡銀行拒絕了這筆交易，沒有任何款項被扣除。你的名額仍保留至 09/14 23:59。</p>
+<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #eddcd5;padding-top:15px;font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d">
+<div style="display:flex;gap:11px"><span style="color:#8a4b3f">—</span><span>確認卡片額度與到期日，或換一張卡再試一次。</span></div>
+<div style="display:flex;gap:11px"><span style="color:#8a4b3f">—</span><span>改用 ATM 轉帳，虛擬帳號會立即發送。</span></div>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:6px">
+<button onClick="{{ goPay }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC';cursor:pointer">重新付款</button>
+<button onClick="{{ goAtm }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 20px;font:400 14px 'Noto Sans TC';cursor:pointer">改用 ATM 轉帳</button>
+</div>
+</section>
+</sc-if>
+
+</main>
+
+<aside style="position:sticky;top:22px;border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:22px;display:flex;flex-direction:column;gap:15px">
+<div style="display:flex;gap:14px;align-items:flex-start">
+<div style="width:64px;height:52px;border-radius:3px;background:#efeade;border:1px solid #ded7c9;flex:none;display:flex;align-items:center;justify-content:center;font:400 9.5px 'Noto Sans TC';color:#9a9487">主視覺</div>
+<div style="min-width:0">
+<div style="font:700 15px/1.45 'Noto Serif TC',serif;text-wrap:pretty">從零開始的木工手作：做一張小板凳</div>
+<div style="font:400 12px 'Noto Sans TC';color:#6c6659;margin-top:3px">陳彥霖 · 台北大同</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #ded7c9;padding-top:14px;font:400 13px/1.5 'Noto Sans TC'">
+<sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+<div style="display:flex;gap:12px"><span style="color:#6c6659;width:58px;flex:none">{{ s.k }}</span><span style="color:#22201c">{{ s.v }}</span></div>
+</sc-for>
+</div>
+<div style="border-top:1px solid #22201c;padding-top:14px;display:flex;justify-content:space-between;align-items:baseline">
+<span style="font:500 13.5px 'Noto Sans TC'">應付金額</span>
+<span style="font:600 28px 'EB Garamond',serif">3,000</span>
+</div>
+<div style="font:400 12px/1.75 'Noto Sans TC';color:#6c6659;border-top:1px solid #ded7c9;padding-top:12px">{{ asideNote }}</div>
+<a href="./StepGo Terms.dc.html" style="font:400 12.5px 'Noto Sans TC'">退費規則 →</a>
+</aside>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;info&quot;,&quot;pay&quot;,&quot;atm&quot;,&quot;done&quot;,&quot;failed&quot;],&quot;default&quot;:&quot;info&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const STEP_ORDER = [
+  { key: "info", num: "1", label: "確認資料" },
+  { key: "pay", num: "2", label: "付款方式" },
+  { key: "wait", num: "3", label: "完成付款" },
+  { key: "done", num: "4", label: "報名成立" }
+];
+
+class Component extends DCLogic {
+  state = { view: null, method: "atm" };
+
+  renderVals() {
+    const view = this.state.view ?? (this.props.view ?? "info");
+    const method = this.state.method;
+    const go = v => () => { this.setState({ view: v }); window.scrollTo(0, 0); };
+
+    const activeIdx = { info: 0, pay: 1, atm: 2, failed: 2, done: 3 }[view];
+    const steps = STEP_ORDER.map((s, i) => {
+      const on = i <= activeIdx, cur = i === activeIdx;
+      return {
+        num: s.num, label: s.label,
+        ring: on ? "#2f5560" : "#ded7c9",
+        bg: cur ? "#2f5560" : "transparent",
+        numFg: cur ? "#fdfbf6" : on ? "#2f5560" : "#7c7668",
+        fg: on ? "#22201c" : "#7c7668",
+        font: (cur ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+        line: i < STEP_ORDER.length - 1 ? (i < activeIdx ? "#2f5560" : "#ded7c9") : "transparent"
+      };
+    });
+
+    const methods = [
+      { k: "atm", name: "ATM 虛擬帳號", speed: "入帳確認約 1 個工作日", desc: "取得專屬虛擬帳號後自行轉帳，系統確認入帳即成立報名。名額保留 3 天。" },
+      { k: "card", name: "信用卡", speed: "即時確認", desc: "付款成功當下報名立即成立，不需等待對帳。支援 VISA、Mastercard、JCB。" }
+    ].map(m => ({
+      ...m,
+      onClick: () => this.setState({ method: m.k }),
+      border: method === m.k ? "#2f5560" : "#ded7c9",
+      bg: method === m.k ? "#f2f6f6" : "#f7f4ee",
+      dotRing: method === m.k ? "#2f5560" : "#c9c2b2",
+      dotBg: method === m.k ? "#2f5560" : "transparent"
+    }));
+
+    return {
+      steps, methods,
+      isInfo: view === "info", isPay: view === "pay", isAtm: view === "atm",
+      isDone: view === "done", isFailed: view === "failed",
+      showCardForm: method === "card",
+      payCta: method === "card" ? "確認付款 NT$ 3,000" : "取得虛擬帳號 →",
+      goInfo: go("info"), goPay: go("pay"), goAtm: go("atm"),
+      submitPay: () => {
+        this.setState(s => ({ view: (s.method === "card" ? "done" : "atm") }));
+        window.scrollTo(0, 0);
+      },
+      simulatePaid: go("done"),
+
+      fields: [
+        { label: "姓名", value: "林郁婷" },
+        { label: "手機", value: "0912-345-458", hasHint: true, hint: "老師臨時異動時會用簡訊通知。" },
+        { label: "Email", value: "yuting.lin@example.com" },
+        { label: "緊急聯絡人（選填）", value: "" }
+      ],
+      cardFields: [
+        { label: "卡號", value: "4123 4567 8901 3092" },
+        { label: "有效期限", value: "09 / 29" },
+        { label: "安全碼", value: "•••" },
+        { label: "持卡人姓名", value: "LIN YU TING" }
+      ],
+      atmInfo: [
+        { k: "銀行", v: "（812）台新國際商業銀行", font: "500 14px 'Noto Sans TC'" },
+        { k: "虛擬帳號", v: "0093 4471 2280", font: "500 17px ui-monospace,Menlo,monospace" },
+        { k: "轉帳金額", v: "NT$ 3,000", font: "600 17px 'EB Garamond',serif" }
+      ],
+      atmSteps: [
+        { title: "虛擬帳號已發送", note: "同一組帳號已寄到你的 Email，也留存在「我的課程」。", dot: "#2f5560", ring: "#2f5560", line: "#2f5560", font: "500 14px 'Noto Sans TC'", fg: "#22201c" },
+        { title: "你完成轉帳", note: "金額須與上方完全一致，跨行轉帳手續費由你的銀行收取。", dot: "#fdfbf6", ring: "#a7622c", line: "#ded7c9", font: "500 14px 'Noto Sans TC'", fg: "#a7622c" },
+        { title: "系統確認入帳", note: "約 1 個工作日。確認後報名自動成立，不需通知老師。", dot: "#fdfbf6", ring: "#ded7c9", line: "#ded7c9", font: "400 14px 'Noto Sans TC'", fg: "#7c7668" },
+        { title: "收到成立通知", note: "Email 與站內通知同時發出，之後可在「我的課程」查看。", dot: "#fdfbf6", ring: "#ded7c9", line: "transparent", font: "400 14px 'Noto Sans TC'", fg: "#7c7668" }
+      ],
+      receipt: [
+        { k: "報名編號", v: "EN-24810" },
+        { k: "課程", v: "從零開始的木工手作：做一張小板凳" },
+        { k: "付款方式", v: method === "card" ? "信用卡 VISA **** 3092" : "ATM 轉帳（812）0093 4471 2280" },
+        { k: "付款金額", v: "NT$ 3,000" },
+        { k: "成立時間", v: method === "card" ? "2026/09/11 15:42（即時）" : "2026/09/12 09:18（入帳確認後）" }
+      ],
+      doneIntro: method === "card"
+        ? "信用卡付款已即時完成，款項由學步代收保管，課程結束後才撥給老師。確認信已寄到 yuting.lin@example.com。"
+        : "系統已確認你的轉帳入帳，報名成立。款項由學步代收保管，課程結束後才撥給老師。確認信已寄到 yuting.lin@example.com。",
+      nextNotes: [
+        "開課前 3 天會收到提醒，含交通方式與當天要帶的東西。",
+        "課程當天請提早 10 分鐘到，工作室有安全講解。",
+        "無法出席可在「我的課程」申請退課，開課前 14 日以上全額退費。"
+      ],
+      summary: [
+        { k: "開課日", v: "2026/10/20（一）" },
+        { k: "時間", v: "每週一 19:00–22:00" },
+        { k: "堂數", v: "4 堂・共 12 小時" },
+        { k: "名額", v: "剩 4 位" }
+      ],
+      asideNote: view === "atm"
+        ? "名額保留至 09/14 23:59，逾期未入帳將自動釋出。"
+        : view === "done"
+        ? "款項由學步代收保管，課程結束後撥給老師。"
+        : "款項先由學步代收，課程成立後才撥給老師。開課前 14 日以上可全額退費。"
+    };
+  }
+}
+
+</script>
+</body>
+</html>

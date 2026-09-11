@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.termsgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,250px);gap:56px;align-items:start}
+@media(max-width:900px){.termsgrid{grid-template-columns:1fr}.termsgrid aside{position:static !important;border-left:none;border-top:1px solid #ded7c9;padding-left:0;padding-top:20px}}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:11px;color:#22201c">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</a>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Courses.dc.html" style="color:#4a463d">課程</a>
+<a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用</a>
+<a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a>
+<a href="./StepGo Terms.dc.html" style="color:#22201c;font-weight:500;border-bottom:1px solid #22201c;padding-bottom:2px">合作條款</a>
+</nav>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</header>
+
+<section style="padding:48px 0 26px;display:flex;flex-direction:column;gap:14px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">Terms &amp; refunds</div>
+<h1 style="font:700 clamp(28px,4vw,40px)/1.3 'Noto Serif TC',serif;margin:0">合作條款與退費政策</h1>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0;max-width:38em;text-wrap:pretty">這頁寫的是錢與責任的分界：誰收錢、誰負責上課、出事的時候誰處理。條款有異動會在生效前 30 天以 Email 與站內通知寄出，已成立的課程適用舊版。</p>
+<div style="display:flex;gap:16px;flex-wrap:wrap;font:400 12.5px 'Noto Sans TC';color:#6c6659;padding-top:4px">
+<span>版本 v2.3</span><span>·</span><span>生效日 2026/09/01</span><span>·</span><a href="#history">歷次修訂</a>
+</div>
+</section>
+
+<div style="display:flex;gap:8px;border-bottom:1px solid #ded7c9;padding-bottom:0;margin-bottom:40px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2">
+<button onClick="{{ t.onClick }}" style="border:none;background:none;cursor:pointer;padding:11px 4px;margin-right:24px;font:{{ t.font }};color:{{ t.fg }};border-bottom:2px solid {{ t.line }}">{{ t.label }}</button>
+</sc-for>
+</div>
+
+<div class="termsgrid" style="padding-bottom:70px">
+
+<main style="min-width:0;display:flex;flex-direction:column;gap:44px">
+<sc-for list="{{ sections }}" as="s" hint-placeholder-count="5">
+<section id="{{ s.id }}" style="display:flex;flex-direction:column;gap:14px;scroll-margin-top:20px">
+<div style="display:flex;align-items:baseline;gap:12px;border-bottom:1px solid #ded7c9;padding-bottom:10px">
+<span style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">{{ s.num }}</span>
+<h2 style="font:700 20px 'Noto Serif TC',serif;margin:0;text-wrap:pretty">{{ s.title }}</h2>
+</div>
+<sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
+<p style="font:400 14.5px/2 'Noto Sans TC';color:#4a463d;margin:0;max-width:40em;text-wrap:pretty">{{ p }}</p>
+</sc-for>
+<sc-if value="{{ s.hasTable }}" hint-placeholder-val="{{ false }}">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden;margin-top:4px;max-width:40em">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;gap:12px;padding:11px 18px;background:#efeade;font:500 12px 'Noto Sans TC';color:#4a463d;letter-spacing:.04em">
+<span>{{ s.table.h1 }}</span><span style="text-align:right">{{ s.table.h2 }}</span><span style="text-align:right">{{ s.table.h3 }}</span>
+</div>
+<sc-for list="{{ s.table.rows }}" as="r" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;gap:12px;padding:12px 18px;border-top:1px solid #ece6da;font:400 14px/1.6 'Noto Sans TC';color:#4a463d">
+<span>{{ r.a }}</span><span style="text-align:right;color:#22201c;font-weight:500">{{ r.b }}</span><span style="text-align:right;color:#6c6659">{{ r.c }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ s.hasList }}" hint-placeholder-val="{{ false }}">
+<ul style="margin:2px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;max-width:40em">
+<sc-for list="{{ s.items }}" as="i" hint-placeholder-count="3">
+<li style="display:flex;gap:11px;font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d"><span style="color:#a7622c;flex:none">—</span><span>{{ i }}</span></li>
+</sc-for>
+</ul>
+</sc-if>
+<sc-if value="{{ s.hasNote }}" hint-placeholder-val="{{ false }}">
+<div style="border-left:2px solid #a7622c;padding:4px 0 4px 16px;font:400 13.5px/1.85 'Noto Sans TC';color:#6c6659;max-width:38em;text-wrap:pretty">{{ s.note }}</div>
+</sc-if>
+</section>
+</sc-for>
+
+<section id="history" style="display:flex;flex-direction:column;gap:12px;scroll-margin-top:20px">
+<div style="border-bottom:1px solid #ded7c9;padding-bottom:10px"><h2 style="font:700 20px 'Noto Serif TC',serif;margin:0">歷次修訂</h2></div>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;font:400 14px/1.8 'Noto Sans TC';padding-bottom:10px;border-bottom:1px solid #ece6da;max-width:40em">
+<span style="font:500 12.5px ui-monospace,Menlo,monospace;color:#a7622c">{{ h.date }}</span>
+<span style="color:#4a463d">{{ h.what }}</span>
+</div>
+</sc-for>
+</section>
+</main>
+
+<aside style="position:sticky;top:20px;display:flex;flex-direction:column;gap:9px;border-left:1px solid #ded7c9;padding-left:22px">
+<span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659;margin-bottom:4px">本頁章節</span>
+<sc-for list="{{ toc }}" as="t" hint-placeholder-count="5">
+<a href="{{ t.href }}" style="font:400 13.5px/1.6 'Noto Sans TC';color:#4a463d">{{ t.label }}</a>
+</sc-for>
+<a href="#history" style="font:400 13.5px/1.6 'Noto Sans TC';color:#4a463d">歷次修訂</a>
+<div style="border-top:1px solid #ded7c9;margin-top:14px;padding-top:14px;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659">
+條款有疑問可直接問貓頭鷹，或寄信到 <a href="#mail">hello@stepgo.tw</a>。
+</div>
+</aside>
+</div>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用試算</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Courses.dc.html" style="color:#4a463d">課程列表</a><a href="./StepGo For Students.dc.html" style="color:#4a463d">給學生</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a><a href="./StepGo Wireframes.dc.html" style="color:#4a463d">線框總覽</a></div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;tab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;teacher&quot;,&quot;student&quot;],&quot;default&quot;:&quot;teacher&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const TEACHER = [
+  { id:"t1", num:"01", title:"平台與老師的關係", paras:[
+    "學步是課程的代收轉付平台，不是課程的主辦方。課程內容、授課品質、場地安排與器材安全由老師負責；報名收款、款項保管、撥款與費用揭露由學步負責。",
+    "老師以自己的名義開課，與學生成立教學契約。學生在課程頁看到的老師姓名、經歷與聯絡方式，須與身分驗證資料一致。"] },
+  { id:"t2", num:"02", title:"身分驗證與撥款帳戶", hasList:true, items:[
+    "開課前須完成人工身分審核，一般於 2 個工作日內完成。",
+    "撥款帳戶戶名必須與註冊姓名完全一致，系統會強制比對，不接受代收帳戶。",
+    "帳戶資料變更後，該筆變更生效前既有的撥款排程會暫停一個週期。"],
+    hasNote:true, note:"驗證未通過者可補件重審；連續兩次未通過，帳號將限制開課功能。" },
+  { id:"t3", num:"03", title:"費用結構", paras:["以下費用在建課頁與每次撥款明細中都會完整列出。平台不收上架費與月費。"],
+    hasTable:true, table:{ h1:"項目", h2:"費率", h3:"計算時機", rows:[
+      { a:"平台服務費", b:"10%", c:"報名成立" },
+      { a:"信用卡金流手續費", b:"2.89%", c:"付款當下" },
+      { a:"ATM 虛擬帳號手續費", b:"15 元／筆", c:"入帳當下" },
+      { a:"撥款轉帳費（同行／跨行）", b:"10／20 元", c:"每次撥款" },
+      { a:"退款處理費", b:"25 元", c:"退款核准" }] },
+    hasNote:true, note:"費率調整將於生效前 30 天通知；已成立的報名沿用舊費率至課程結束。" },
+  { id:"t4", num:"04", title:"撥款週期", paras:[
+    "預設為月結：每月 5 日結算上月已開課完成的報名款，扣除各項費用後於 3 個工作日內匯出。老師可在後台改為課程結束後單筆撥款。",
+    "撥款金額低於 500 元時累計至下一週期，累計超過 6 個月仍未達門檻者，平台將主動全額匯出並免收轉帳費。"] },
+  { id:"t5", num:"05", title:"停課、爭議與終止", hasList:true, items:[
+    "老師因故無法開課，須於開課日 7 日前於後台申請停課，平台將全額退費予學生，服務費同步退回。",
+    "開課日 7 日內停課者，退款處理費由老師負擔。",
+    "學生退課申請由老師於 5 個工作日內回覆；逾期未回覆，系統依課程頁公告的退費規則自動核定。",
+    "雙方無法達成共識時，任一方可申請平台仲裁，仲裁結果為款項處理的最終依據。",
+    "任一方得隨時終止合作，但既有已成立的課程須履行至結束。"] }
+];
+const STUDENT = [
+  { id:"s1", num:"01", title:"報名與付款", paras:[
+    "按下報名後名額即為你保留，尚未成立。完成付款、系統確認入帳，報名才算成立，你會收到 Email 與站內通知。",
+    "信用卡付款即時確認；ATM 轉帳依銀行作業時間，通常 1 個工作日內確認入帳。"],
+    hasNote:true, note:"保留名額有期限，課程頁會標示。逾期未付款，名額自動釋出給候補。" },
+  { id:"s2", num:"02", title:"退費級距", paras:["以下為平台預設級距。老師可在建課時調整，實際規則以該課程頁標示為準，報名前一定看得到。"],
+    hasTable:true, table:{ h1:"申請時間", h2:"退還比例", h3:"處理費", rows:[
+      { a:"開課前 14 日以上", b:"100%", c:"25 元" },
+      { a:"開課前 7–13 日", b:"70%", c:"25 元" },
+      { a:"開課前 1–6 日", b:"30%", c:"25 元" },
+      { a:"開課後", b:"不退費", c:"—" }] } },
+  { id:"s3", num:"03", title:"退課怎麼申請", hasList:true, items:[
+    "在「我的課程」點選退課，填寫原因後送出，進度即時顯示。",
+    "老師須於 5 個工作日內回覆；逾期未回覆，系統依課程退費規則自動核定。",
+    "核准後，信用卡退款約 3–7 個工作日入帳；ATM 退款需提供帳戶資料，約 3 個工作日匯出。",
+    "對老師的決定有疑義，可在通知後 7 日內申請平台仲裁。"] },
+  { id:"s4", num:"04", title:"老師停課或更動", paras:[
+    "老師取消課程時，你會收到通知並獲得全額退費，不扣任何處理費。",
+    "課程時間、地點有重大更動時，你可選擇接受或全額退費，選擇期限為通知後 7 日。"] },
+  { id:"s5", num:"05", title:"你的資料", hasList:true, items:[
+    "報名資料僅提供給該課程的老師，用於聯繫與點名。",
+    "付款資訊由合作金流機構處理，平台不保存完整卡號。",
+    "可隨時在帳號設定申請刪除帳號，交易紀錄依法保存 5 年後銷毀。"] }
+];
+
+class Component extends DCLogic {
+  state = { tab: null };
+  renderVals() {
+    const tab = this.state.tab ?? (this.props.tab ?? "teacher");
+    const mk = (k, label) => ({
+      label,
+      font: (tab === k ? "700" : "400") + " 15px 'Noto Serif TC',serif",
+      fg: tab === k ? "#22201c" : "#6c6659",
+      line: tab === k ? "#22201c" : "transparent",
+      onClick: () => this.setState({ tab: k })
+    });
+    const sections = tab === "teacher" ? TEACHER : STUDENT;
+    return {
+      tabs: [mk("teacher", "老師合作條款"), mk("student", "學生退費政策")],
+      sections,
+      toc: sections.map(s => ({ href: "#" + s.id, label: s.num + " " + s.title })),
+      history: [
+        { date: "2026/09/01", what: "新增跨行撥款轉帳費級距說明；退款處理費由 30 元調整為 25 元。" },
+        { date: "2026/05/12", what: "老師逾期未回覆退課申請時，改由系統自動核定。" },
+        { date: "2026/01/08", what: "首次發布。" }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

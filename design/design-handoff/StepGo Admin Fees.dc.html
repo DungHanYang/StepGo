@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#22201c;text-decoration:underline}a:hover{color:#4a463d}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh;align-items:stretch}
+.side{background:#e3dcd1;color:#2b2822;display:flex;flex-direction:column;gap:4px;padding:20px 13px 24px}
+.side .brand{display:flex;align-items:center;gap:10px;color:#2b2822;padding:4px 8px 18px;flex:none}
+.side .account{margin-top:auto;border-top:1px solid #cfc4b2;padding:14px 0 0 8px;display:flex;align-items:center;gap:9px}
+.pad{padding:22px 30px}
+.feegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.tierrow{display:grid;grid-template-columns:minmax(0,1fr) 90px 90px;gap:12px;align-items:center}
+@media(max-width:1080px){
+ .shell{grid-template-columns:1fr}
+ .side{flex-direction:row;align-items:center;gap:10px;padding:10px 14px;overflow:auto}
+ .side .brand{padding:0 10px 0 0}
+ .side .account{display:none !important}
+ .pad{padding:18px 22px}
+}
+@media(max-width:640px){
+ .pad{padding:15px 16px}
+ .tierrow{grid-template-columns:minmax(0,1fr) 70px 70px;gap:8px}
+}
+</style></helmet>
+
+<div class="shell">
+
+<aside class="side">
+<div class="brand">
+<div style="width:32px;height:32px;border-radius:50%;border:1px solid #bfb29c;background:#d2c6b4;display:flex;align-items:center;justify-content:center;font:700 14px 'Noto Serif TC',serif;flex:none;color:#2b2822">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span style="font:700 14px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9px 'EB Garamond',serif;letter-spacing:.2em;color:#8c7f6c">ADMIN</span>
+</div>
+</div>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a href="{{ n.href }}" style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:{{ n.font }};background:{{ n.bg }};color:{{ n.fg }};flex:none;white-space:nowrap">
+<span style="font:400 12px 'EB Garamond',serif;color:{{ n.dim }};width:14px;flex:none">{{ n.num }}</span>{{ n.label }}
+</a>
+</sc-for>
+<div class="account">
+<div style="width:30px;height:30px;border-radius:50%;background:#d2c6b4;border:1px solid #bfb29c;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;flex:none;color:#2b2822">財</div>
+<div style="display:flex;flex-direction:column;line-height:1.3;min-width:0">
+<span style="font:500 13px 'Noto Sans TC';color:#2b2822">財務／營運</span>
+<span style="font:400 10.5px 'Noto Sans TC';color:#8c7f6c">費率管理權限</span>
+</div>
+</div>
+</aside>
+
+<main style="min-width:0;display:flex;flex-direction:column;background:#f7f4ee">
+
+<header class="pad" style="display:flex;align-items:center;gap:14px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<h1 style="font:700 19px 'Noto Serif TC',serif;margin:0">費用設定</h1>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">影響全站費率，調整需 30 天預告</span>
+</header>
+
+<div class="pad" style="display:flex;flex-direction:column;gap:26px;padding-bottom:60px">
+
+<section style="border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">01</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">平台服務費</h2>
+</div>
+<div style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">目前生效</span>
+<span style="font:600 34px 'EB Garamond',serif">10%</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">自 2026/01/08 生效</span>
+</div>
+<div style="border:1px solid #e2cdb7;background:#fdf7f0;border-radius:4px;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:500 11.5px 'Noto Sans TC';letter-spacing:.08em;color:#a7622c">排定變更</span>
+<span style="font:600 22px 'EB Garamond',serif;color:#22201c">{{ pendingRate }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">將於 {{ pendingDate }} 生效（已於 {{ noticeDate }} 預告，滿 30 天）</span>
+</div>
+<div style="margin-left:auto;display:flex;flex-direction:column;gap:6px;min-width:180px">
+<label style="font:500 12px 'Noto Sans TC';color:#4a463d">新費率（%）</label>
+<input value="{{ draftRate }}" onChange="{{ setDraftRate }}" style="border:1px solid #ded7c9;border-radius:3px;background:#fff;padding:9px 11px;font:500 14px 'EB Garamond',serif;color:#22201c;width:100%;box-sizing:border-box">
+</div>
+</div>
+<button onClick="{{ schedule }}" style="align-self:flex-start;border:1px solid #22201c;background:#22201c;color:#fff;border-radius:3px;padding:11px 20px;font:500 13.5px 'Noto Sans TC';cursor:pointer">排定變更（30 天後生效）</button>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">依合作條款 §03，費率調整須於生效前 30 天以 Email 與站內通知老師；已成立的報名沿用生效當時的費率至課程結束。</p>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">02</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">撥款轉帳費 / 退款處理費</h2>
+</div>
+<div class="feegrid">
+<sc-for list="{{ flatFees }}" as="f" hint-placeholder-count="3">
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:16px 17px;display:flex;flex-direction:column;gap:7px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<div style="display:flex;align-items:baseline;gap:8px">
+<input value="{{ f.value }}" onChange="{{ f.onChange }}" style="border:1px solid #ded7c9;border-radius:3px;background:#fff;padding:7px 9px;font:500 16px 'EB Garamond',serif;color:#22201c;width:70px;box-sizing:border-box">
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">元</span>
+</div>
+<span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659">{{ f.note }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">03</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">金流手續費（顯示文案）</h2>
+<span style="margin-left:auto;font:400 12px 'Noto Sans TC';color:#6c6659">實際費率由金流商收取，這裡只能編輯對外顯示的文字</span>
+</div>
+<div class="feegrid">
+<sc-for list="{{ gatewayCopy }}" as="g" hint-placeholder-count="2">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ g.label }}</span>
+<input value="{{ g.value }}" onChange="{{ g.onChange }}" style="border:1px solid #ded7c9;border-radius:3px;background:#fff;padding:9px 11px;font:400 13.5px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+</label>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">04</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">退費規則平台底線</h2>
+<span style="margin-left:auto;font:400 12px 'Noto Sans TC';color:#6c6659">老師開課時可調整天數門檔，退費比例不得低於此底線</span>
+</div>
+<div class="tierrow" style="font:500 11px 'Noto Sans TC';color:#6c6659;letter-spacing:.04em;padding-bottom:2px">
+<span>天數門檔</span><span style="text-align:right">底線 %</span><span></span>
+</div>
+<sc-for list="{{ floors }}" as="t" hint-placeholder-count="4">
+<div class="tierrow" style="padding-bottom:10px;border-bottom:1px solid #ece6da">
+<span style="font:400 14px 'Noto Sans TC';color:#4a463d">{{ t.when }}</span>
+<input value="{{ t.value }}" onChange="{{ t.onChange }}" style="border:1px solid #ded7c9;border-radius:3px;background:#fff;padding:7px 9px;font:500 14px 'EB Garamond',serif;color:#22201c;text-align:right;width:100%;box-sizing:border-box">
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659;text-align:right">%</span>
+</div>
+</sc-for>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">底線依開課前金流手續費、平台服務費等已產生的系統成本估算；用於「建立課程」頁攔阻老師把退費比例設得比底線更低。</p>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:12px"><h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">變更紀錄</h2></div>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:104px minmax(0,1fr);gap:16px;font:400 13.5px/1.8 'Noto Sans TC';padding-bottom:10px;border-bottom:1px solid #ece6da">
+<span style="font:500 12.5px ui-monospace,Menlo,monospace;color:#a7622c">{{ h.date }}</span>
+<span style="color:#4a463d">{{ h.what }}</span>
+</div>
+</sc-for>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const NAV = [
+  { num: "01", label: "金流總覽", href: "./StepGo Admin Cashflow.dc.html" },
+  { num: "02", label: "費用設定", href: "#", active: true },
+  { num: "03", label: "老師與課程", href: "./StepGo Admin Directory.dc.html" },
+  { num: "04", label: "帳號與權限", href: "./StepGo Admin Accounts.dc.html" },
+  { num: "05", label: "仲裁案件", href: "./StepGo Arbitration.dc.html" },
+  { num: "06", label: "帳戶審核", href: "./StepGo Teacher Verification.dc.html" },
+  { num: "07", label: "操作日誌", href: "./StepGo Admin Audit Log.dc.html" }
+];
+
+class Component extends DCLogic {
+  state = {
+    draftRate: "12", pendingRate: 12, transfer1: 10, transfer2: 20, refundFee: 25,
+    creditCopy: "2.75%–2.89%", atmCopy: "約 1%（最低 15 元）",
+    floor1: 100, floor2: 50, floor3: 15
+  };
+  renderVals() {
+    const s = this.state;
+    const set = k => e => this.setState({ [k]: e.target.value });
+    return {
+      nav: NAV.map(n => ({
+        ...n,
+        font: (n.active ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+        bg: n.active ? "#d2c6b4" : "transparent",
+        fg: n.active ? "#22201c" : "#5c5347",
+        dim: n.active ? "#a7622c" : "#a89a84"
+      })),
+      pendingRate: s.pendingRate + "%", pendingDate: "2026/10/11", noticeDate: "2026/09/11",
+      draftRate: s.draftRate, setDraftRate: set("draftRate"),
+      schedule: () => this.setState({ pendingRate: Number(s.draftRate) || s.pendingRate }),
+      flatFees: [
+        { label: "撥款轉帳費（同行）", value: s.transfer1, onChange: set("transfer1"), note: "每次撥款批次收一筆" },
+        { label: "撥款轉帳費（跨行）", value: s.transfer2, onChange: set("transfer2"), note: "每次撥款批次收一筆" },
+        { label: "退款處理費", value: s.refundFee, onChange: set("refundFee"), note: "退款核准時由退款金額扣除" }
+      ],
+      gatewayCopy: [
+        { label: "信用卡手續費說明文案", value: s.creditCopy, onChange: set("creditCopy") },
+        { label: "ATM 手續費說明文案", value: s.atmCopy, onChange: set("atmCopy") }
+      ],
+      floors: [
+        { when: "開課前 14 日以上", value: s.floor1, onChange: set("floor1") },
+        { when: "開課前 7–13 日", value: s.floor2, onChange: set("floor2") },
+        { when: "開課前 1–6 日", value: s.floor3, onChange: set("floor3") },
+        { when: "開課後", value: 0, onChange: () => {} }
+      ],
+      history: [
+        { date: "2026/09/11", what: "排定平台服務費由 10% 調整為 12%，將於 2026/10/11 生效。" },
+        { date: "2026/05/12", what: "退款處理費由 30 元調整為 25 元。" },
+        { date: "2026/01/08", what: "首次設定：平台服務費 10%，同行撥款 10 元／跨行 20 元。" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

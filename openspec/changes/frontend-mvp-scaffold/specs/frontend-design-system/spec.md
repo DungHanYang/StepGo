@@ -1,0 +1,38 @@
+## Purpose
+
+提供 StepGo 四個前端應用（行銷網站、老師後台、學生後台、管理者後台）共用的設計代幣與核心 UI 元件庫，確保視覺語言、狀態語意與響應式行為在整個平台上一致。
+
+## ADDED Requirements
+
+### Requirement: 設計代幣集中管理
+系統 SHALL 將色彩、字體、邊框、圓角、間距等設計代幣定義在共用的 Tailwind preset（`packages/ui`）中，供四個應用 extend 使用；任何應用層元件不得直接寫入色碼字面值（hex literal）或自訂字體名稱字串。
+
+#### Scenario: 新元件必須引用共用代幣
+- **WHEN** 開發者在任一應用中建立新的 UI 元件並需要設定文字顏色或背景色
+- **THEN** 該元件必須使用 `packages/ui` 提供的 Tailwind theme class 或 CSS variable，程式碼審查時發現色碼字面值視為未通過
+
+#### Scenario: 老師端與學生端主色一致對應角色
+- **WHEN** 老師後台介面渲染主要互動元件（按鈕、選中狀態）
+- **THEN** 元件使用赭石色系代幣（含 hover 深色）；學生後台的對應元件使用深青色系代幣，兩者皆來自同一份共用 token 定義，不在各自應用內另行定義相近色碼
+
+### Requirement: 核心元件庫涵蓋跨應用共用元件
+系統 SHALL 在 `packages/ui` 提供 Button、Card、Table、StatusTag、StepIndicator、OwlTip（提示框）、Wizard（多步驟表單容器）等元件，並提供對應的 TypeScript 型別定義。
+
+#### Scenario: 老師端與學生端共用同一顆訂單狀態標籤
+- **WHEN** 老師後台顯示某筆訂單的付款狀態為「已付款」，且學生後台同時顯示同一筆訂單的付款狀態
+- **THEN** 兩處畫面皆使用 `packages/ui` 的 `StatusTag` 元件渲染，顏色與文字語意相同，不得各自實作不同的狀態標籤樣式
+
+#### Scenario: 多步驟流程共用 StepIndicator
+- **WHEN** 老師建立課程精靈（4 步驟）或學生報名付款流程（3 步驟）需要顯示目前所在步驟
+- **THEN** 兩處皆使用共用的 `StepIndicator` 元件，僅傳入步驟數量與目前步驟索引作為參數
+
+### Requirement: 響應式斷點跨應用一致
+系統 SHALL 定義兩組響應式斷點常數並供四個應用共用：系統頁（含側邊選單版面，適用老師/學生/管理者後台）斷點為 1080px 與 980px；行銷頁（適用行銷網站）斷點為 900px 與 640px。
+
+#### Scenario: 系統頁側邊選單在窄螢幕收合為橫向列
+- **WHEN** 任一系統頁面（老師/學生/管理者後台）視窗寬度縮小至 980px 以下
+- **THEN** 側邊選單版面必須改為橫向列顯示，且側邊選單容器不得以 inline style 設定 `flex-direction`（避免行內樣式蓋掉媒體查詢的版面切換）
+
+#### Scenario: 行銷頁在手機寬度維持可讀版面
+- **WHEN** 行銷網站任一頁面視窗寬度縮小至 640px 以下
+- **THEN** 頁面版面依行銷頁斷點規則重新排列（單欄化），且不得出現水平捲動

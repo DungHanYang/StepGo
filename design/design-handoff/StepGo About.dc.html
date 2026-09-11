@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.split1{display:grid;grid-template-columns:minmax(260px,0.85fr) minmax(0,1.15fr);gap:52px;align-items:center}
+.split2{display:grid;grid-template-columns:minmax(220px,0.7fr) minmax(0,1.3fr);gap:44px}
+@media(max-width:860px){.split1,.split2{grid-template-columns:1fr}}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:11px;color:#22201c">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</a>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Courses.dc.html" style="color:#4a463d">課程</a>
+<a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用</a>
+<a href="./StepGo About.dc.html" style="color:#22201c;font-weight:500;border-bottom:1px solid #22201c;padding-bottom:2px">關於學步</a>
+<a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a>
+</nav>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</header>
+
+<section class="split1" style="padding:62px 0 58px">
+<image-slot id="about-hero" shape="rect" fit="contain" style="width:100%;height:330px" placeholder="孩子戴著大人的帽子學走路（透明背景 PNG）"></image-slot>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:12px;color:#6c6659;font:400 11px 'Noto Sans TC';letter-spacing:.3em">ABOUT<span style="width:34px;height:1px;background:#ded7c9;display:block"></span></div>
+<h1 style="font:700 clamp(28px,4.2vw,44px)/1.28 'Noto Serif TC',serif;margin:0;text-wrap:pretty">名字叫學步，<br>因為第一堂課最難開</h1>
+<p style="font:400 italic 18px/1.55 'EB Garamond',serif;color:#6c6659;margin:0">Learning to walk — with the money part already figured out.</p>
+<p style="font:400 15.5px/1.95 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em;text-wrap:pretty">學步的識別是一個戴著大人帽子的孩子，正在學走路。帽子太大、步伐不穩，但方向是對的。第一次開課的老師差不多是這個樣子：會教，但不知道錢要怎麼收、手續費算在誰頭上、學生退課該怎麼辦。</p>
+</div>
+</section>
+
+<section class="split2" style="border-top:1px solid #ded7c9;padding:52px 0">
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0">我們在解的事</h2>
+<div style="display:flex;flex-direction:column;gap:26px;max-width:38em">
+<p style="font:400 15px/2 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">獨立開課的老師通常自己收款：報名表填一填，轉帳到私人帳戶，用訊息一筆一筆對。課開得少的時候還行，一旦同時有三班、每班二十人，對帳就吃掉備課的時間。更常見的狀況是，老師其實不知道自己實際賺多少——金流手續費、退款成本、轉帳費用散在不同地方。</p>
+<p style="font:400 15px/2 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">學步做的是代收轉付：學生的錢先進平台，課程成立後依約定週期撥給老師，每一筆都附上完整扣除明細。老師在定價的那一刻就知道實拿多少，不會等到撥款通知才發現數字對不上。</p>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:30px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">三件我們不讓步的事</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Principles</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:34px">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">01</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">費用永遠先講</h3>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">註冊、建課、報名成立、每次撥款，四個時機都完整揭露成本。費率調整提前 30 天通知，已成立的課程不溯及既往。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">02</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">錢的動向可查</h3>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">每筆報名、退款、撥款都有獨立編號與時間戳，老師與學生看到的是同一份紀錄。報表免費匯出，離開平台也帶得走。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">03</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">爭議有人接手</h3>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">退課先由老師處理；談不成可升級平台仲裁，老師逾期未回應則由系統依課程規則自動裁定。</p>
+</div>
+</div>
+</section>
+
+<section class="split2" style="border-top:1px solid #ded7c9;padding:52px 0">
+<div>
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0 0 10px">平台怎麼賺錢</h2>
+<p style="font:400 13px/1.8 'Noto Sans TC';color:#6c6659;margin:0">沒有上架費、沒有月費。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:0;max-width:40em">
+<sc-for list="{{ costs }}" as="c" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:baseline;padding:14px 0;border-bottom:1px solid #ece6da">
+<div>
+<div style="font:500 15px/1.5 'Noto Sans TC';color:#22201c">{{ c.name }}</div>
+<div style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659">{{ c.note }}</div>
+</div>
+<div style="font:600 17px 'EB Garamond',serif;color:#22201c;white-space:nowrap">{{ c.rate }}</div>
+</div>
+</sc-for>
+<a href="./StepGo Fee Calculator.dc.html" style="margin-top:20px;align-self:flex-start;border:1px solid #22201c;color:#22201c;border-radius:3px;padding:11px 18px;font-size:13.5px;font-weight:500">用試算工具算你的課 →</a>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px;align-items:center">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">The owl</div>
+<h2 style="font:700 24px/1.4 'Noto Serif TC',serif;margin:0;text-wrap:pretty">貓頭鷹是那個會回答問題的人</h2>
+<p style="font:400 15px/1.9 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">站上每一頁的右下角都有牠。牠不是聊天機器人的裝飾，是把「這一步會扣多少錢、下一步會發生什麼」講清楚的地方。第一次開課的老師最常問的三個問題，牠都會直接帶你走一遍。</p>
+</div>
+<image-slot id="about-owl" shape="rect" fit="contain" style="width:100%;height:250px" placeholder="貓頭鷹插畫（透明背景 PNG）"></image-slot>
+</section>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用試算</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Courses.dc.html" style="color:#4a463d">課程列表</a><a href="./StepGo For Students.dc.html" style="color:#4a463d">給學生</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a><a href="./StepGo Wireframes.dc.html" style="color:#4a463d">線框總覽</a></div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      costs: [
+        { name: "平台服務費", note: "報名成立時計算，退款時等比退回", rate: "10%" },
+        { name: "金流手續費", note: "信用卡 2.89%；ATM 虛擬帳號每筆 15 元", rate: "實支實付" },
+        { name: "撥款轉帳費", note: "同行 10 元、跨行 20 元，每次撥款一筆", rate: "10–20 元" },
+        { name: "退款處理費", note: "學生成功退課時由退款金額扣除", rate: "25 元" }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

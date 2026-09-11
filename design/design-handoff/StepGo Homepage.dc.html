@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</div>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Courses.dc.html" style="color:#4a463d">課程</a>
+<a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用</a>
+<a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a>
+<a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a>
+</nav>
+<div style="display:flex;align-items:center;gap:14px;font-size:12.5px;color:#6c6659">
+<span style="display:flex;gap:6px"><span style="color:#22201c;font-weight:500">繁中</span><span>·</span><span>EN</span></span>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</div>
+</header>
+
+<section style="display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;gap:22px;padding:64px 0 54px;position:relative">
+<div style="display:flex;align-items:center;gap:14px;color:#6c6659;font:400 11px 'Noto Sans TC';letter-spacing:.3em">
+<span style="width:34px;height:1px;background:#ded7c9;display:block"></span>EST. 2026<span style="width:34px;height:1px;background:#ded7c9;display:block"></span>
+</div>
+<img src="./assets/homepage-hero-figure.png" alt="學步人物插畫" style="width:236px;height:300px;object-fit:cover;object-position:top center;border-radius:3px">
+<h1 style="font:700 clamp(34px,5vw,54px)/1.24 'Noto Serif TC',serif;margin:0;max-width:15em;text-wrap:pretty">一步一步，<br>把課開起來</h1>
+<p style="font:400 italic 19px/1.5 'EB Garamond',serif;color:#6c6659;margin:0;letter-spacing:.01em">One step at a time — you teach, we handle the money.</p>
+<p style="font:400 15.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em;text-wrap:pretty">老師專心教，報名、金流、對帳與撥款交給學步。所有手續費在你定價的那一刻就算得清楚，沒有事後才知道的扣款。</p>
+</section>
+
+<sc-if value="{{ showFeeCalc }}" hint-placeholder-val="{{ false }}">
+<section style="border:1px solid #ded7c9;background:#fdfbf6;border-radius:4px;padding:22px 26px;display:flex;flex-wrap:wrap;align-items:center;gap:26px;margin-bottom:54px">
+<div style="flex:1 1 220px;min-width:0">
+<div style="font:700 15px 'Noto Serif TC',serif;margin-bottom:6px">先算給你看</div>
+<p style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659;margin:0">課程 3,000 元、信用卡付款、平台服務費 10%</p>
+</div>
+<div style="display:flex;gap:20px;flex-wrap:wrap;font:400 12.5px/1.9 ui-monospace,Menlo,monospace;color:#6c6659">
+<div>學生付款<br><span style="color:#22201c">3,000</span></div>
+<div>金流 2.89%<br><span style="color:#22201c">−87</span></div>
+<div>平台服務費<br><span style="color:#22201c">−300</span></div>
+<div>撥款轉帳<br><span style="color:#22201c">−20</span></div>
+</div>
+<div style="border-left:1px solid #ded7c9;padding-left:22px">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">你實收</div>
+<div style="font:600 30px 'EB Garamond',serif;color:#22201c">2,593</div>
+</div>
+<a href="./StepGo Fee Calculator.dc.html" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:10px 18px;font-size:13.5px;font-weight:500">完整試算工具 →</a>
+</section>
+</sc-if>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;padding-bottom:64px">
+<div style="border:1px solid #22201c;border-radius:4px;padding:28px;display:flex;flex-direction:column;gap:16px;background:#fdfbf6">
+<img src="./assets/teacher-illustration.png" alt="老師插畫" style="width:100%;height:120px;object-fit:contain">
+<div>
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase;margin-bottom:7px">For teachers</div>
+<h2 style="font:700 25px/1.3 'Noto Serif TC',serif;margin:0 0 10px">我是老師</h2>
+<p style="font:400 14.5px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">輕量身分驗證通過就能開課。自己決定收 ATM、信用卡或兩者都收，定價時就看得到實拿金額。</p>
+</div>
+<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font:400 13.5px/1.6 'Noto Sans TC';color:#6c6659;border-top:1px solid #ded7c9;padding-top:14px">
+<li style="display:flex;gap:9px"><span style="color:#a7622c">—</span>四層成本逐筆記錄，報表免費匯出</li>
+<li style="display:flex;gap:9px"><span style="color:#a7622c">—</span>月結撥款，每次附完整扣除明細</li>
+<li style="display:flex;gap:9px"><span style="color:#a7622c">—</span>退課爭議可升級平台仲裁</li>
+</ul>
+<a href="./StepGo For Teachers.dc.html" style="margin-top:auto;background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 18px;text-align:center;font-size:14px;font-weight:500">開始開課 →</a>
+</div>
+<div style="border:1px solid #22201c;border-radius:4px;padding:28px;display:flex;flex-direction:column;gap:16px;background:#fdfbf6">
+<img src="./assets/students-illustration.png" alt="學生插畫" style="width:100%;height:120px;object-fit:contain">
+<div>
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase;margin-bottom:7px">For students</div>
+<h2 style="font:700 25px/1.3 'Noto Serif TC',serif;margin:0 0 10px">我是學生</h2>
+<p style="font:400 14.5px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">找到課、付款、上課。繳費期限、開課時間與退費規則都寫在報名前，不用自己記。</p>
+</div>
+<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font:400 13.5px/1.6 'Noto Sans TC';color:#6c6659;border-top:1px solid #ded7c9;padding-top:14px">
+<li style="display:flex;gap:9px"><span style="color:#2f5560">—</span>ATM 或信用卡，看課程開放哪種</li>
+<li style="display:flex;gap:9px"><span style="color:#2f5560">—</span>Email 與站內通知保底，可加綁 LINE</li>
+<li style="display:flex;gap:9px"><span style="color:#2f5560">—</span>退課線上申請，進度看得到</li>
+</ul>
+<a href="./StepGo Courses.dc.html" style="margin-top:auto;border:1px solid #22201c;color:#22201c;border-radius:3px;padding:13px 18px;text-align:center;font-size:14px;font-weight:500">找課程 →</a>
+</div>
+</section>
+
+<sc-if value="{{ showCourses }}" hint-placeholder-val="{{ true }}">
+<section id="courses" style="padding-bottom:64px">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #ded7c9;padding-bottom:12px;margin-bottom:24px">
+<h2 style="font:700 21px 'Noto Serif TC',serif;margin:0">正在招生</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Open for enrolment</span>
+<a href="./StepGo Courses.dc.html" style="margin-left:auto;font-size:13.5px">全部課程 →</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px">
+<sc-for list="{{ courses }}" as="c" hint-placeholder-count="3">
+<article style="display:flex;flex-direction:column;gap:12px">
+<image-slot id="{{ c.slotId }}" shape="rounded" radius="3" style="width:100%;height:150px" placeholder="課程主視覺"></image-slot>
+<div style="display:flex;gap:8px;font:400 11px 'Noto Sans TC';color:#6c6659;letter-spacing:.08em">
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:2px 7px">{{ c.pay }}</span>
+<span style="padding:2px 0">{{ c.date }}</span>
+</div>
+<h3 style="font:700 17px/1.45 'Noto Serif TC',serif;margin:0;text-wrap:pretty">{{ c.title }}</h3>
+<p style="font:400 13.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">{{ c.teacher }}</p>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:auto;padding-top:6px;border-top:1px solid #ded7c9">
+<span style="font:600 20px 'EB Garamond',serif">{{ c.price }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ c.seats }}</span>
+</div>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<section id="fees" style="border-top:1px solid #ded7c9;border-bottom:1px solid #ded7c9;padding:52px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:34px">
+<div style="grid-column:1/-1;display:flex;align-items:baseline;gap:14px">
+<h2 style="font:700 21px 'Noto Serif TC',serif;margin:0">為什麼老師敢把錢交給我們</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Why teachers trust us</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">01</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">身分驗證的老師</h3>
+<p style="font:400 14px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">老師需通過人工審核，撥款帳戶戶名必須與註冊姓名一致，系統強制比對。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">02</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">費用揭露四個時機</h3>
+<p style="font:400 14px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">註冊、建課、報名成立、每次撥款都完整說明成本。費率調整提前 30 天通知，不溯及既往。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">03</div>
+<h3 style="font:700 17px 'Noto Serif TC',serif;margin:0">退課有第三方仲裁</h3>
+<p style="font:400 14px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">學生與老師談不成，可升級平台仲裁；老師逾期未回應，系統自動接手處理。</p>
+</div>
+</section>
+
+<section id="about" style="padding:56px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:40px;align-items:center">
+<image-slot id="sg-about" shape="rect" fit="contain" style="width:100%;height:260px" placeholder="仿古紙構圖：人物與貓頭鷹"></image-slot>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">About StepGo</div>
+<h2 style="font:700 clamp(24px,3vw,32px)/1.35 'Noto Serif TC',serif;margin:0;text-wrap:pretty">名字叫學步，因為第一堂課最難開</h2>
+<p style="font:400 15px/1.9 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">戴著大人帽子的孩子，正在學走路。學步的角色是把開課路上會跌倒的地方鋪平：金流怎麼收、手續費怎麼算、錢什麼時候到、退課怎麼處理。</p>
+<a href="./StepGo About.dc.html" style="font-size:14px;font-weight:500">讀品牌故事 →</a>
+</div>
+</section>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用試算</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Courses.dc.html" style="color:#4a463d">課程列表</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="#arch" style="color:#4a463d">系統架構</a><a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a></div>
+</footer>
+</div>
+
+<sc-if value="{{ showOwl }}" hint-placeholder-val="{{ true }}">
+<div style="position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:50">
+<sc-if value="{{ owlOpen }}" hint-placeholder-val="{{ false }}">
+<div style="width:266px;background:#fdfbf6;border:1px solid #22201c;border-radius:4px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(34,32,28,.13)">
+<div style="font:700 13.5px 'Noto Serif TC',serif">第一次開課？我帶你走一遍。</div>
+<p style="font:400 13px/1.75 'Noto Sans TC';color:#4a463d;margin:0">從身分驗證到第一筆入帳，四個步驟。中間任何一步的費用我都會先講清楚。</p>
+<div style="display:flex;flex-direction:column;gap:7px;border-top:1px solid #ded7c9;padding-top:10px;font-size:13px">
+<a href="./StepGo For Teachers.dc.html" style="color:#a7622c">開課流程怎麼走</a>
+<a href="./StepGo Fee Calculator.dc.html" style="color:#a7622c">手續費怎麼算</a>
+<a href="./StepGo Terms.dc.html" style="color:#a7622c">退課規則是什麼</a>
+</div>
+</div>
+</sc-if>
+<button onClick="{{ toggleOwl }}" onMouseEnter="{{ openOwl }}" onMouseLeave="{{ closeOwl }}" style="display:flex;align-items:center;gap:9px;background:#fdfbf6;border:1px solid #22201c;border-radius:99px;padding:8px 15px 8px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';color:#22201c;box-shadow:0 4px 14px rgba(34,32,28,.1)" style-hover="background:#f2ece0">
+<img src="./assets/owl-icon.png" alt="貓頭鷹" style="width:32px;height:32px;border-radius:50%;border:1px solid #22201c;object-fit:cover;flex:none">
+<span>{{ owlLabel }}</span>
+</button>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showOwl&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;內容&quot;},&quot;showCourses&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;內容&quot;},&quot;showFeeCalc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;內容&quot;}}">
+class Component extends DCLogic {
+  state = { owlOpen: false };
+  renderVals() {
+    return {
+      showOwl: this.props.showOwl ?? true,
+      showCourses: this.props.showCourses ?? true,
+      showFeeCalc: this.props.showFeeCalc ?? false,
+      owlOpen: this.state.owlOpen,
+      owlLabel: this.state.owlOpen ? "先不用，謝謝" : "有問題問貓頭鷹",
+      toggleOwl: () => this.setState(s => ({ owlOpen: !s.owlOpen })),
+      openOwl: () => this.setState({ owlOpen: true }),
+      closeOwl: () => this.setState({ owlOpen: false }),
+      courses: [
+        { slotId: "sg-course-1", title: "從零開始的木工手作：做一張小板凳", teacher: "陳彥霖", pay: "ATM · 信用卡", date: "10/20 開課", price: "3,000", seats: "剩 4 位" },
+        { slotId: "sg-course-2", title: "給上班族的鋼筆字練習課", teacher: "林思如", pay: "信用卡", date: "10/26 開課", price: "1,800", seats: "剩 9 位" },
+        { slotId: "sg-course-3", title: "手沖咖啡入門：從磨豆到萃取", teacher: "黃柏睿", pay: "ATM · 信用卡", date: "11/02 開課", price: "2,400", seats: "剩 2 位" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

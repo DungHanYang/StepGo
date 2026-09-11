@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet"><style>body{margin:0;background:#f0eee9;font-family:"Noto Sans TC",system-ui,sans-serif}a{color:#c2703a}a:hover{color:#96522a}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 "Noto Sans TC",sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 "Noto Sans TC",sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.6 "Noto Sans TC",sans-serif;color:rgba(0,0,0,.5)}
+.wf-nav{display:flex;gap:14px;align-items:center;padding:11px 16px;border-bottom:1px dashed #c6c1b7;font-size:11px;color:#6b665e}
+.wf-sec{padding:18px 16px;border-bottom:1px dashed #ddd9d2;display:flex;flex-direction:column;gap:10px}
+.wf-box{border:1px dashed #b9b4aa;background:repeating-linear-gradient(45deg,#f5f3ef,#f5f3ef 5px,#ebe8e2 5px,#ebe8e2 10px);display:flex;align-items:center;justify-content:center;font:10px/1.4 ui-monospace,Menlo,monospace;color:#8a857c;text-align:center;padding:6px;border-radius:3px}
+.wf-h{font:700 17px/1.3 "Noto Serif TC",serif;color:#1a1a1a;margin:0}
+.wf-sub{font:400 11px/1.55 "Noto Sans TC",sans-serif;color:#6b665e;margin:0}
+.wf-line{height:7px;background:#e4e1da;border-radius:2px}
+.wf-btn{border:1.5px solid #1a1a1a;border-radius:4px;padding:7px 11px;font:600 11px "Noto Sans TC",sans-serif;text-align:center;color:#1a1a1a}
+.wf-btn2{border:1.5px solid #c6c1b7;border-radius:4px;padding:7px 11px;font:500 11px "Noto Sans TC",sans-serif;text-align:center;color:#6b665e}
+.wf-tag{font:9px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#a8a29a;text-transform:uppercase}
+.wf-owl{border:1.5px solid #c2703a;color:#a2582c;background:#fdf6f0;border-radius:4px;padding:8px 10px;font:400 10.5px/1.5 "Noto Sans TC",sans-serif;display:flex;gap:8px}
+.wf-node{border:1.5px solid #1a1a1a;border-radius:4px;padding:8px 10px;font:600 11px "Noto Sans TC",sans-serif;background:#fff}
+.wf-node2{border:1px solid #c6c1b7;border-radius:4px;padding:7px 10px;font:400 11px "Noto Sans TC",sans-serif;color:#4a463f;background:#fbfaf8}
+.wf-col{display:flex;flex-direction:column;gap:7px}</style></helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">產品介面：老師後台與報名付款流程（首頁採 <a class="dv-oid" href="#1b">1b</a> 雙入口）</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>老師後台總覽</div>
+<div class="dv-card" style="width:560px">
+<div class="wf-nav"><div class="wf-box" style="width:24px;height:24px;border-radius:50%">logo</div><span style="font-weight:700;color:#1a1a1a">老師後台</span><span style="margin-left:auto;border:1px solid #c6c1b7;border-radius:99px;padding:2px 8px;font-size:10px">已認證</span><span>王老師</span></div>
+<div style="display:flex">
+<div class="wf-col" style="width:132px;flex:none;padding:14px 12px;border-right:1px dashed #ddd9d2;gap:5px">
+<span class="wf-tag">選單</span>
+<div class="wf-node" style="padding:6px 9px">總覽</div>
+<div class="wf-node2">我的課程</div>
+<div class="wf-node2">學生名單</div>
+<div class="wf-node2">收入報表</div>
+<div class="wf-node2">撥款紀錄</div>
+<div class="wf-node2" style="display:flex;justify-content:space-between;gap:6px">退課工單<span style="color:#c2703a;font-weight:700">2</span></div>
+<div class="wf-node2">帳戶與條款</div>
+</div>
+<div style="flex:1">
+<div class="wf-sec">
+<span class="wf-tag">待辦優先（SLA 倒數排最前）</span>
+<div class="wf-owl"><span style="font-weight:700;flex:none">!</span><span>2 張退課工單待審核，最快剩 1 天 4 小時未回應將自動升級平台仲裁。</span></div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">本期收入總覽</span>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+<div class="wf-box" style="height:54px">報名筆數</div><div class="wf-box" style="height:54px">總營收<br>（毛額）</div><div class="wf-box" style="height:54px">總扣除<br>成本</div><div style="border:1.5px solid #1a1a1a;border-radius:4px;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font:9px ui-monospace;color:#8a857c">應收淨額</span><span style="font:700 15px 'Noto Serif TC',serif">2,593</span></div>
+</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">下次撥款</span>
+<div style="border:1px dashed #b9b4aa;border-radius:4px;padding:11px;display:flex;flex-direction:column;gap:6px;background:#fbfaf8">
+<div style="font:700 11.5px 'Noto Sans TC'">月結 · 10/31　狀態：可撥款 8 筆</div>
+<div style="font:400 10.5px/1.5 ui-monospace,monospace;color:#6b665e">訂單淨額加總 X − 轉帳手續費 Y = 實收 Z</div>
+<div style="display:flex;gap:8px"><div class="wf-btn2" style="flex:1">看涵蓋訂單</div><div class="wf-btn2" style="flex:1">匯出 CSV（免費）</div></div>
+</div>
+</div>
+<div class="wf-sec" style="border-bottom:none">
+<span class="wf-tag">近期訂單（表格）</span>
+<div class="wf-box" style="height:70px">訂單編號 · 學生 · 課程 · 付款方式 · 原價 · 金流費 · 平台費 · 付款狀態 · 撥款狀態</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>建立課程：付款方式 + 即時試算同屏</div>
+<div class="dv-card" style="width:420px">
+<div class="wf-nav"><span>← 我的課程</span><span style="font-weight:700;color:#1a1a1a;margin-left:auto">建立課程</span><span style="margin-left:auto">儲存草稿</span></div>
+<div class="wf-sec"><span class="wf-tag">步驟指示</span><div style="display:flex;gap:6px;font:10px ui-monospace;color:#8a857c"><span style="color:#1a1a1a;font-weight:700">1 基本資料</span><span>›</span><span>2 定價與付款</span><span>›</span><span>3 退費規則</span><span>›</span><span>4 招生頁</span></div></div>
+<div class="wf-sec">
+<span class="wf-tag">2 定價與付款</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;width:52px">售價</span><div class="wf-box" style="flex:1;height:28px;background:#fff">3,000</div></div>
+<span class="wf-tag" style="margin-top:4px">接受的付款方式（可複選）</span>
+<div style="display:flex;gap:8px">
+<div style="flex:1;border:1.5px solid #1a1a1a;border-radius:4px;padding:9px;display:flex;flex-direction:column;gap:4px"><div style="font:700 11px 'Noto Sans TC'">☑ ATM 虛擬帳號</div><div style="font:10px/1.4 'Noto Sans TC';color:#6b665e">約 1%（最低 15 元）<br>到帳較慢，有繳費期限</div></div>
+<div style="flex:1;border:1.5px solid #1a1a1a;border-radius:4px;padding:9px;display:flex;flex-direction:column;gap:4px"><div style="font:700 11px 'Noto Sans TC'">☑ 信用卡</div><div style="font:10px/1.4 'Noto Sans TC';color:#6b665e">2.75–2.89%<br>一鍵完成，轉換率高</div></div>
+</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">即時試算（黏著在畫面右側／下緣）</span>
+<div style="border:1.5px solid #1a1a1a;border-radius:5px;padding:11px;background:#fbfaf8;display:flex;flex-direction:column;gap:6px">
+<div style="font:9px ui-monospace;letter-spacing:.1em;color:#a8a29a">學生付款 3,000 → 你預估可收到</div>
+<div style="display:flex;gap:14px">
+<div class="wf-col" style="flex:1;gap:3px"><span style="font:10px ui-monospace;color:#8a857c">ATM</span><span style="font:700 16px 'Noto Serif TC',serif">2,650</span></div>
+<div class="wf-col" style="flex:1;gap:3px"><span style="font:10px ui-monospace;color:#8a857c">信用卡</span><span style="font:700 16px 'Noto Serif TC',serif">2,593</span></div>
+</div>
+<div style="font:10px/1.5 'Noto Sans TC';color:#6b665e">明細展開：金流成本 · 平台服務費（以原價計） · 撥款轉帳費</div>
+</div>
+<div class="wf-owl"><span style="font-weight:700;flex:none">🦉</span><span>「平台服務費是以原價計算，不是扣完金流成本後的淨額。」</span></div>
+</div>
+<div class="wf-sec" style="border-bottom:none;flex-direction:row;gap:8px"><div class="wf-btn2" style="flex:1">上一步</div><div class="wf-btn" style="flex:2">下一步：退費規則</div></div>
+</div>
+</div>
+
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>學生報名付款：三步 + 兩種付款結果頁</div>
+<div class="dv-card" style="width:560px">
+<div class="wf-nav"><span style="font-weight:700;color:#1a1a1a">報名流程</span><span style="margin-left:auto;font:10px ui-monospace">付款方式依老師課程設定動態顯示</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr)">
+<div class="wf-sec" style="border-right:1px dashed #ddd9d2">
+<span class="wf-tag">1 確認課程</span>
+<div class="wf-box" style="height:50px">課程圖</div>
+<div class="wf-line"></div><div class="wf-line" style="width:65%"></div>
+<div style="font:700 13px 'Noto Serif TC',serif">3,000 元</div>
+<div style="font:10px/1.5 'Noto Sans TC';color:#6b665e">場次時間 · 地點 · 退費規則摘要（固定百分比＋天數）</div>
+<div class="wf-btn">下一步</div>
+</div>
+<div class="wf-sec" style="border-right:1px dashed #ddd9d2">
+<span class="wf-tag">2 填資料 + 選付款</span>
+<div class="wf-box" style="height:26px;background:#fff">手機　必填</div>
+<div class="wf-box" style="height:26px;background:#fff">Email　選填</div>
+<div style="font:10px/1.4 'Noto Sans TC';color:#c2703a">建議填 Email，通知才收得到</div>
+<div style="border:1.5px solid #1a1a1a;border-radius:4px;padding:8px;font:600 11px 'Noto Sans TC'">◉ 信用卡</div>
+<div style="border:1px solid #c6c1b7;border-radius:4px;padding:8px;font:400 11px 'Noto Sans TC';color:#6b665e">○ ATM 虛擬帳號</div>
+<div class="wf-btn">前往付款</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">3 結果頁（兩種）</span>
+<div style="border:1.5px solid #1a1a1a;border-radius:4px;padding:9px;display:flex;flex-direction:column;gap:5px"><div style="font:700 11px 'Noto Sans TC'">信用卡：報名成功</div><div style="font:10px/1.4;color:#6b665e">立即確認 · Email／站內通知 · 綁 LINE 加值推播</div></div>
+<div style="border:1px dashed #b9b4aa;border-radius:4px;padding:9px;display:flex;flex-direction:column;gap:5px;background:#fbfaf8"><div style="font:700 11px 'Noto Sans TC'">ATM：待繳費</div><div class="wf-box" style="height:34px;background:#fff">虛擬帳號 · 金額 · 繳費期限</div><div style="font:10px/1.4;color:#6b665e">期限前 X 小時未繳 → 逾期提醒</div></div>
+<div class="wf-btn2">到我的課程查看</div>
+</div>
+</div>
+<div class="wf-sec" style="border-bottom:none;background:#fbfaf8"><p class="wf-sub">狀態來源：綠界／藍新背景通知回傳後才轉「已付款」。付款頁不做「我已完成轉帳」的自我申報按鈕。</p></div>
+</div>
+</div>
+
+<div class="dv-opt" id="2d">
+<div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>學生會員中心：我的課程四分頁</div>
+<div class="dv-card" style="width:380px">
+<div class="wf-nav"><span style="font-weight:700;color:#1a1a1a">我的課程</span><span style="margin-left:auto">通知</span><span>帳戶</span></div>
+<div class="wf-sec" style="gap:8px">
+<div style="display:flex;gap:5px;font:11px 'Noto Sans TC'"><span style="font-weight:700;border-bottom:2px solid #1a1a1a;padding-bottom:3px">待繳費 1</span><span style="color:#6b665e;padding-bottom:3px">即將上課 2</span><span style="color:#6b665e">已結束</span><span style="color:#6b665e">已退款</span></div>
+<div style="border:1.5px solid #1a1a1a;border-radius:4px;padding:10px;display:flex;gap:9px"><div class="wf-box" style="width:52px;height:52px;flex:none">課程圖</div><div class="wf-col" style="flex:1;gap:5px"><div class="wf-line"></div><div class="wf-line" style="width:55%"></div><div style="font:10px ui-monospace;color:#c2703a">繳費期限 10/12 23:59</div><div class="wf-btn2" style="padding:5px 8px">查看虛擬帳號</div></div></div>
+<div style="border:1px solid #c6c1b7;border-radius:4px;padding:10px;display:flex;gap:9px;opacity:.75"><div class="wf-box" style="width:52px;height:52px;flex:none">課程圖</div><div class="wf-col" style="flex:1;gap:5px"><div class="wf-line"></div><div class="wf-line" style="width:45%"></div><div style="font:10px 'Noto Sans TC';color:#6b665e">10/20 19:00 · 台北</div></div></div>
+</div>
+<div class="wf-sec" style="border-bottom:none">
+<span class="wf-tag">單筆訂單頁（點入）</span>
+<div class="wf-box" style="height:60px">付款證明：訂單編號 · 課程 · 金額 · 付款時間 · 付款方式<br>可下載／列印（MVP 不做電子發票）</div>
+<div class="wf-btn2">申請退課</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2e">
+<div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>退課工單：老師審核頁（狀態機可視化）</div>
+<div class="dv-card" style="width:440px">
+<div class="wf-nav"><span>← 退課工單</span><span style="font-weight:700;color:#1a1a1a;margin-left:auto">#T-1042</span><span style="margin-left:auto;color:#c2703a;font-weight:700">剩 1 天 4 小時</span></div>
+<div class="wf-sec">
+<span class="wf-tag">狀態進度</span>
+<div style="display:flex;align-items:center;gap:5px;font:9.5px ui-monospace;color:#8a857c"><span style="color:#1a1a1a;font-weight:700">提出</span><span>—</span><span style="color:#1a1a1a;font-weight:700">系統試算</span><span>—</span><span style="border:1.5px solid #1a1a1a;border-radius:99px;padding:2px 6px;color:#1a1a1a;font-weight:700">老師審核中</span><span>—</span><span>學生決定</span><span>—</span><span>平台仲裁</span></div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">訂單與試算</span>
+<div class="wf-box" style="height:48px">原訂單 3,000 元 · 信用卡 · 尚未撥款<br>系統試算可退：2,100 元（開課前 7 天，退 70%）</div>
+<div style="font:10px/1.5 'Noto Sans TC';color:#6b665e">未撥款 → 直接從平台帳戶退款，該筆不進下次撥款清單</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">學生退課原因 · 共用留言串</span>
+<div class="wf-box" style="height:52px;background:#fff">學生留言 / 老師回覆（雙方可見，升級仲裁時管理者直接看到）</div>
+</div>
+<div class="wf-sec" style="border-bottom:none">
+<span class="wf-tag">你的決定</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px">核准金額</span><div class="wf-box" style="flex:1;height:26px;background:#fff">2,100（可在範圍內調整，需填理由）</div></div>
+<div class="wf-box" style="height:34px;background:#fff">理由（必填）</div>
+<div style="display:flex;gap:8px"><div class="wf-btn" style="flex:2">核准退款</div><div class="wf-btn2" style="flex:1">駁回</div></div>
+<div class="wf-owl"><span style="font-weight:700;flex:none">🦉</span><span>「逾期未處理會自動升級平台仲裁，建議先回一句話。」</span></div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">可以這樣回我：「<a class="dv-oid" href="#2b">2b</a> 的試算改成固定在右側欄」 · 「<a class="dv-oid" href="#2c">2c</a> 加上 ATM 逾期未繳的處理畫面」 · 「結構都 OK，開始做首頁的高擬真視覺」</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">學步 StepGo — 站台結構與首頁三個方向（低擬真 wireframe）</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>站台結構：對外網站 + 產品介面的邊界</div>
+<div class="dv-card" style="width:640px">
+<div class="wf-nav"><span style="font-weight:700;color:#1a1a1a">SITEMAP</span><span>學步 StepGo</span><span style="margin-left:auto">繁中 / EN</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+<div class="wf-sec" style="border-right:1px dashed #ddd9d2">
+<span class="wf-tag">A — 對外網站（公開）</span>
+<div class="wf-node">首頁　Home</div>
+<div class="wf-col" style="padding-left:14px;border-left:1px dashed #c6c1b7">
+<div class="wf-node2">給老師：費用與撥款說明</div>
+<div class="wf-node2">費用試算工具　← 規劃 §三、§六、§七</div>
+<div class="wf-node2">給學生：怎麼找課上課</div>
+<div class="wf-node2">課程列表 → 課程詳情</div>
+<div class="wf-node2">關於學步（品牌故事）</div>
+<div class="wf-node2">常見問題</div>
+<div class="wf-node2">合作條款／退費政策（版本標註）</div>
+</div>
+<div class="wf-owl"><span style="font-weight:700">貓頭鷹</span><span>全站右下角常駐提示，FAQ 與試算頁講解規則</span></div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">B — 產品介面（登入後，可點擊原型）</span>
+<div class="wf-node">老師後台</div>
+<div class="wf-col" style="padding-left:14px;border-left:1px dashed #c6c1b7">
+<div class="wf-node2">註冊 + 輕量身分驗證</div>
+<div class="wf-node2">建立課程（付款方式 + 即時試算）</div>
+<div class="wf-node2">學生名單與繳費狀態</div>
+<div class="wf-node2">收入報表 · 撥款紀錄</div>
+<div class="wf-node2">退課工單（SLA 倒數）</div>
+</div>
+<div class="wf-node" style="margin-top:4px">學生會員中心</div>
+<div class="wf-col" style="padding-left:14px;border-left:1px dashed #c6c1b7">
+<div class="wf-node2">我的課程（待繳費／即將上課／已結束／已退款）</div>
+<div class="wf-node2">報名 + 付款（ATM／信用卡）</div>
+<div class="wf-node2">退課申請</div>
+</div>
+<div class="wf-node2" style="border-style:dashed;color:#8a857c;margin-top:4px">管理者後台（獨立網域，本次先不畫）</div>
+</div>
+</div>
+<div class="wf-sec" style="border-bottom:none;background:#fbfaf8">
+<span class="wf-tag">決策點</span>
+<p class="wf-sub">規劃文件的完整內容（含 ER 圖、資料模型）要放在哪？三個選擇：① 對外網站的獨立技術頁 ② 只放給老師看的說明頁摘要版 ③ 內部文件站，不掛在品牌站上。你選了「全部含 ER 圖」，我先預設 ①，另開一頁 <b>系統架構</b>。</p>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>首頁 A：雙入口分流（老師／學生一開始就分岔）</div>
+<div class="dv-card" style="width:400px">
+<div class="wf-nav"><div class="wf-box" style="width:26px;height:26px;border-radius:50%">人物<br>logo</div><span style="font-weight:700;color:#1a1a1a">學步 StepGo</span><span style="margin-left:auto">課程</span><span>費用</span><span>登入</span></div>
+<div class="wf-sec" style="align-items:center;text-align:center;padding:26px 20px">
+<span class="wf-tag">HERO</span>
+<div class="wf-box" style="width:120px;height:150px">學步人物插畫<br>（銅版雕刻風）<br>放此</div>
+<h3 class="wf-h" style="font-size:21px">一步一步，把課開起來</h3>
+<p class="wf-sub" style="max-width:250px">標語一句話：老師專心教，金流帳務交給學步。</p>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">兩個入口（等重）</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="border:1.5px solid #1a1a1a;border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:7px"><div class="wf-box" style="height:44px">插圖</div><div style="font:700 12px 'Noto Sans TC'">我是老師</div><div class="wf-line"></div><div class="wf-line" style="width:70%"></div><div class="wf-btn" style="margin-top:2px">開始開課 →</div></div>
+<div style="border:1.5px solid #1a1a1a;border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:7px"><div class="wf-box" style="height:44px">插圖</div><div style="font:700 12px 'Noto Sans TC'">我是學生</div><div class="wf-line"></div><div class="wf-line" style="width:70%"></div><div class="wf-btn" style="margin-top:2px">找課程 →</div></div>
+</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">熱門課程（3 張卡）</span>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div class="wf-col"><div class="wf-box" style="height:56px">課程圖</div><div class="wf-line"></div><div class="wf-line" style="width:60%"></div></div>
+<div class="wf-col"><div class="wf-box" style="height:56px">課程圖</div><div class="wf-line"></div><div class="wf-line" style="width:60%"></div></div>
+<div class="wf-col"><div class="wf-box" style="height:56px">課程圖</div><div class="wf-line"></div><div class="wf-line" style="width:60%"></div></div>
+</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">信任區塊</span>
+<div style="display:flex;gap:8px"><div class="wf-box" style="flex:1;height:52px">身分驗證<br>已認證老師</div><div class="wf-box" style="flex:1;height:52px">費用透明<br>四層成本揭露</div><div class="wf-box" style="flex:1;height:52px">退課仲裁<br>平台介入</div></div>
+</div>
+<div class="wf-sec" style="border-bottom:none"><div class="wf-owl"><div class="wf-box" style="width:30px;height:30px;flex:none;border-color:#c2703a">貓<br>頭鷹</div><span>「第一次開課？我帶你走一遍。」→ 開啟引導</span></div></div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>首頁 B：費用透明優先（試算工具就是首頁主角）</div>
+<div class="dv-card" style="width:400px">
+<div class="wf-nav"><div class="wf-box" style="width:26px;height:26px;border-radius:50%">logo</div><span style="font-weight:700;color:#1a1a1a">學步 StepGo</span><span style="margin-left:auto">給老師</span><span>給學生</span><span>登入</span></div>
+<div class="wf-sec" style="padding:22px 20px">
+<span class="wf-tag">HERO — 左文右工具</span>
+<h3 class="wf-h">開一堂課，你實際拿到多少？</h3>
+<p class="wf-sub">先算給你看，再談合作。</p>
+<div style="border:1.5px solid #1a1a1a;border-radius:5px;padding:13px;display:flex;flex-direction:column;gap:9px;background:#fbfaf8">
+<div class="wf-tag">即時試算（前端計算，不打 API）</div>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;width:56px">課程售價</span><div class="wf-box" style="flex:1;height:28px;background:#fff">3,000 元　輸入框</div></div>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;width:56px">付款方式</span><div class="wf-box" style="flex:1;height:28px;background:#fff">ATM ／ 信用卡　切換</div></div>
+<div style="height:1px;background:#ddd9d2"></div>
+<div class="wf-col" style="gap:5px;font:400 10.5px/1.4 ui-monospace,monospace;color:#6b665e">
+<div style="display:flex;justify-content:space-between"><span>學生付款</span><span>3,000</span></div>
+<div style="display:flex;justify-content:space-between"><span>− 金流手續費 2.89%</span><span>−87</span></div>
+<div style="display:flex;justify-content:space-between"><span>− 平台服務費 10%</span><span>−300</span></div>
+<div style="display:flex;justify-content:space-between"><span>− 撥款轉帳費</span><span>−20</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid #1a1a1a;padding-top:8px"><span style="font:700 12px 'Noto Sans TC'">你實收</span><span style="font:700 19px 'Noto Serif TC',serif">2,593</span></div>
+<div class="wf-btn">用這個價錢開課 →</div>
+</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">四層成本說明（圖解）</span>
+<div class="wf-box" style="height:78px">四層扣除流程圖<br>學生付款 → 金流 → 平台 → 撥款 → 老師淨額</div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">揭露時機時間軸</span>
+<div style="display:flex;gap:6px"><div class="wf-box" style="flex:1;height:46px">註冊時</div><div class="wf-box" style="flex:1;height:46px">建課時</div><div class="wf-box" style="flex:1;height:46px">報名成立</div><div class="wf-box" style="flex:1;height:46px">每次撥款</div></div>
+</div>
+<div class="wf-sec" style="border-bottom:none;flex-direction:row;gap:10px"><div class="wf-btn" style="flex:1">我是老師，開始驗證</div><div class="wf-btn2" style="flex:1">我是學生，找課程</div></div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>首頁 C：一步一步的旅程（品牌敘事主導，貓頭鷹全程帶路）</div>
+<div class="dv-card" style="width:400px">
+<div class="wf-nav"><div class="wf-box" style="width:26px;height:26px;border-radius:50%">logo</div><span style="font-weight:700;color:#1a1a1a">學步 StepGo</span><span style="margin-left:auto">目錄</span><span>登入</span></div>
+<div class="wf-sec" style="padding:24px 20px;align-items:center;text-align:center">
+<div class="wf-box" style="width:100%;height:120px">全幅仿古紙背景 + 人物側身行走<br>（參考圖構圖：中央人物、四角紋飾）</div>
+<h3 class="wf-h" style="font-size:20px">學步 StepGo</h3>
+<p class="wf-sub" style="max-width:240px">從第一步到第一筆入帳，我們把路鋪好。</p>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">STEP 01 — 縱向步驟敘事</span>
+<div style="display:flex;gap:10px"><div style="width:22px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:20px;height:20px;border:1.5px solid #1a1a1a;border-radius:50%;font:700 9px ui-monospace;display:flex;align-items:center;justify-content:center">01</div><div style="flex:1;width:1px;border-left:1px dashed #c6c1b7"></div></div><div class="wf-col" style="flex:1"><div style="font:700 12px 'Noto Sans TC'">註冊與身分驗證</div><div class="wf-line"></div><div class="wf-line" style="width:80%"></div><div class="wf-box" style="height:52px">畫面截圖／插畫</div></div></div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">STEP 02</span>
+<div style="display:flex;gap:10px"><div style="width:22px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:20px;height:20px;border:1.5px solid #1a1a1a;border-radius:50%;font:700 9px ui-monospace;display:flex;align-items:center;justify-content:center">02</div><div style="flex:1;width:1px;border-left:1px dashed #c6c1b7"></div></div><div class="wf-col" style="flex:1"><div style="font:700 12px 'Noto Sans TC'">建立課程與定價</div><div class="wf-line"></div><div class="wf-box" style="height:52px">試算工具縮圖（點開為 <a href="#1c">1c</a> 的工具）</div><div class="wf-owl"><span style="font-weight:700;flex:none">🦉</span><span>「選同一家銀行，可以省下轉帳手續費。」</span></div></div></div>
+</div>
+<div class="wf-sec">
+<span class="wf-tag">STEP 03 / 04</span>
+<div style="display:flex;gap:8px"><div class="wf-box" style="flex:1;height:60px">03 學生報名付款</div><div class="wf-box" style="flex:1;height:60px">04 月結撥款入帳</div></div>
+</div>
+<div class="wf-sec" style="border-bottom:none;align-items:center"><div class="wf-btn" style="width:180px">走第一步 →</div><p class="wf-sub" style="text-align:center">次要出口：學生找課 · 常見問題 · 費用細節</p></div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">可以這樣回我：「用 <a class="dv-oid" href="#1c">1c</a> 當首頁，但把 <a class="dv-oid" href="#1b">1b</a> 的雙入口卡片加進來」 · 「<a class="dv-oid" href="#1a">1a</a> 的結構同意，下一輪畫老師後台與報名付款流程」 · 「首頁再給我兩個不一樣的方向」</p>
+</section>
+</x-dc>
+</body>
+</html>

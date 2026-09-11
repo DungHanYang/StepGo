@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</div>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Homepage.dc.html" style="color:#4a463d">首頁</a>
+<a href="#fees" style="color:#22201c;font-weight:500;border-bottom:1.5px solid #a7622c;padding-bottom:2px">給老師</a>
+<a href="#students" style="color:#4a463d">給學生</a>
+<a href="#faq" style="color:#4a463d">常見問題</a>
+</nav>
+<div style="display:flex;align-items:center;gap:14px;font-size:12.5px;color:#6c6659">
+<span style="display:flex;gap:6px"><span style="color:#22201c;font-weight:500">繁中</span><span>·</span><span>EN</span></span>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</div>
+</header>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;align-items:center;padding:58px 0 48px">
+<div style="display:flex;flex-direction:column;gap:18px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">Fees &amp; Payouts</div>
+<h1 style="font:700 clamp(30px,4.4vw,46px)/1.28 'Noto Serif TC',serif;margin:0;text-wrap:pretty">你的錢，經過哪些手，什麼時候到</h1>
+<p style="font:400 15.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:32em;text-wrap:pretty">這一頁把全部成本攤開：金流手續費、平台服務費、撥款轉帳費。定價之前你就能算出實拿金額，不會在收到撥款那天才發現被扣了什麼。</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">
+<a href="#calc" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 20px;font-size:14px;font-weight:500">立即試算 →</a>
+<a href="#verify" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:13px 20px;font-size:14px;font-weight:500">怎麼開始驗證</a>
+</div>
+</div>
+<image-slot id="sgt-hero" shape="rect" fit="contain" style="width:100%;height:280px" placeholder="人物插畫（透明背景 PNG）"></image-slot>
+</section>
+
+<section id="calc" style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">四層扣除，一次看完</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Four layers of cost</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;align-items:start">
+
+<div style="border:1px solid #ded7c9;background:#fdfbf6;border-radius:4px;padding:24px;display:flex;flex-direction:column;gap:18px">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.18em;color:#6c6659">試算工具　CALCULATOR</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<label style="font:500 13px 'Noto Sans TC';color:#4a463d">課程售價（元）</label>
+<input type="number" value="{{ price }}" onChange="{{ onPrice }}" style="border:1px solid #ded7c9;background:#fff;border-radius:3px;padding:11px 13px;font:600 19px 'EB Garamond',serif;color:#22201c;width:100%;box-sizing:border-box" />
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<label style="font:500 13px 'Noto Sans TC';color:#4a463d">付款方式</label>
+<div style="display:flex;gap:9px">
+<button onClick="{{ pickCredit }}" style="flex:1;border:1px solid #22201c;border-radius:3px;padding:10px;cursor:pointer;font:500 13px 'Noto Sans TC';background:{{ creditBg }};color:{{ creditFg }}">信用卡</button>
+<button onClick="{{ pickAtm }}" style="flex:1;border:1px solid #22201c;border-radius:3px;padding:10px;cursor:pointer;font:500 13px 'Noto Sans TC';background:{{ atmBg }};color:{{ atmFg }}">ATM 虛擬帳號</button>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #ded7c9;padding-top:16px;font:400 13.5px/1.5 'Noto Sans TC'">
+<div style="display:flex;justify-content:space-between;color:#4a463d"><span>學生付款</span><span style="font:500 15px 'EB Garamond',serif;color:#22201c">{{ priceStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 金流手續費（{{ gatewayLabel }}）</span><span style="font:500 15px 'EB Garamond',serif">−{{ gatewayStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 平台服務費（{{ platformPctStr }}，以原價計）</span><span style="font:500 15px 'EB Garamond',serif">−{{ platformStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 撥款轉帳手續費</span><span style="font:500 15px 'EB Garamond',serif">−{{ transferStr }}</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid #22201c;padding-top:14px">
+<span style="font:700 15px 'Noto Serif TC',serif">你實收</span>
+<span style="font:600 34px 'EB Garamond',serif">{{ netStr }}</span>
+</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">實際費率以金流商公告為準。撥款轉帳手續費為每次撥款批次一筆，同行帳戶通常免收。</p>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="border:1px solid #22201c;border-radius:4px;padding:16px 18px;background:#fdfbf6">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">LAYER 00</div>
+<div style="font:700 16px 'Noto Serif TC',serif;margin-top:5px">學生付款金額</div>
+<p style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659;margin:6px 0 0">課程原價，由你設定。</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;padding-left:20px;border-left:1px dashed #ded7c9">
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:16px 18px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">LAYER 01 · 金流成本</div>
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-top:5px">綠界／藍新手續費</div>
+<p style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659;margin:6px 0 0">依付款方式而定。信用卡 2.75–2.89%，ATM 約 1%（最低 15 元）。</p>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:16px 18px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">LAYER 02 · 平台服務費</div>
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-top:5px">學步的抽成</div>
+<p style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659;margin:6px 0 0">依方案而定，<b style="font-weight:700;color:#4a463d">以課程原價計算</b>，不是扣完金流成本後的淨額。</p>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:16px 18px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">LAYER 03 · 撥款轉帳成本</div>
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-top:5px">轉帳到你帳戶的手續費</div>
+<p style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659;margin:6px 0 0">跨行約 15–30 元／筆，每次撥款批次算一次。同行免收。</p>
+</div>
+</div>
+<div style="border:1.5px solid #22201c;border-radius:4px;padding:16px 18px;background:#22201c;color:#f7f4ee">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#c9b99f">RESULT</div>
+<div style="font:700 16px 'Noto Serif TC',serif;margin-top:5px">老師實際應收淨額</div>
+</div>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">ATM 或信用卡，你自己決定</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Choose what you accept</span>
+</div>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0 0 24px;max-width:44em">每堂課可以只開 ATM、只開信用卡，或兩者都開讓學生自己選。開課時勾選即可，之後也能改。</p>
+<div style="border:1px solid #ded7c9;border-radius:4px;overflow:hidden;background:#fdfbf6">
+<div style="display:grid;grid-template-columns:minmax(120px,1fr) minmax(160px,1.4fr) minmax(160px,1.4fr);font:500 12.5px 'Noto Sans TC';background:#efeade;color:#4a463d">
+<div style="padding:13px 16px">項目</div>
+<div style="padding:13px 16px;border-left:1px solid #ded7c9">ATM 虛擬帳號</div>
+<div style="padding:13px 16px;border-left:1px solid #ded7c9">信用卡</div>
+</div>
+<sc-for list="{{ compare }}" as="row" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:minmax(120px,1fr) minmax(160px,1.4fr) minmax(160px,1.4fr);border-top:1px solid #ded7c9;font:400 13.5px/1.7 'Noto Sans TC'">
+<div style="padding:14px 16px;font-weight:500;color:#4a463d">{{ row.k }}</div>
+<div style="padding:14px 16px;border-left:1px solid #ded7c9;color:#6c6659">{{ row.atm }}</div>
+<div style="padding:14px 16px;border-left:1px solid #ded7c9;color:#6c6659">{{ row.credit }}</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">錢從學生手上到你帳戶的路</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">The payout journey</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+<div style="padding:22px 20px;border-left:1px solid #ded7c9;display:flex;flex-direction:column;gap:9px">
+<span style="font:600 13px 'EB Garamond',serif;letter-spacing:.16em;color:#a7622c">{{ s.n }}</span>
+<span style="font:700 15px/1.4 'Noto Serif TC',serif">{{ s.t }}</span>
+<span style="font:400 13px/1.75 'Noto Sans TC';color:#6c6659">{{ s.d }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:22px">
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:20px 22px">
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-bottom:8px">平台吸收的那一段</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">從金流商提領到平台帳戶的手續費，由學步負擔，不轉嫁給你。</p>
+</div>
+<div style="border:1px solid #a7622c;border-radius:4px;padding:20px 22px;background:#fdf7f0">
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-bottom:8px;color:#7d461b">你可以省下的那一段</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c4a2c;margin:0">撥款轉帳手續費算在你的成本裡。綁定與平台同一家銀行的帳戶，同行轉帳免手續費，系統自動判斷不收這筆。</p>
+</div>
+</div>
+</section>
+
+<section id="verify" style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">開課前的四件事</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Getting verified</span>
+</div>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0 0 24px;max-width:44em">學步是資金的實際持有者（代收轉付），所以需要基本把關。這是輕量驗證，不是完整 KYC。</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px">
+<sc-for list="{{ verify }}" as="v" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c">{{ v.n }}</span>
+<span style="font:700 16px/1.4 'Noto Serif TC',serif">{{ v.t }}</span>
+<span style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659">{{ v.d }}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:26px;border:1px solid #ded7c9;border-radius:4px;padding:18px 20px;background:#fdfbf6;font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659">
+送出資料後進入待審核，通過才會開放建立課程。姓名與身分證字號僅存內部資料庫，不對學生顯示。
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">我們會在四個時候提醒你費用</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Disclosure moments</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px">
+<sc-for list="{{ moments }}" as="m" hint-placeholder-count="4">
+<div style="border-top:2px solid #22201c;padding-top:14px;display:flex;flex-direction:column;gap:8px">
+<span style="font:700 15px 'Noto Serif TC',serif">{{ m.t }}</span>
+<span style="font:400 13px/1.75 'Noto Sans TC';color:#6c6659">{{ m.d }}</span>
+</div>
+</sc-for>
+</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:24px 0 0;max-width:44em">費率若要調整，至少提前 30 天通知，並且不溯及既往——已成立的訂單依當初適用的條款版本結算。</p>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:56px 0;display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:30em">
+<h2 style="font:700 clamp(23px,3vw,30px)/1.35 'Noto Serif TC',serif;margin:0;text-wrap:pretty">算完覺得可以，就走第一步</h2>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0">註冊、上傳證件、綁定撥款帳戶。審核通過後就能建立第一堂課。</p>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<a href="#signup" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px 22px;font-size:14px;font-weight:500">註冊成為老師 →</a>
+<a href="#terms" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:14px 22px;font-size:14px;font-weight:500">先看合作條款</a>
+</div>
+</section>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="#fees" style="color:#4a463d">費用與撥款</a><a href="#calc" style="color:#4a463d">費用試算</a><a href="#terms" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Homepage.dc.html" style="color:#4a463d">課程列表</a><a href="#faq" style="color:#4a463d">常見問題</a><a href="#terms" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="#arch" style="color:#4a463d">系統架構</a><a href="./StepGo Homepage.dc.html" style="color:#4a463d">關於學步</a></div>
+</footer>
+</div>
+
+<div style="position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:50">
+<sc-if value="{{ owlOpen }}" hint-placeholder-val="{{ false }}">
+<div style="width:272px;background:#fdfbf6;border:1px solid #22201c;border-radius:4px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(34,32,28,.13)">
+<div style="font:700 13.5px 'Noto Serif TC',serif">關於費用，最常被問的三件事</div>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ded7c9;padding-top:11px;font:400 13px/1.7 'Noto Sans TC';color:#4a463d">
+<span>平台服務費是以原價計算，不是扣完金流成本後的淨額。</span>
+<span>撥款轉帳手續費每次批次收一筆，不逐筆訂單分攤。</span>
+<span>同行帳戶轉帳免手續費，系統會自動判斷。</span>
+</div>
+<a href="#faq" style="font-size:13px">看完整常見問題 →</a>
+</div>
+</sc-if>
+<button onClick="{{ toggleOwl }}" onMouseEnter="{{ openOwl }}" onMouseLeave="{{ closeOwl }}" style="display:flex;align-items:center;gap:9px;background:#fdfbf6;border:1px solid #22201c;border-radius:99px;padding:8px 15px 8px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';color:#22201c;box-shadow:0 4px 14px rgba(34,32,28,.1)" style-hover="background:#f2ece0">
+<img src="./assets/owl-icon.png" alt="貓頭鷹" style="width:32px;height:32px;border-radius:50%;border:1px solid #22201c;object-fit:cover;flex:none">
+<span>{{ owlLabel }}</span>
+</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;platformFeePct&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:10,&quot;min&quot;:5,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;費率設定&quot;},&quot;transferFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:20,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:5,&quot;unit&quot;:&quot;元&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;費率設定&quot;}}">
+class Component extends DCLogic {
+  state = { price: 3000, method: "credit", owlOpen: false };
+  renderVals() {
+    const pct = this.props.platformFeePct ?? 10;
+    const transfer = this.props.transferFee ?? 20;
+    const price = Number(this.state.price) || 0;
+    const credit = this.state.method === "credit";
+    const gateway = credit ? Math.round(price * 0.0289) : Math.max(15, Math.round(price * 0.01));
+    const platform = Math.round(price * pct / 100);
+    const net = Math.max(0, price - gateway - platform - transfer);
+    const f = n => n.toLocaleString("en-US");
+    const on = "#22201c", onFg = "#f7f4ee", off = "transparent", offFg = "#4a463d";
+    return {
+      price: this.state.price,
+      priceStr: f(price), gatewayStr: f(gateway), platformStr: f(platform),
+      transferStr: f(transfer), netStr: f(net),
+      platformPctStr: pct + "%",
+      gatewayLabel: credit ? "2.89%" : "1%，最低 15 元",
+      creditBg: credit ? on : off, creditFg: credit ? onFg : offFg,
+      atmBg: credit ? off : on, atmFg: credit ? offFg : onFg,
+      onPrice: e => this.setState({ price: e.target.value }),
+      pickCredit: () => this.setState({ method: "credit" }),
+      pickAtm: () => this.setState({ method: "atm" }),
+      owlOpen: this.state.owlOpen,
+      owlLabel: this.state.owlOpen ? "先不用，謝謝" : "問貓頭鷹費用",
+      toggleOwl: () => this.setState(s => ({ owlOpen: !s.owlOpen })),
+      openOwl: () => this.setState({ owlOpen: true }),
+      closeOwl: () => this.setState({ owlOpen: false }),
+      compare: [
+        { k: "手續費", atm: "約 1%（最低 15 元）", credit: "約 2.75%–2.89%" },
+        { k: "到帳速度", atm: "較慢，需等銀行確認，可能延遲數小時到隔天", credit: "較快" },
+        { k: "學生便利性", atm: "需自行轉帳，有繳費期限，可能忘記繳", credit: "一次點擊完成，轉換率較高" },
+        { k: "適合情境", atm: "學生對刷卡有疑慮、客單價高想避免刷卡手續費", credit: "想提高報名轉換率、避免學生忘記繳費" }
+      ],
+      steps: [
+        { n: "01", t: "學生完成付款", d: "金流商背景通知學步，訂單轉為已付款。" },
+        { n: "02", t: "保留期", d: "開課後數天的退款保護期，避免撥款後又要退款。" },
+        { n: "03", t: "進入待撥款", d: "保留期過後標記為可撥款，出現在你的撥款清單。" },
+        { n: "04", t: "月結批次", d: "依設定頻率結算，目前為月結。" },
+        { n: "05", t: "撥款入帳", d: "轉帳並回填憑證，後台顯示完整扣除明細。" }
+      ],
+      verify: [
+        { n: "01", t: "填寫真實姓名與身分證字號", d: "僅存內部資料庫，加密儲存，不對學生顯示。" },
+        { n: "02", t: "上傳身分證正反面", d: "供平台人工審核，僅管理員可讀取。" },
+        { n: "03", t: "綁定撥款銀行帳戶", d: "戶名必須與註冊姓名一致，系統強制檢查。" },
+        { n: "04", t: "同意合作條款", d: "費用結構、退款規則、身分聲明，條款有版本記錄。" }
+      ],
+      moments: [
+        { t: "註冊審核時", d: "完整費用結構說明，勾選同意後才能繼續。" },
+        { t: "建立課程時", d: "輸入售價即時顯示預估實拿金額。" },
+        { t: "報名成立時", d: "通知你這筆訂單的成本概要。" },
+        { t: "每次撥款時", d: "涵蓋訂單、三層成本、實收金額，可匯出留存。" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

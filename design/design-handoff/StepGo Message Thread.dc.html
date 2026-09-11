@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2f5560;text-decoration:none}a:hover{color:#1f3c45}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px;min-height:100vh;display:flex;flex-direction:column}
+@media(max-width:640px){.wrap{padding:0 14px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Student Dashboard.dc.html" style="font:400 13px 'Noto Sans TC';color:#6c6659">← 退課申請</a>
+<span style="width:1px;height:16px;background:#ded7c9"></span>
+<div style="width:34px;height:34px;border-radius:50%;background:#efeade;border:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:600 13px 'Noto Serif TC',serif;flex:none">{{ teacherInitial }}</div>
+<div style="display:flex;flex-direction:column;line-height:1.2">
+<span style="font:600 14.5px 'Noto Serif TC',serif">{{ teacherName }}</span>
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">退課申請 {{ caseId }} · {{ courseTitle }}</span>
+</div>
+</header>
+
+<div style="border-bottom:1px solid #ded7c9;padding:12px 0;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;text-wrap:pretty">這裡只用於<b style="color:#4a463d">退課申請的正式溝通</b>，內容會作為老師審核與平台仲裁的依據。一般上課相關的問題，請透過<a href="#line">LINE 加老師好友</a>聯繫。</div>
+
+<div style="flex:1;overflow:auto;padding:22px 0;display:flex;flex-direction:column;gap:16px">
+<div style="text-align:center;font:400 11.5px 'Noto Sans TC';color:#6c6659;padding-bottom:4px">這筆申請結案後，留言仍會保留作為紀錄。</div>
+<sc-for list="{{ messages }}" as="m" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:4px;align-items:{{ m.align }}">
+<div style="max-width:78%;border:1px solid {{ m.border }};background:{{ m.bg }};border-radius:10px;padding:11px 14px;font:400 14px/1.7 'Noto Sans TC';color:#22201c;text-wrap:pretty">{{ m.text }}</div>
+<span style="font:400 11px 'Noto Sans TC';color:#6c6659;padding:0 4px">{{ m.who }} · {{ m.time }}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="border-top:1px solid #ded7c9;padding:14px 0 22px;display:flex;gap:10px;align-items:flex-end">
+<textarea readOnly="{{ true }}" rows="{{ 1 }}" placeholder="輸入訊息…" style="flex:1;border:1px solid #ded7c9;border-radius:20px;background:#fdfbf6;padding:11px 16px;font:400 14px/1.5 'Noto Sans TC';color:#22201c;resize:none;box-sizing:border-box"></textarea>
+<button style="border:none;background:#2f5560;color:#fff;border-radius:50%;width:40px;height:40px;flex:none;font:400 15px 'Noto Sans TC';cursor:pointer">→</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      teacherName: "吳曉恩", teacherInitial: "吳",
+      courseTitle: "植物染基礎：藍染方巾兩件", caseId: "RQ-00318",
+      messages: [
+        { who: "你", time: "09/09 14:22", text: "老師不好意思，公司臨時要調我去台中常駐三個月，週二晚上固定沒辦法過來，想申請退課。", align: "flex-end", border: "#cfdcdd", bg: "#f2f6f6" },
+        { who: "系統", time: "09/09 14:22", text: "已依課程退費規則試算：開課前 53 日，全額退費，扣處理費 25 元。", align: "center", border: "#ded7c9", bg: "#efeade" },
+        { who: "吳曉恩", time: "09/10 09:15", text: "了解，這種情況沒問題，我這幾天會核准退費。", align: "flex-start", border: "#ded7c9", bg: "#fdfbf6" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
