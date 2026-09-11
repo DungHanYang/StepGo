@@ -36,10 +36,20 @@
 替代方案：讓前端直接消費 Application 層的 command/query 物件——排除，因為 Application 層的形狀會跟著 use case 內部重構變動，直接暴露會讓前端被迫跟著每次內部重構改動；也會把 Infrastructure 的 AWS SDK 相依性透過 project reference 鏈條帶進前端專案。
 替代方案：用 OpenAPI schema + 產生的 client（NSwag/Kiota）取代共用專案——保留作為未來若要支援非 .NET 的第三方客戶端時的路徑，但既然前後端目前都是同一個 repo 裡的 C#，直接共用型別更簡單、零轉譯成本，MVP 階段不需要多一層 schema 產生流程。
 
-### 2. API 層：API Gateway HTTP API + Lambda（.NET 8）
+### 2. API 層：API Gateway HTTP API + Lambda（.NET 10，Native AOT，`provided.al2023` 自訂執行環境）
 選用 HTTP API 而非 REST API：延遲更低、成本更低，且 MVP 不需要 REST API 才有的請求驗證/WAF 整合等進階功能（admin 的 IP 白名單改由 CloudFront + WAF 在前端那層處理，不需要 API Gateway REST API 的資源政策）。
-Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也非單一巨石函式）：`Orders`、`Payouts`、`RefundTickets`、`Courses`、`Teachers`、`Admin`、`Notifications`——每個函式用 `Amazon.Lambda.AspNetCoreServer.Hosting` 包裝一個小型 ASP.NET Core Minimal API，內部路由用一般的 Minimal API endpoint 定義，降低冷啟動數量與部署複雜度之間的取捨。
+Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也非單一巨石函式）：`Orders`、`Payouts`、`RefundTickets`、`Courses`、`Teachers`、`Admin`、`Notifications`。
+
+**執行模型改為 Native AOT**（取代原先 `Amazon.Lambda.AspNetCoreServer.Hosting` 包裝 Minimal API 的方案）：
+- 每個 `StepGo.Api.<Capability>` 專案設定 `<PublishAot>true</PublishAot>`，以 `dotnet publish -r linux-x64` 產出原生執行檔 `bootstrap`，部署到 Lambda 的 `provided.al2023` 自訂執行環境（CDK `Runtime.PROVIDED_AL2023`），不使用託管的 `dotnet` 執行環境——因此 Lambda 執行環境版本與專案的 .NET SDK 版本（.NET 10）脫鉤，AOT 產出的是自帶執行期的原生二進位。
+- 用 `Amazon.Lambda.RuntimeSupport` 的 `LambdaBootstrapBuilder` 搭配一個輕量、手寫的路由器（依 HTTP method + path 比對，非反射式的 ASP.NET Core Minimal API 端點解析），避免 `Amazon.Lambda.AspNetCoreServer.Hosting` 內部大量反射造成 AOT 相容性問題與可觀測的執行期警告。
+- 所有序列化改用 `System.Text.Json` 的 source generator（每個 capability 一個 `JsonSerializerContext`，`[JsonSerializable(typeof(XxxDto))]` 逐一標註 `StepGo.Contracts` 的 DTO），不依賴反射式序列化。
+- AWS SDK 相依套件一律取最新穩定版（`AWSSDK.DynamoDBv2`、`AWSSDK.CognitoIdentityProvider`、`AWSSDK.S3`、`AWSSDK.SecretsManager`、`AWSSDK.SQS`、`AWSSDK.EventBridge`、`AWSSDK.SimpleEmail`、`AWSSDK.StepFunctions` 等），並避開 `Amazon.DynamoDBv2.DocumentModel` 的動態 `Document` 型別，改用強型別的低階 `AttributeValue` 轉換，降低 AOT trim 警告面積。
+- 好處：AOT 原生執行檔啟動速度顯著優於託管 CLR 冷啟動，改變了原先「決策 2 的取捨」與「Risks 一節『.NET 冷啟動高於 Node/Python』」的判斷（見下方 Risks 更新）。
+
+**衍生的專案拆分調整（相對 tasks.md 原文字面描述的偏離，實作階段記錄於此）**：Native AOT 的限制是一個編譯產出的 `bootstrap` 執行檔只能有一個進入點/事件型別，因此同一 capability 若同時要處理 HTTP API 請求與非 HTTP 事件（SQS 訊息、EventBridge 事件、EventBridge Scheduler 排程、Step Functions task），無法共用同一個 `StepGo.Api.<Capability>` 部署產物。實作時把非 HTTP 事件處理拆成獨立的 `StepGo.Worker.<Purpose>` 專案（`StepGo.Worker.PaymentNotificationConsumer`、`StepGo.Worker.PayoutBatchScheduler`、`StepGo.Worker.RefundSlaCheck`、`StepGo.Worker.NotificationDispatcher`、`StepGo.Worker.OverdueOrderScan`），與對應 capability 的 `StepGo.Api.*` 專案各自獨立部署、共用同一份 `StepGo.Application`/`StepGo.Infrastructure` 邏輯。tasks.md 1.3/9.1 提到「`StepGo.Api.Notifications` 訂閱處理」等字面描述因此對應到 `StepGo.Worker.NotificationDispatcher`，而非 `StepGo.Api.Notifications` 本身——後者只保留該 capability 的 HTTP 端點（範本管理 API 等）。
 替代方案：每個 API 路由一個獨立 Lambda——排除，函式數量會膨脹到數十個，部署與觀測成本過高，且 MVP 流量不需要這種細粒度的獨立擴縮。
+替代方案：沿用 `Amazon.Lambda.AspNetCoreServer.Hosting` 託管執行環境（非 AOT）——排除，使用者已明確要求 Lambda 端要用 Native AOT 部署。
 
 ### 3. 認證：Amazon Cognito，老師/學生共用一個 User Pool，Admin 獨立一個 User Pool（強制 MFA）
 - 老師/學生 User Pool：Email 或手機號碼可作登入識別（對應業務規則「手機必填、Email 選填」，Cognito 的 username 用系統內部 user id，手機/Email 存為 attribute），簽發 JWT（access token 含自訂 claim：`role`=teacher/student）。
@@ -106,9 +116,12 @@ GSI4（依學生查訂單，對應第 4 項；付款狀態/場次時間分類直
 
 ### 5. 非同步與排程：EventBridge Scheduler + SQS + Step Functions
 - **金流背景通知接收**：API Gateway 端點接收綠界/藍新的 webhook → 立即寫入 SQS（避免 Lambda 短暫故障或流量尖峰丟單）→ 另一 Lambda 消費 SQS 更新訂單狀態（冪等處理，見上）。
+  - **DLQ/redrive 策略**：主 queue 設定 `maxReceiveCount=5`，超過後訊息轉入專屬 DLQ；DLQ 深度 > 0 觸發 CloudWatch Alarm → SNS Email 通知人工介入（MVP 不做自動重放，人工確認原因後手動 redrive）。
 - **月結撥款批次**：EventBridge Scheduler 於每月 5 日觸發 Lambda，篩選「可撥款」訂單、依老師分組、判斷同行/跨行轉帳費（比對老師撥款帳戶銀行代碼與平台永豐帳戶）、產生撥款批次草稿（MVP 為人工確認後才真正標記已撥款，不自動轉帳）。
 - **退課工單 SLA 自動升級**：老師進入 `teacher_reviewing` 狀態時，啟動一個 **Step Functions** 執行（`Wait` 5 個工作日 → 檢查工單狀態是否仍為 `teacher_reviewing` → 若是則自動轉為 `admin_arbitration`）。選用 Step Functions 而非單純的 EventBridge 定時任務，因為需要「等待期間工單狀態可能被老師的動作打斷（老師核准/駁回）」——用 Step Functions 的 `Wait` + 條件檢查表達這種「除非提前發生某事，否則等到期限做某事」的邏輯最直接，且執行歷程可觀測、可重試。
+  - **狀態機定義方式**：直接用 AWS CDK 的 C# Step Functions L2 constructs（`Wait`、`Choice`、`Task` 等）在 `BackendStack` 程式碼中組裝，不維護獨立的 ASL JSON 檔案——與其餘基礎設施一致用 C# 表達，型別檢查、重構安全性較好。
 - **通知派送**：訂單狀態變更等事件透過 EventBridge 自訂 event bus 發布，`Notifications` Lambda 訂閱後依業務規則的管道優先順序（Email 保底、站內必留、LINE 選用加值）分別呼叫 SES/寫入通知資料/呼叫 LINE Messaging API。
+  - **事件 schema 組織**：每個 Domain Event 類別對應一個 EventBridge `detail-type`（例如 `OrderPaymentConfirmed`、`RefundApproved`、`TeacherVerificationApproved`），`detail` payload 為該事件的強型別欄位（透過 `StepGo.Domain` 定義的事件類別，經 `StepGo.Application` 的 `IEventPublisher` port、`StepGo.Infrastructure` 的 EventBridge 實作發布，用 source-generated `JsonSerializerContext` 序列化）。`Notifications` Lambda 用 EventBridge rule 的 `detail-type` pattern 訂閱所需事件，新增事件類型不影響既有訂閱規則。
 
 ### 6. 檔案儲存：S3（老師身分證照片等私有物件）
 獨立的私有 bucket，物件金鑰包含 teacher id，存取一律透過後端產生的短效 presigned URL，僅限 Admin 角色的 API 呼叫可取得，不開放公開讀取。
@@ -139,7 +152,7 @@ GSI4（依學生查訂單，對應第 4 項；付款狀態/場次時間分類直
 - [Step Functions 為每張退課工單各啟動一次執行，工單量大時執行數量與成本上升] → MVP 規模下退課工單量不高（依業務規則文件，退課本身就是相對少數情境），成本可接受；若未來量大，可改為單一定時 Lambda 掃描 SLA 到期工單，屆時再權衡改動。
 - [SQS 緩衝金流通知會讓「付款完成」到「前端看到已付款狀態」多一段非同步延遲] → 延遲通常在秒級，可接受；比起讓 Lambda 直接同步處理 webhook（若 Lambda 當下故障就真的丟單）更穩健。
 - [Cognito 雙 User Pool（老師/學生 vs Admin）增加維運復雜度] → 業務規則明確要求 Admin 需要獨立、更嚴格的驗證機制，複雜度為必要成本。
-- [.NET 在 Lambda 上的冷啟動時間高於 Node.js/Python] → 對 API 端點（非 SSR 頁面渲染）的冷啟動影響通常可接受；若量測後發現使用者體感延遲明顯，可對高頻端點（訂單建立、webhook 接收）加購 Provisioned Concurrency。
+- [改用 .NET 10 Native AOT 取代原先評估的託管執行環境（決策 2 更新）] → 原本「.NET 在 Lambda 上冷啟動高於 Node.js/Python」的風險因改用 Native AOT 大幅緩解（原生執行檔省去 JIT/組件載入時間，冷啟動與 Node.js 級別相近甚至更快），交換成一個新風險：AOT 對反射/動態程式碼的限制較嚴格，`StepGo.Contracts` 與部分 AWS SDK 呼叫路徑需要用 source-generated JSON、避開動態型別，開發時需留意 trim/AOT 分析警告；若未來新增的第三方套件（例如金流商官方 SDK）不支援 AOT，需自行寫薄的相容層或改叫其 REST API。
 
 ## Migration Plan
 

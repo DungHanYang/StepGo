@@ -1,0 +1,566 @@
+openapi: 3.0.3
+info:
+  title: StepGo Backend API
+  version: 0.1.0
+  description: >
+    Minimal OpenAPI description of the endpoints implemented so far (task 10.2).
+    Field shapes mirror StepGo.Contracts DTOs 1:1; StepGo.ApiClient (frontend-mvp-scaffold)
+    will eventually reference StepGo.Contracts directly instead of consuming this document,
+    per design.md decision 1 — this file exists for non-.NET / documentation consumers only.
+servers:
+  - url: https://{apiId}.execute-api.{region}.amazonaws.com
+    variables:
+      apiId:
+        default: example
+      region:
+        default: ap-northeast-1
+security:
+  - cognitoJwt: []
+components:
+  securitySchemes:
+    cognitoJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Cognito JWT (teacher/student user pool), verified by the API Gateway JWT authorizer.
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+    PagedResult:
+      type: object
+      required: [items, nextCursor]
+      properties:
+        items: { type: array, items: {} }
+        nextCursor: { type: string, nullable: true }
+    Role:
+      type: string
+      enum: [Student, Teacher, Admin]
+    RegisterUserRequest:
+      type: object
+      required: [fullName, phoneNumber, role]
+      properties:
+        fullName: { type: string }
+        phoneNumber: { type: string }
+        email: { type: string, nullable: true }
+        role: { $ref: '#/components/schemas/Role' }
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        fullName: { type: string }
+        phoneNumber: { type: string }
+        email: { type: string, nullable: true }
+        role: { $ref: '#/components/schemas/Role' }
+        createdAt: { type: string, format: date-time }
+    BankAccount:
+      type: object
+      required: [bankCode, accountNumber, accountHolderName]
+      properties:
+        bankCode: { type: string }
+        accountNumber: { type: string }
+        accountHolderName: { type: string }
+    SubmitTeacherVerificationRequest:
+      type: object
+      required: [realName, nationalId, idPhotoFrontObjectKey, idPhotoBackObjectKey, payoutAccount]
+      properties:
+        realName: { type: string }
+        nationalId: { type: string }
+        idPhotoFrontObjectKey: { type: string }
+        idPhotoBackObjectKey: { type: string }
+        payoutAccount: { $ref: '#/components/schemas/BankAccount' }
+    TeacherVerification:
+      type: object
+      properties:
+        teacherId: { type: string, format: uuid }
+        realName: { type: string }
+        payoutAccount: { $ref: '#/components/schemas/BankAccount' }
+        status: { type: string, enum: [PendingReview, Verified, Rejected] }
+        rejectionReason: { type: string, nullable: true }
+    ReviewTeacherVerificationRequest:
+      type: object
+      required: [approve]
+      properties:
+        approve: { type: boolean }
+        rejectionReason: { type: string, nullable: true }
+    RefundTier:
+      type: object
+      required: [daysBeforeCourseStart, refundPercentage]
+      properties:
+        daysBeforeCourseStart: { type: integer }
+        refundPercentage: { type: number, format: double }
+    PaymentMethod:
+      type: string
+      enum: [None, Atm, CreditCard, All]
+    CreateCourseRequest:
+      type: object
+      required: [title, price, acceptedPaymentMethods, refundRules, startsAt]
+      properties:
+        title: { type: string }
+        price: { type: integer, format: int64 }
+        acceptedPaymentMethods: { $ref: '#/components/schemas/PaymentMethod' }
+        refundRules: { type: array, items: { $ref: '#/components/schemas/RefundTier' } }
+        startsAt: { type: string, format: date-time }
+    Course:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        teacherId: { type: string, format: uuid }
+        title: { type: string }
+        price: { type: integer, format: int64 }
+        acceptedPaymentMethods: { $ref: '#/components/schemas/PaymentMethod' }
+        refundRules: { type: array, items: { $ref: '#/components/schemas/RefundTier' } }
+        status: { type: string, enum: [Draft, Published] }
+        startsAt: { type: string, format: date-time }
+    CreateOrderRequest:
+      type: object
+      required: [courseId, requestedPaymentMethod]
+      properties:
+        courseId: { type: string, format: uuid }
+        requestedPaymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+    Order:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        courseId: { type: string, format: uuid }
+        teacherId: { type: string, format: uuid }
+        studentId: { type: string, format: uuid }
+        coursePriceAtOrder: { type: integer, format: int64 }
+        requestedPaymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+        gatewayChoosePayment: { type: string, enum: [Atm, Credit, All] }
+        paymentMethodUsed: { $ref: '#/components/schemas/PaymentMethod' }
+        paymentStatus: { type: string, enum: [PendingPayment, Paid, Overdue, Refunded] }
+        payoutStatus: { type: string, enum: [NotEligible, PendingPayout, Batched, PaidOut] }
+        atmPaymentDueAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+    PaymentGatewayNotification:
+      type: object
+      required: [gateway, merchantTradeNo, gatewayTransactionId, rtnCode, rawFields]
+      properties:
+        gateway: { type: string }
+        merchantTradeNo: { type: string }
+        gatewayTransactionId: { type: string }
+        rtnCode: { type: string }
+        rawFields: { type: object, additionalProperties: { type: string } }
+    PayoutBatchOrderLine:
+      type: object
+      properties:
+        orderId: { type: string, format: uuid }
+        netReceivableSnapshot: { type: integer, format: int64 }
+    PayoutBatch:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        teacherId: { type: string, format: uuid }
+        periodYyyyMm: { type: string }
+        orderLines: { type: array, items: { $ref: '#/components/schemas/PayoutBatchOrderLine' } }
+        netReceivableTotal: { type: integer, format: int64 }
+        transferFee: { type: integer, format: int64 }
+        netPayout: { type: integer, format: int64 }
+        status: { type: string, enum: [Draft, Paid, BankRejected] }
+        paidAt: { type: string, format: date-time, nullable: true }
+        transferReference: { type: string, nullable: true }
+        bankRejectionReason: { type: string, nullable: true }
+    MarkBankRejectedRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string }
+    MarkPayoutBatchPaidRequest:
+      type: object
+      required: [transferReference]
+      properties:
+        transferReference: { type: string }
+    SubmitRefundTicketRequest:
+      type: object
+      required: [orderId]
+      properties:
+        orderId: { type: string, format: uuid }
+    ThreadMessage:
+      type: object
+      properties:
+        authorRole: { type: string }
+        authorId: { type: string, format: uuid }
+        text: { type: string }
+        createdAt: { type: string, format: date-time }
+    RefundTicket:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        orderId: { type: string, format: uuid }
+        studentId: { type: string, format: uuid }
+        teacherId: { type: string, format: uuid }
+        originalPaidAmount: { type: integer, format: int64 }
+        eligibleRefundAmount: { type: integer, format: int64 }
+        status: { type: string, enum: [AutoRejected, TeacherReviewing, TeacherRejected, AdminArbitration, ApprovedTerminal, RejectedTerminal] }
+        teacherSlaDeadline: { type: string, format: date-time, nullable: true }
+        rejectionReason: { type: string, nullable: true }
+        decidedAmount: { type: integer, format: int64, nullable: true }
+        decidedDeductionSource: { type: string, enum: [PlatformAccountDirect, NextTeacherPayout], nullable: true }
+        thread: { type: array, items: { $ref: '#/components/schemas/ThreadMessage' } }
+    TeacherRefundDecisionRequest:
+      type: object
+      required: [approve]
+      properties:
+        approve: { type: boolean }
+        approvedAmount: { type: integer, format: int64, nullable: true }
+        rejectionReason: { type: string, nullable: true }
+    AdminArbitrationRequest:
+      type: object
+      required: [approve]
+      properties:
+        approve: { type: boolean }
+        approvedAmount: { type: integer, format: int64, nullable: true }
+    AddThreadMessageRequest:
+      type: object
+      required: [text]
+      properties:
+        text: { type: string }
+    AddInternalNoteRequest:
+      type: object
+      required: [text]
+      properties:
+        text: { type: string }
+    ProposeFeeSettingRequest:
+      type: object
+      required: [platformServiceFeeRate, crossBankTransferFee, refundFloor, effectiveDate]
+      properties:
+        platformServiceFeeRate: { type: number, format: double }
+        crossBankTransferFee: { type: integer, format: int64 }
+        refundFloor: { type: array, items: { $ref: '#/components/schemas/RefundTier' } }
+        effectiveDate: { type: string, format: date-time }
+    PlatformFeeSetting:
+      type: object
+      properties:
+        versionId: { type: string }
+        platformServiceFeeRate: { type: number, format: double }
+        crossBankTransferFee: { type: integer, format: int64 }
+        refundFloor: { type: array, items: { $ref: '#/components/schemas/RefundTier' } }
+        effectiveDate: { type: string, format: date-time }
+        proposedBy: { type: string, format: uuid }
+        proposedAt: { type: string, format: date-time }
+    ChangeLogEntry:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        category: { type: string }
+        description: { type: string }
+        operatorId: { type: string, format: uuid }
+        occurredAt: { type: string, format: date-time }
+    PublishTermsVersionRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    TermsVersion:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        versionNumber: { type: integer }
+        content: { type: string }
+        publishedBy: { type: string, format: uuid }
+        publishedAt: { type: string, format: date-time }
+    RecordTeacherConsentRequest:
+      type: object
+      required: [termsVersionId]
+      properties:
+        termsVersionId: { type: string, format: uuid }
+    UpdateNotificationTemplateRequest:
+      type: object
+      required: [bodyTemplate]
+      properties:
+        bodyTemplate: { type: string }
+    NotificationTemplate:
+      type: object
+      properties:
+        key: { type: string }
+        bodyTemplate: { type: string }
+        updatedBy: { type: string, format: uuid }
+        updatedAt: { type: string, format: date-time }
+    NotificationRecord:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        userId: { type: string, format: uuid }
+        templateKey: { type: string }
+        renderedText: { type: string }
+        dispatchedChannels: { type: string }
+        sentAt: { type: string, format: date-time }
+        isRead: { type: boolean }
+    UpdateAccountNotificationSettingsRequest:
+      type: object
+      required: [disabledChannels]
+      properties:
+        disabledChannels:
+          type: array
+          items: { type: string }
+          description: Only "Line" may ever appear here — Email and InApp can never be disabled (task 9.4).
+paths:
+  /users:
+    post:
+      tags: [identity]
+      summary: Register a student or teacher account (task 2.1)
+      security: []
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/RegisterUserRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '400': { description: Validation error (e.g. missing phone number), content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
+  /teachers/{teacherId}/verification:
+    post:
+      tags: [identity]
+      summary: Submit teacher identity verification (task 2.2)
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SubmitTeacherVerificationRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/TeacherVerification' } } } }
+    get:
+      tags: [identity]
+      summary: Get a teacher's verification status
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/TeacherVerification' } } } }
+  /teachers/{teacherId}/verification/review:
+    post:
+      tags: [identity]
+      summary: Admin approves/rejects a teacher's verification (task 2.3)
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/ReviewTeacherVerificationRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/TeacherVerification' } } } }
+  /courses:
+    post:
+      tags: [courses]
+      summary: Create a course (task 3.1/3.2)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/CreateCourseRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Course' } } } }
+  /courses/{courseId}:
+    get:
+      tags: [courses]
+      summary: Get course details
+      security: []
+      parameters: [{ name: courseId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Course' } } } }
+  /courses/{courseId}/publish:
+    post:
+      tags: [courses]
+      summary: Publish a course (task 3.3)
+      parameters: [{ name: courseId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Course' } } } }
+  /teachers/{teacherId}/courses:
+    get:
+      tags: [courses]
+      summary: List a teacher's courses
+      security: []
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PagedResult' } } } }
+  /orders:
+    post:
+      tags: [orders]
+      summary: Place an order (task 4.1)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/CreateOrderRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+  /orders/{orderId}:
+    get:
+      tags: [orders]
+      summary: Get order details
+      parameters: [{ name: orderId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+  /students/{studentId}/orders:
+    get:
+      tags: [orders]
+      summary: List a student's orders
+      parameters: [{ name: studentId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PagedResult' } } } }
+  /webhooks/payment-notifications:
+    post:
+      tags: [orders]
+      summary: 綠界/藍新 payment gateway background-notification webhook (task 4.2) — never our own JWT
+      security: []
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/PaymentGatewayNotification' } } }
+      responses:
+        '204': { description: Accepted and enqueued to SQS for async processing (task 4.3) }
+  /payout-batches/{payoutBatchId}:
+    get:
+      tags: [payouts]
+      summary: Payout batch detail (task 6.3)
+      parameters: [{ name: payoutBatchId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PayoutBatch' } } } }
+  /teachers/{teacherId}/payout-batches:
+    get:
+      tags: [payouts]
+      summary: List a teacher's payout batches
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PagedResult' } } } }
+  /payout-batches/{payoutBatchId}/mark-paid:
+    post:
+      tags: [payouts]
+      summary: Admin marks a payout batch as paid (task 6.2)
+      parameters: [{ name: payoutBatchId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/MarkPayoutBatchPaidRequest' } } }
+      responses:
+        '204': { description: No Content }
+  /payout-batches/{payoutBatchId}/mark-bank-rejected:
+    post:
+      tags: [payouts]
+      summary: Admin marks a payout batch as bank-rejected (task 6.2)
+      parameters: [{ name: payoutBatchId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/MarkBankRejectedRequest' } } }
+      responses:
+        '204': { description: No Content }
+  /refund-tickets:
+    post:
+      tags: [refund-tickets]
+      summary: Submit a refund ticket (task 7.1)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SubmitRefundTicketRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}:
+    get:
+      tags: [refund-tickets]
+      summary: Get a refund ticket
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}/teacher-decision:
+    post:
+      tags: [refund-tickets]
+      summary: Teacher approves/rejects a refund ticket (task 7.2)
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/TeacherRefundDecisionRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}/escalate:
+    post:
+      tags: [refund-tickets]
+      summary: Student appeals an auto-rejected or teacher-rejected ticket to arbitration (task 7.1)
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}/admin-arbitration:
+    post:
+      tags: [refund-tickets]
+      summary: Admin makes a final arbitration decision (task 7.4)
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/AdminArbitrationRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}/thread:
+    post:
+      tags: [refund-tickets]
+      summary: Add a message to the shared student/teacher thread (task 7.6)
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/AddThreadMessageRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /refund-tickets/{ticketId}/internal-notes:
+    post:
+      tags: [refund-tickets]
+      summary: Admin adds an internal-only note (task 7.6)
+      parameters: [{ name: ticketId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/AddInternalNoteRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/RefundTicket' } } } }
+  /governance/fee-settings:
+    post:
+      tags: [governance]
+      summary: Propose a fee/floor change with >= 30 days notice (task 8.1)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/ProposeFeeSettingRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/PlatformFeeSetting' } } } }
+  /governance/change-log/{category}:
+    get:
+      tags: [governance]
+      summary: List change-log entries by category (task 8.2)
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema: { type: string, enum: [FeeRate, RefundFloor, Verification, Arbitration, Permission, Payout] }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PagedResult' } } } }
+  /governance/terms:
+    post:
+      tags: [governance]
+      summary: Publish a new terms version (task 8.3)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/PublishTermsVersionRequest' } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/TermsVersion' } } } }
+  /teachers/{teacherId}/terms-consent:
+    post:
+      tags: [governance]
+      summary: Record a teacher's consent to a terms version (task 8.4)
+      parameters: [{ name: teacherId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/RecordTeacherConsentRequest' } } }
+      responses:
+        '204': { description: No Content }
+  /notification-templates/{key}:
+    post:
+      tags: [notifications]
+      summary: Admin creates/updates a notification template (task 9.3)
+      parameters: [{ name: key, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/UpdateNotificationTemplateRequest' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/NotificationTemplate' } } } }
+  /users/{userId}/notifications:
+    get:
+      tags: [notifications]
+      summary: List a user's in-app notification records
+      parameters: [{ name: userId, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PagedResult' } } } }
+  /account/notification-settings:
+    post:
+      tags: [notifications]
+      summary: Update account notification settings — Email/InApp can never be disabled (task 9.4)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/UpdateAccountNotificationSettingsRequest' } } }
+      responses:
+        '204': { description: No Content }
+        '400': { description: Attempted to disable a core channel, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }

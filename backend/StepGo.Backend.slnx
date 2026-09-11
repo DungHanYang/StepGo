@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/StepGo.Api.Courses/StepGo.Api.Courses.csproj" />
+    <Project Path="src/StepGo.Api.Governance/StepGo.Api.Governance.csproj" />
+    <Project Path="src/StepGo.Api.Identity/StepGo.Api.Identity.csproj" />
+    <Project Path="src/StepGo.Api.Notifications/StepGo.Api.Notifications.csproj" />
+    <Project Path="src/StepGo.Api.Orders/StepGo.Api.Orders.csproj" />
+    <Project Path="src/StepGo.Api.Payouts/StepGo.Api.Payouts.csproj" />
+    <Project Path="src/StepGo.Api.RefundTickets/StepGo.Api.RefundTickets.csproj" />
+    <Project Path="src/StepGo.Api.Shared/StepGo.Api.Shared.csproj" />
+    <Project Path="src/StepGo.Application/StepGo.Application.csproj" />
+    <Project Path="src/StepGo.Contracts/StepGo.Contracts.csproj" />
+    <Project Path="src/StepGo.Domain/StepGo.Domain.csproj" />
+    <Project Path="src/StepGo.Infrastructure/StepGo.Infrastructure.csproj" />
+    <Project Path="src/StepGo.Worker.NotificationDispatcher/StepGo.Worker.NotificationDispatcher.csproj" />
+    <Project Path="src/StepGo.Worker.OverdueOrderScan/StepGo.Worker.OverdueOrderScan.csproj" />
+    <Project Path="src/StepGo.Worker.PaymentNotificationConsumer/StepGo.Worker.PaymentNotificationConsumer.csproj" />
+    <Project Path="src/StepGo.Worker.PayoutBatchScheduler/StepGo.Worker.PayoutBatchScheduler.csproj" />
+    <Project Path="src/StepGo.Worker.RefundSlaCheck/StepGo.Worker.RefundSlaCheck.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/StepGo.Application.Tests/StepGo.Application.Tests.csproj" />
+    <Project Path="tests/StepGo.Domain.Tests/StepGo.Domain.Tests.csproj" />
+    <Project Path="tests/StepGo.Infrastructure.Tests/StepGo.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>
