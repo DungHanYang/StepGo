@@ -1,0 +1,45 @@
+@page "/payout-account"
+@using StepGo.TeacherPortal.Services
+@using StepGo.UI.Status
+@inject TeacherDataStore Store
+
+<PageTitle>撥款帳戶 — StepGo</PageTitle>
+
+<h1>撥款帳戶設定</h1>
+
+<div class="stepgo-card mt-4 flex flex-col gap-3" data-testid="payout-account-status">
+    <StatusTag Label="@Store.PayoutAccountStatus.ToDisplay().Label" Variant="@Store.PayoutAccountStatus.ToDisplay().Variant" />
+
+    @if (Store.PayoutAccountStatus == PayoutAccountStatus.BankRejected)
+    {
+        <p class="text-stepgo-danger" data-testid="bank-rejection-reason">退回原因：@Store.PayoutAccountBankRejectionReason</p>
+    }
+
+    @if (!_editing)
+    {
+        <p>戶名：王老師　銀行：模擬銀行　帳號：****1234</p>
+        <Button Variant="secondary" OnClick="@(() => _editing = true)">
+            @(Store.PayoutAccountStatus == PayoutAccountStatus.BankRejected ? "修改後重新送出" : "變更帳戶")
+        </Button>
+    }
+    else
+    {
+        <OwlTip Title="小提醒">戶名必須與身分驗證時填寫的真實姓名一致，否則將被銀行退回。</OwlTip>
+        <label class="flex flex-col gap-1">
+            戶名
+            <input @bind="_accountName" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+        </label>
+        <Button Variant="primary" OnClick="Submit">送出</Button>
+    }
+</div>
+
+@code {
+    private bool _editing;
+    private string _accountName = "王老師";
+
+    private void Submit()
+    {
+        Store.PayoutAccountStatus = PayoutAccountStatus.Reconciling;
+        _editing = false;
+    }
+}

@@ -1,3 +1,15 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-@Body
+<div class="stepgo-system-shell">
+    <nav class="stepgo-system-sidebar" aria-label="老師後台導覽">
+        <a href="/" class="stepgo-btn stepgo-btn--secondary">總覽</a>
+        <a href="/courses/new" class="stepgo-btn stepgo-btn--secondary">建立課程</a>
+        <a href="/verification" class="stepgo-btn stepgo-btn--secondary">身分驗證</a>
+        <a href="/payout-account" class="stepgo-btn stepgo-btn--secondary">撥款帳戶</a>
+        <a href="/refund-review" class="stepgo-btn stepgo-btn--secondary">退課審核</a>
+        <a href="/students" class="stepgo-btn stepgo-btn--secondary">學生名單</a>
+    </nav>
+    <main class="stepgo-system-main">
+        @Body
+    </main>
+</div>

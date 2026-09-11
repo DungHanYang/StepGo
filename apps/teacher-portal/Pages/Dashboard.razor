@@ -1,0 +1,86 @@
+@page "/"
+@using StepGo.TeacherPortal.Models
+@using StepGo.TeacherPortal.Services
+@inject TeacherDataStore Store
+@inject TimeProvider Clock
+
+<PageTitle>後台總覽 — StepGo</PageTitle>
+
+<h1>後台總覽</h1>
+
+<section class="mt-4 flex flex-col gap-2" aria-labelledby="todo-heading">
+    <h2 id="todo-heading">待辦優先清單</h2>
+    @if (_urgentTickets.Count == 0)
+    {
+        <Card>目前沒有待處理的退課工單。</Card>
+    }
+    else
+    {
+        @foreach (var ticket in _urgentTickets)
+        {
+            <Card>
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="font-medium">@ticket.StudentName — @ticket.CourseName</p>
+                        <p class="text-sm text-stepgo-ink-subtle">原因：@ticket.Reason</p>
+                    </div>
+                    <StatusTag Label="@FormatRemaining(ticket.TimeRemaining(_now))" Variant="StatusTagVariant.Warning" />
+                </div>
+            </Card>
+        }
+    }
+</section>
+
+<section class="mt-6 grid grid-cols-1 gap-4 sys-mid:grid-cols-2 sys-wide:grid-cols-4" aria-labelledby="revenue-heading">
+    <h2 id="revenue-heading" class="sys-mid:col-span-2 sys-wide:col-span-4">本期收入總覽</h2>
+    <Card>
+        <p class="text-sm text-stepgo-ink-subtle">報名筆數</p>
+        <p class="font-number text-xl">@_revenue.OrderCount</p>
+    </Card>
+    <Card>
+        <p class="text-sm text-stepgo-ink-subtle">總營收毛額</p>
+        <p class="font-number text-xl">NT$@(_revenue.GrossRevenue.ToString("N0"))</p>
+    </Card>
+    <Card>
+        <p class="text-sm text-stepgo-ink-subtle">總扣除成本</p>
+        <p class="font-number text-xl">NT$@(_revenue.TotalCost.ToString("N0"))</p>
+    </Card>
+    <Card Class="border-2 border-stepgo-teacher">
+        <p class="text-sm text-stepgo-teacher">應收淨額</p>
+        <p class="font-number text-2xl font-medium text-stepgo-teacher">NT$@(_revenue.NetAmount.ToString("N0"))</p>
+    </Card>
+</section>
+
+<section class="mt-6" aria-labelledby="payout-heading">
+    <h2 id="payout-heading">下次撥款</h2>
+    <Card>
+        <p>批次日期：@Store.NextPayout.BatchDate.ToString("yyyy/MM/dd")</p>
+        <p>可撥款筆數：@Store.NextPayout.EligibleOrderCount 筆</p>
+        <p>預估金額：NT$@(Store.NextPayout.TotalAmount.ToString("N0"))（依各筆訂單淨額加總換算）</p>
+    </Card>
+</section>
+
+@code {
+    private DateTimeOffset _now;
+    private IReadOnlyList<RefundTicket> _urgentTickets = [];
+    private RevenueSummary _revenue = new(0, 0, 0, 0);
+
+    protected override void OnInitialized()
+    {
+        _now = Clock.GetUtcNow();
+        _urgentTickets = RefundTicketSorting.ByUrgency(Store.RefundTickets, _now);
+        _revenue = RevenueSummaryCalculator.Calculate(Store.Orders);
+    }
+
+    private static string FormatRemaining(TimeSpan remaining)
+    {
+        if (remaining < TimeSpan.Zero)
+        {
+            return "已逾期";
+        }
+
+        return remaining.TotalDays >= 1
+            ? $"剩餘 {(int)remaining.TotalDays} 天 {remaining.Hours} 小時"
+            : $"剩餘 {remaining.Hours} 小時 {remaining.Minutes} 分";
+    }
+}

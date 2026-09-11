@@ -1,0 +1,134 @@
+@page "/refund-review"
+@using StepGo.TeacherPortal.Models
+@using StepGo.TeacherPortal.Services
+@using StepGo.UI.Status
+@inject TeacherDataStore Store
+@inject TimeProvider Clock
+
+<PageTitle>退課審核 — StepGo</PageTitle>
+
+<h1>退課審核</h1>
+
+@{
+    var pending = Store.RefundTickets.Where(t => t.Status == RefundTicketStatus.PendingTeacherReview).ToList();
+}
+
+@if (pending.Count == 0)
+{
+    <Card>目前沒有待審核的退課申請。</Card>
+}
+else
+{
+    <div class="mt-4 flex flex-col gap-4" data-testid="refund-review-list">
+        @foreach (var ticket in pending)
+        {
+            <Card>
+                <div class="flex flex-col gap-2" data-testid="@($"ticket-{ticket.Id}")">
+                    <div class="flex items-center justify-between">
+                        <p class="font-medium">@ticket.StudentName — @ticket.CourseName</p>
+                        <span class="font-number text-sm text-stepgo-ink-subtle">SLA 剩餘 @FormatRemaining(ticket.TimeRemaining(Clock.GetUtcNow()))</span>
+                    </div>
+                    <p class="text-sm text-stepgo-ink-subtle">原因：@ticket.Reason</p>
+                    <p class="font-number text-sm">原始繳費：NT$@(ticket.OriginalPaymentAmount.ToString("N0"))　系統試算退款：NT$@(ticket.SystemCalculatedRefundAmount.ToString("N0"))</p>
+
+                    <label class="flex flex-col gap-1">
+                        核准金額（不得超過原始繳費金額 NT$@(ticket.OriginalPaymentAmount.ToString("N0"))）
+                        <input type="number" min="0" value="@GetAmount(ticket.Id, ticket.SystemCalculatedRefundAmount)"
+                               @onchange="e => OnAmountChanged(ticket.Id, e)"
+                               class="rounded-stepgo border border-stepgo-border px-2 py-1 font-number" />
+                    </label>
+                    @if (_amountErrors.Contains(ticket.Id))
+                    {
+                        <p class="text-sm text-stepgo-danger" role="alert">核准金額不得超過原始繳費金額</p>
+                    }
+
+                    <label class="flex flex-col gap-1">
+                        理由（微調金額或駁回時必填）
+                        <input @onchange="e => OnReasonChanged(ticket.Id, e)" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                    @if (_reasonErrors.Contains(ticket.Id))
+                    {
+                        <p class="text-sm text-stepgo-danger" role="alert">理由為必填</p>
+                    }
+
+                    <div class="flex gap-2">
+                        <Button Variant="primary" OnClick="@(() => Approve(ticket))">核准</Button>
+                        <Button Variant="danger" OnClick="@(() => Reject(ticket))">駁回</Button>
+                    </div>
+                </div>
+            </Card>
+        }
+    </div>
+}
+
+@code {
+    private readonly Dictionary<string, decimal> _amounts = [];
+    private readonly Dictionary<string, string> _reasons = [];
+    private readonly HashSet<string> _amountErrors = [];
+    private readonly HashSet<string> _reasonErrors = [];
+
+    private decimal GetAmount(string ticketId, decimal fallback) => _amounts.TryGetValue(ticketId, out var v) ? v : fallback;
+
+    private void OnAmountChanged(string ticketId, ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value?.ToString(), out var amount))
+        {
+            _amounts[ticketId] = amount;
+        }
+    }
+
+    private void OnReasonChanged(string ticketId, ChangeEventArgs e)
+    {
+        _reasons[ticketId] = e.Value?.ToString() ?? string.Empty;
+    }
+
+    private void Approve(RefundTicket ticket)
+    {
+        _amountErrors.Remove(ticket.Id);
+        _reasonErrors.Remove(ticket.Id);
+
+        var amount = GetAmount(ticket.Id, ticket.SystemCalculatedRefundAmount);
+        var reason = _reasons.GetValueOrDefault(ticket.Id);
+
+        if (amount > ticket.OriginalPaymentAmount)
+        {
+            _amountErrors.Add(ticket.Id);
+            return;
+        }
+
+        var isAdjusted = amount != ticket.SystemCalculatedRefundAmount;
+        if (isAdjusted && string.IsNullOrWhiteSpace(reason))
+        {
+            _reasonErrors.Add(ticket.Id);
+            return;
+        }
+
+        Store.ApproveRefund(ticket.Id, amount, reason);
+    }
+
+    private void Reject(RefundTicket ticket)
+    {
+        _reasonErrors.Remove(ticket.Id);
+        var reason = _reasons.GetValueOrDefault(ticket.Id);
+
+        if (string.IsNullOrWhiteSpace(reason))
+        {
+            _reasonErrors.Add(ticket.Id);
+            return;
+        }
+
+        Store.RejectRefund(ticket.Id, reason);
+    }
+
+    private static string FormatRemaining(TimeSpan remaining)
+    {
+        if (remaining < TimeSpan.Zero)
+        {
+            return "已逾期";
+        }
+
+        return remaining.TotalDays >= 1
+            ? $"{(int)remaining.TotalDays} 天 {remaining.Hours} 小時"
+            : $"{remaining.Hours} 小時 {remaining.Minutes} 分";
+    }
+}

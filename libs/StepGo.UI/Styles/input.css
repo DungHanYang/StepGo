@@ -93,3 +93,18 @@ h6 {
 .stepgo-wizard-container {
   @apply flex flex-col gap-6;
 }
+
+/* System-page shell (teacher/student/admin portals) — sidebar layout that collapses to a
+   horizontal bar below 980px. Deliberately plain utility classes, never inline
+   flex-direction, per the known pitfall in design/design-handoff/README.md. */
+.stepgo-system-shell {
+  @apply flex min-h-screen flex-col sys-mid:flex-row sys-wide:flex-row;
+}
+.stepgo-system-sidebar {
+  @apply flex flex-row flex-wrap items-center gap-2 border-b border-stepgo-border bg-stepgo-card p-3
+    sys-mid:w-48 sys-mid:flex-col sys-mid:items-stretch sys-mid:border-b-0 sys-mid:border-r
+    sys-wide:w-56 sys-wide:flex-col sys-wide:items-stretch sys-wide:border-b-0 sys-wide:border-r;
+}
+.stepgo-system-main {
+  @apply flex-1 p-6;
+}

@@ -1,0 +1,199 @@
+@page "/courses/new"
+@using StepGo.PricingRules
+@using StepGo.TeacherPortal.Models
+@using StepGo.TeacherPortal.Services
+@using StepGo.UI.Status
+@inject TeacherDataStore Store
+@inject NavigationManager Nav
+
+<PageTitle>建立課程 — StepGo</PageTitle>
+
+<h1>建立課程</h1>
+
+<div class="mt-4">
+    <Wizard Steps="@_stepLabels" CurrentStepIndex="@_currentStep" AriaLabel="建立課程步驟">
+        <ChildContent>
+            @if (_currentStep == 0)
+            {
+                <div class="stepgo-card flex flex-col gap-3">
+                    <label class="flex flex-col gap-1">
+                        課程名稱
+                        <input @bind="_draft.Title" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        類別
+                        <input @bind="_draft.Category" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        場次
+                        <input @bind="_draft.ScheduleSummary" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        地點
+                        <input @bind="_draft.Location" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                </div>
+            }
+            else if (_currentStep == 1)
+            {
+                <div class="stepgo-card flex flex-col gap-3" data-testid="pricing-step">
+                    <label class="flex flex-col gap-1">
+                        售價（NT$）
+                        <input type="number" min="0" @bind="_draft.Price" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1 font-number" />
+                    </label>
+
+                    <fieldset class="flex flex-col gap-1">
+                        <legend>付款方式（至少選一項）</legend>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" @bind="_draft.AllowCreditCard" />
+                            信用卡
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" @bind="_draft.AllowAtm" />
+                            ATM 虛擬帳號
+                        </label>
+                        @if (_paymentMethodError)
+                        {
+                            <p class="text-sm text-stepgo-danger" role="alert">需至少選擇一種付款方式</p>
+                        }
+                    </fieldset>
+
+                    <div data-testid="pricing-breakdown" class="flex flex-col gap-1 border-t border-stepgo-border pt-2 font-number text-sm">
+                        <p class="text-xs text-stepgo-ink-subtle">平台服務費以原價計算</p>
+                        @if (_draft.AllowCreditCard)
+                        {
+                            var cc = PricingCalculator.Calculate(_draft.Price, PaymentMethod.CreditCard);
+                            <p>信用卡：金流 NT$@(cc.GatewayFee.ToString("N0")) + 服務費 NT$@(cc.PlatformFee.ToString("N0")) + 撥款費 NT$@(cc.PayoutTransferFee.ToString("N0")) → 預估淨額 NT$@(cc.TeacherNetAmount.ToString("N0"))</p>
+                        }
+                        @if (_draft.AllowAtm)
+                        {
+                            var atm = PricingCalculator.Calculate(_draft.Price, PaymentMethod.Atm);
+                            <p>ATM：金流 NT$@(atm.GatewayFee.ToString("N0")) + 服務費 NT$@(atm.PlatformFee.ToString("N0")) + 撥款費 NT$@(atm.PayoutTransferFee.ToString("N0")) → 預估淨額 NT$@(atm.TeacherNetAmount.ToString("N0"))</p>
+                        }
+                    </div>
+                </div>
+            }
+            else if (_currentStep == 2)
+            {
+                <div class="stepgo-card flex flex-col gap-3" data-testid="refund-rules-step">
+                    @foreach (var tier in _tiers)
+                    {
+                        var floor = StepGo.PricingRules.RefundPolicy.DefaultPlatformFloor[tier];
+                        <label class="flex flex-col gap-1">
+                            @TierLabel(tier)（平台底線 @((floor * 100).ToString("N0"))%）
+                            <input type="number" min="0" max="100" value="@((_draft.RefundRates[tier] * 100).ToString("N0"))"
+                                   @onchange="e => OnRefundRateChanged(tier, e)"
+                                   class="rounded-stepgo border border-stepgo-border px-2 py-1 font-number" />
+                        </label>
+                        @if (_refundTierErrors.Contains(tier))
+                        {
+                            <p class="text-sm text-stepgo-danger" role="alert">不得低於平台底線 @((floor * 100).ToString("N0"))%</p>
+                        }
+                    }
+                </div>
+            }
+            else if (_currentStep == 3)
+            {
+                <div class="stepgo-card flex flex-col gap-3" data-testid="enrollment-step">
+                    <label class="flex flex-col gap-1">
+                        招生頁介紹
+                        <textarea @bind="_draft.EnrollmentDescription" @bind:event="oninput" rows="4"
+                                  class="rounded-stepgo border border-stepgo-border px-2 py-1"></textarea>
+                    </label>
+                </div>
+            }
+        </ChildContent>
+        <Footer>
+            <Button Variant="secondary" Disabled="@(_currentStep == 0)" OnClick="GoBack">上一步</Button>
+            @if (_currentStep < _stepLabels.Count - 1)
+            {
+                <Button Variant="primary" OnClick="GoNext">下一步</Button>
+            }
+            else
+            {
+                <Button Variant="primary" OnClick="SubmitCourse">送出審核</Button>
+            }
+        </Footer>
+    </Wizard>
+</div>
+
+@code {
+    private readonly IReadOnlyList<string> _stepLabels = ["基本資料", "定價與付款", "退費規則", "招生頁"];
+    private readonly IReadOnlyList<RefundTier> _tiers =
+    [
+        RefundTier.FourteenDaysOrMore,
+        RefundTier.SevenToThirteenDays,
+        RefundTier.OneToSixDays,
+        RefundTier.AfterCourseStart,
+    ];
+
+    private readonly CourseDraft _draft = new();
+    private int _currentStep;
+    private bool _paymentMethodError;
+    private readonly HashSet<RefundTier> _refundTierErrors = [];
+
+    protected override void OnInitialized()
+    {
+        // frontend-teacher-portal spec: "身分驗證頁四狀態控管課程建立權限" — non-Verified
+        // teachers are redirected to the verification page instead of entering the wizard.
+        if (Store.VerificationStatus != VerificationStatus.Verified)
+        {
+            Nav.NavigateTo("/verification");
+        }
+    }
+
+    private void GoBack()
+    {
+        if (_currentStep > 0)
+        {
+            _currentStep--;
+        }
+    }
+
+    private void GoNext()
+    {
+        if (_currentStep == 1 && !_draft.HasAtLeastOnePaymentMethod)
+        {
+            _paymentMethodError = true;
+            return;
+        }
+
+        _paymentMethodError = false;
+        _currentStep++;
+    }
+
+    private void OnRefundRateChanged(RefundTier tier, ChangeEventArgs e)
+    {
+        if (!decimal.TryParse(e.Value?.ToString(), out var percent))
+        {
+            return;
+        }
+
+        var rate = percent / 100m;
+
+        if (StepGo.PricingRules.RefundPolicy.IsAllowed(tier, rate))
+        {
+            _draft.RefundRates[tier] = rate;
+            _refundTierErrors.Remove(tier);
+        }
+        else
+        {
+            _refundTierErrors.Add(tier);
+        }
+    }
+
+    private void SubmitCourse()
+    {
+        Store.SubmitCourse(_draft);
+        Nav.NavigateTo("/courses/submitted");
+    }
+
+    private static string TierLabel(RefundTier tier) => tier switch
+    {
+        RefundTier.FourteenDaysOrMore => "開課前 14 日以上",
+        RefundTier.SevenToThirteenDays => "開課前 7–13 日",
+        RefundTier.OneToSixDays => "開課前 1–6 日",
+        RefundTier.AfterCourseStart => "開課後",
+        _ => tier.ToString(),
+    };
+}

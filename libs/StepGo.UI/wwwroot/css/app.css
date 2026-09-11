@@ -572,12 +572,24 @@ video {
   margin-bottom: 0.25rem;
 }
 
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
 .flex {
   display: flex;
 }
 
 .table {
   display: table;
+}
+
+.grid {
+  display: grid;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-6 {
@@ -604,8 +616,24 @@ video {
   width: 100%;
 }
 
+.max-w-2xl {
+  max-width: 42rem;
+}
+
 .max-w-3xl {
   max-width: 48rem;
+}
+
+.max-w-5xl {
+  max-width: 64rem;
+}
+
+.max-w-sm {
+  max-width: 24rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
 }
 
 .flex-1 {
@@ -616,12 +644,28 @@ video {
   flex-shrink: 0;
 }
 
+.list-disc {
+  list-style-type: disc;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .flex-col {
   flex-direction: column;
 }
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -632,20 +676,52 @@ video {
   justify-content: space-between;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-10 {
+  gap: 2.5rem;
+}
+
 .gap-2 {
   gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
 }
 
 .gap-8 {
   gap: 2rem;
 }
 
+.self-start {
+  align-self: flex-start;
+}
+
 .rounded-full {
   border-radius: 9999px;
 }
 
+.rounded-stepgo {
+  border-radius: 3px;
+}
+
 .border {
   border-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-stepgo-border {
@@ -673,6 +749,11 @@ video {
   background-color: rgb(34 32 28 / var(--tw-bg-opacity, 1));
 }
 
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
 .p-3 {
   padding: 0.75rem;
 }
@@ -681,13 +762,50 @@ video {
   padding: 1.5rem;
 }
 
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.pl-5 {
+  padding-left: 1.25rem;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
+}
+
+.font-number {
+  font-family: "EB Garamond", serif;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
 
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
 .font-medium {
   font-weight: 500;
+}
+
+.text-stepgo-danger {
+  --tw-text-opacity: 1;
+  color: rgb(138 75 63 / var(--tw-text-opacity, 1));
 }
 
 .text-stepgo-ink {
@@ -695,14 +813,33 @@ video {
   color: rgb(34 32 28 / var(--tw-text-opacity, 1));
 }
 
+.text-stepgo-ink-muted {
+  --tw-text-opacity: 1;
+  color: rgb(74 70 61 / var(--tw-text-opacity, 1));
+}
+
 .text-stepgo-ink-subtle {
   --tw-text-opacity: 1;
   color: rgb(108 102 89 / var(--tw-text-opacity, 1));
 }
 
+.text-stepgo-student {
+  --tw-text-opacity: 1;
+  color: rgb(47 85 96 / var(--tw-text-opacity, 1));
+}
+
+.text-stepgo-teacher {
+  --tw-text-opacity: 1;
+  color: rgb(167 98 44 / var(--tw-text-opacity, 1));
+}
+
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.no-underline {
+  text-decoration-line: none;
 }
 
 /*
@@ -959,6 +1096,75 @@ h6 {
   gap: 1.5rem;
 }
 
+/* System-page shell (teacher/student/admin portals) — sidebar layout that collapses to a
+   horizontal bar below 980px. Deliberately plain utility classes, never inline
+   flex-direction, per the known pitfall in design/design-handoff/README.md. */
+
+.stepgo-system-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+@media (min-width: 1080px) {
+  .stepgo-system-shell {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 980px) and (max-width: 1079px) {
+  .stepgo-system-shell {
+    flex-direction: row;
+  }
+}
+
+.stepgo-system-sidebar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(222 215 201 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 251 246 / var(--tw-bg-opacity, 1));
+  padding: 0.75rem;
+}
+
+@media (min-width: 1080px) {
+  .stepgo-system-sidebar {
+    width: 14rem;
+    flex-direction: column;
+    align-items: stretch;
+    border-bottom-width: 0;
+    border-right-width: 1px;
+  }
+}
+
+@media (min-width: 980px) and (max-width: 1079px) {
+  .stepgo-system-sidebar {
+    width: 12rem;
+    flex-direction: column;
+    align-items: stretch;
+    border-bottom-width: 0;
+    border-right-width: 1px;
+  }
+}
+
+.stepgo-system-main {
+  flex: 1 1 0%;
+  padding: 1.5rem;
+}
+
+.hover\:bg-stepgo-student\/5:hover {
+  background-color: rgb(47 85 96 / 0.05);
+}
+
+.hover\:bg-stepgo-teacher\/5:hover {
+  background-color: rgb(167 98 44 / 0.05);
+}
+
 @media (min-width: 1080px) {
   .sys-wide\:w-48 {
     width: 12rem;
@@ -976,5 +1182,15 @@ h6 {
 
   .sys-mid\:flex-row {
     flex-direction: row;
+  }
+}
+
+@media (min-width: 900px) {
+  .mkt-wide\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mkt-wide\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

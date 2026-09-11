@@ -1,0 +1,55 @@
+@page "/students"
+@using StepGo.TeacherPortal.Models
+@using StepGo.TeacherPortal.Services
+@using StepGo.UI.Status
+@inject TeacherDataStore Store
+@inject IJSRuntime JsRuntime
+
+<PageTitle>學生名單 — StepGo</PageTitle>
+
+<h1>學生名單</h1>
+
+<div class="mt-4 flex flex-wrap items-end gap-3">
+    <label class="flex flex-col gap-1 text-sm">
+        起始日期
+        <input type="date" @bind="_startDate" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+    </label>
+    <label class="flex flex-col gap-1 text-sm">
+        結束日期
+        <input type="date" @bind="_endDate" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+    </label>
+    <Button Variant="secondary" OnClick="ExportCsv">匯出 CSV</Button>
+</div>
+
+<div class="mt-4" data-testid="student-roster-table">
+    <Table TItem="Order" Items="@FilteredOrders" AriaLabel="學生繳費明細">
+        <HeaderTemplate>
+            <th>學生</th>
+            <th>課程</th>
+            <th>金額</th>
+            <th>付款狀態</th>
+            <th>訂單時間</th>
+        </HeaderTemplate>
+        <RowTemplate Context="order">
+            <td>@order.StudentName</td>
+            <td>@order.CourseName</td>
+            <td class="font-number">NT$@(order.Amount.ToString("N0"))</td>
+            <td><StatusTag Label="@order.PaymentStatus.ToDisplay().Label" Variant="@order.PaymentStatus.ToDisplay().Variant" /></td>
+            <td class="font-number">@order.OrderedAt.ToString("yyyy-MM-dd")</td>
+        </RowTemplate>
+        <EmptyTemplate>此區間內沒有訂單。</EmptyTemplate>
+    </Table>
+</div>
+
+@code {
+    private DateOnly? _startDate;
+    private DateOnly? _endDate;
+
+    private IReadOnlyList<Order> FilteredOrders => OrderFiltering.ByDateRange(Store.Orders, _startDate, _endDate);
+
+    private async Task ExportCsv()
+    {
+        var csv = StudentRosterCsvExporter.ToCsv(FilteredOrders);
+        await JsRuntime.InvokeVoidAsync("stepGoDownloadFile", "student-roster.csv", csv, "text/csv");
+    }
+}
