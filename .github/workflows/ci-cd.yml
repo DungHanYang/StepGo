@@ -1,0 +1,175 @@
+name: CI/CD
+
+# ---------------------------------------------------------------------------
+# Design decisions (answers the CI/CD Open Questions from design.md — please
+# mirror these back into the design docs once they're committed):
+#
+# 1. Environments: this workflow currently implements dev + prod only.
+#    (The design docs also list "staging" as a tier — not wired up here yet.
+#    To add it later: add a third tag pattern, e.g. `staging-v*.*.*`, plus a
+#    `staging` case in resolve-environment and a `staging` GitHub Environment.)
+#
+# 2. Trigger for `cdk deploy`: pushing a git tag.
+#      - `dev-v*.*.*`  (e.g. dev-v0.1.0)  -> deploys to dev automatically
+#      - `v*.*.*`      (e.g. v1.2.3)      -> deploys to prod, gated by the
+#                                            `production` GitHub Environment's
+#                                            required reviewers (configure
+#                                            that in repo Settings > Environments)
+#    Nobody runs `cdk deploy` locally against dev/prod — the pipeline is the
+#    only path to those environments.
+#
+# 3. PR checks: lint, typecheck, unit tests, build. Runs on every pull_request
+#    into main. Fill in the TODOs below once package manifests exist.
+# ---------------------------------------------------------------------------
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    tags:
+      - "v*.*.*"
+      - "dev-v*.*.*"
+
+permissions:
+  id-token: write # required for AWS OIDC auth
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }} # TODO: set repo/org variable, e.g. ap-northeast-1
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }} # TODO: set repo/org variable
+
+jobs:
+  # ---------------------------------------------------------------------
+  # PR checks — runs on every pull request into main. No AWS access needed.
+  # ---------------------------------------------------------------------
+  pr-checks:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO: replace with the real toolchain setup once package manifests exist,
+      # e.g. actions/setup-node@v4 with cache: npm/pnpm, or actions/setup-python@v5.
+      - name: Set up toolchain
+        run: "echo 'TODO: actions/setup-node or actions/setup-python here'"
+
+      # TODO: install deps, e.g. `npm ci` / `pnpm install --frozen-lockfile`
+      - name: Install dependencies
+        run: "echo 'TODO: install dependencies'"
+
+      # TODO: `npm run lint` / equivalent
+      - name: Lint
+        run: "echo 'TODO: lint'"
+
+      # TODO: `npm run typecheck` / `tsc --noEmit`
+      - name: Typecheck
+        run: "echo 'TODO: typecheck'"
+
+      # TODO: `npm test` / `npm run test:unit`
+      - name: Unit tests
+        run: "echo 'TODO: unit tests'"
+
+      # TODO: `npm run build` — also validates Dockerfile builds once one exists
+      - name: Build
+        run: "echo 'TODO: build'"
+
+  # ---------------------------------------------------------------------
+  # Resolve which environment a tag push targets, from the tag name.
+  # ---------------------------------------------------------------------
+  resolve-environment:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.resolve.outputs.environment }}
+      image_tag: ${{ steps.resolve.outputs.image_tag }}
+    steps:
+      - id: resolve
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ "$TAG" =~ ^dev-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=dev" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag '$TAG' does not match a known deploy pattern (dev-v*.*.* or v*.*.*)" >&2
+            exit 1
+          fi
+          echo "image_tag=$TAG" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------
+  # Build the image once and push it to AWS ECR, tagged with the git tag.
+  # Same image is later deployed to whichever environment the tag resolved to.
+  # ---------------------------------------------------------------------
+  build-and-push:
+    needs: resolve-environment
+    runs-on: ubuntu-latest
+    outputs:
+      image_uri: ${{ steps.image.outputs.uri }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ECR_PUSH_ROLE_ARN }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # TODO: point `file`/`context` at the real Dockerfile once it exists.
+      - name: Build and push image
+        id: image
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ needs.resolve-environment.outputs.image_tag }}
+        run: |
+          echo "TODO: docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ."
+          echo "TODO: docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "uri=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------
+  # Deploy to dev — runs automatically, no manual approval.
+  # ---------------------------------------------------------------------
+  deploy-dev:
+    needs: [resolve-environment, build-and-push]
+    if: needs.resolve-environment.outputs.environment == 'dev'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_DEV }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      # TODO: run from the real infra/CDK directory once it exists, e.g.:
+      #   working-directory: infra
+      #   run: npx cdk deploy --require-approval never --context env=dev --context imageTag=${{ needs.build-and-push.outputs.image_uri }}
+      - name: cdk deploy (dev)
+        run: "echo 'TODO: npx cdk deploy --context env=dev --context imageUri=${{ needs.build-and-push.outputs.image_uri }}'"
+
+  # ---------------------------------------------------------------------
+  # Deploy to prod — gated by the `production` GitHub Environment's required
+  # reviewers (configure under Settings > Environments > production).
+  # ---------------------------------------------------------------------
+  deploy-prod:
+    needs: [resolve-environment, build-and-push]
+    if: needs.resolve-environment.outputs.environment == 'prod'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_PROD }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      # TODO: run from the real infra/CDK directory once it exists.
+      - name: cdk deploy (prod)
+        run: "echo 'TODO: npx cdk deploy --context env=prod --context imageUri=${{ needs.build-and-push.outputs.image_uri }}'"
