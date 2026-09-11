@@ -1,0 +1,80 @@
+@page "/orders/{OrderId}"
+@using StepGo.StudentPortal.Models
+@using StepGo.StudentPortal.Services
+@using StepGo.UI.Status
+@inject StudentDataStore Store
+@inject NavigationManager Nav
+
+@if (_order is null)
+{
+    <div class="stepgo-card flex flex-col items-start gap-2" data-testid="order-not-found">
+        <h1>找不到訂單</h1>
+        <p>查無此訂單編號，請確認連結是否正確。</p>
+        <a href="/" class="stepgo-btn stepgo-btn--student">回我的課程</a>
+    </div>
+}
+else
+{
+    <PageTitle>訂單 @_order.Id — StepGo</PageTitle>
+
+    <h1>訂單明細</h1>
+
+    <div class="stepgo-card mt-4 flex flex-col gap-2" data-testid="order-detail">
+        <p>課程：@_order.CourseName</p>
+        <p>老師：@_order.TeacherName</p>
+        <p class="font-number">金額：NT$@(_order.Amount.ToString("N0"))</p>
+        <StatusTag Label="@_order.PaymentStatus.ToDisplay().Label" Variant="@_order.PaymentStatus.ToDisplay().Variant" />
+
+        @if (_order.PaymentStatus == PaymentStatus.Paid)
+        {
+            <div class="flex gap-2">
+                <Button Variant="secondary" OnClick="Print">下載付款證明</Button>
+                <Button Variant="secondary" OnClick="Print">列印付款證明</Button>
+            </div>
+        }
+
+        @if (_order.RefundTicketStatus is null && _order.PaymentStatus == PaymentStatus.Paid)
+        {
+            @if (!_showRefundForm)
+            {
+                <Button Variant="danger" OnClick="@(() => _showRefundForm = true)">申請退課</Button>
+            }
+            else
+            {
+                <label class="flex flex-col gap-1">
+                    退課原因
+                    <input @bind="_refundReason" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                </label>
+                <Button Variant="danger" OnClick="SubmitRefundRequest">送出退課申請</Button>
+            }
+        }
+        else if (_order.RefundTicketStatus is not null)
+        {
+            <a href="@($"/orders/{_order.Id}/messages")" class="stepgo-btn stepgo-btn--secondary self-start">查看留言串</a>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string OrderId { get; set; } = string.Empty;
+
+    private StudentOrder? _order;
+    private bool _showRefundForm;
+    private string _refundReason = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _order = Store.FindOrder(OrderId);
+    }
+
+    private void SubmitRefundRequest()
+    {
+        Store.SubmitRefundRequest(OrderId, _refundReason);
+        Nav.NavigateTo($"/orders/{OrderId}/messages");
+    }
+
+    private void Print()
+    {
+        // Mock-first: a real print/download integration is out of scope for this scaffold.
+    }
+}

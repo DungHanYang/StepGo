@@ -1,0 +1,123 @@
+@page "/checkout/{CourseId}"
+@using StepGo.PricingRules
+@using StepGo.StudentPortal.Models
+@using StepGo.StudentPortal.Services
+@inject StudentDataStore Store
+
+@if (_course is null)
+{
+    <div class="stepgo-card">找不到這堂課程。</div>
+}
+else
+{
+    <PageTitle>報名 @_course.Name — StepGo</PageTitle>
+
+    <h1>報名：@_course.Name</h1>
+
+    <div class="mt-4">
+        <Wizard Steps="@_stepLabels" CurrentStepIndex="@_currentStep" AriaLabel="報名付款步驟">
+            <ChildContent>
+                @if (_currentStep == 0)
+                {
+                    <div class="stepgo-card flex flex-col gap-2" data-testid="confirm-step">
+                        <p>課程：@_course.Name</p>
+                        <p>老師：@_course.TeacherName</p>
+                        <p class="font-number">售價：NT$@(_course.Price.ToString("N0"))</p>
+                    </div>
+                }
+                else if (_currentStep == 1)
+                {
+                    <div class="stepgo-card flex flex-col gap-3" data-testid="payment-step">
+                        <label class="flex flex-col gap-1">
+                            姓名
+                            <input @bind="_studentName" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                        </label>
+
+                        <fieldset class="flex flex-col gap-1">
+                            <legend>付款方式</legend>
+                            @if (_course.AllowCreditCard)
+                            {
+                                <label class="flex items-center gap-2">
+                                    <input type="radio" name="pm" checked="@(_method == PaymentMethod.CreditCard)"
+                                           @onchange="() => _method = PaymentMethod.CreditCard" />
+                                    信用卡
+                                </label>
+                            }
+                            @if (_course.AllowAtm)
+                            {
+                                <label class="flex items-center gap-2">
+                                    <input type="radio" name="pm" checked="@(_method == PaymentMethod.Atm)"
+                                           @onchange="() => _method = PaymentMethod.Atm" />
+                                    ATM 虛擬帳號
+                                </label>
+                            }
+                        </fieldset>
+                    </div>
+                }
+                else if (_currentStep == 2)
+                {
+                    @if (_method == PaymentMethod.CreditCard)
+                    {
+                        <div class="stepgo-card flex flex-col gap-2" data-testid="result-success">
+                            <StatusTag Label="報名成功" Variant="StepGo.UI.Status.StatusTagVariant.Positive" />
+                            <p>已透過站內通知（與 Email，若已填寫）發送確認。</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="stepgo-card flex flex-col gap-2" data-testid="result-atm-pending">
+                            <StatusTag Label="待繳費" Variant="StepGo.UI.Status.StatusTagVariant.Warning" />
+                            <p>虛擬帳號：9527-1234-5678</p>
+                            <p>應繳金額：NT$@(_course.Price.ToString("N0"))</p>
+                            <p>繳費期限：@(DateTimeOffset.UtcNow.AddDays(3).ToString("yyyy/MM/dd"))</p>
+                            <p class="text-sm text-stepgo-ink-subtle">系統將於收到金流背景通知後自動更新付款狀態，無需自行申報。</p>
+                        </div>
+                    }
+                }
+            </ChildContent>
+            <Footer>
+                @if (_currentStep < 2)
+                {
+                    <Button Variant="secondary" Disabled="@(_currentStep == 0)" OnClick="GoBack">上一步</Button>
+                    <Button Variant="student" OnClick="GoNext">下一步</Button>
+                }
+                else
+                {
+                    <a href="/" class="stepgo-btn stepgo-btn--student">回我的課程</a>
+                }
+            </Footer>
+        </Wizard>
+    </div>
+}
+
+@code {
+    [Parameter] public string CourseId { get; set; } = string.Empty;
+
+    private readonly string[] _stepLabels = ["確認課程", "填資料選付款", "結果頁"];
+    private CheckoutCourse? _course;
+    private int _currentStep;
+    private string _studentName = string.Empty;
+    private PaymentMethod _method;
+
+    protected override void OnInitialized()
+    {
+        _course = StudentDataStore.FindCourse(CourseId);
+        if (_course is not null)
+        {
+            _method = _course.AllowCreditCard ? PaymentMethod.CreditCard : PaymentMethod.Atm;
+        }
+    }
+
+    private void GoBack()
+    {
+        if (_currentStep > 0)
+        {
+            _currentStep--;
+        }
+    }
+
+    private void GoNext()
+    {
+        _currentStep++;
+    }
+}

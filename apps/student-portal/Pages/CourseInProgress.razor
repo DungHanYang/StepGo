@@ -1,0 +1,52 @@
+@page "/orders/{OrderId}/progress"
+@using StepGo.PricingRules
+@using StepGo.StudentPortal.Models
+@using StepGo.StudentPortal.Services
+@inject StudentDataStore Store
+@inject TimeProvider Clock
+
+@if (_order is null)
+{
+    <div class="stepgo-card" data-testid="order-not-found">找不到這筆訂單。</div>
+}
+else
+{
+    <PageTitle>@_order.CourseName 上課進度 — StepGo</PageTitle>
+
+    <h1>@_order.CourseName</h1>
+
+    <div class="stepgo-card mt-4 flex flex-col gap-2" data-testid="progress-card">
+        <p>老師：@_order.TeacherName</p>
+        @if (_order.NextSessionAt is { } next)
+        {
+            <p data-testid="next-session">下一堂：@next.ToString("yyyy/MM/dd HH:mm")</p>
+        }
+        <p>繳費快照：NT$@(_order.Amount.ToString("N0"))（@_order.PaymentMethod）</p>
+        <p>若現在申請退課，適用退費比例：@_refundRateNow</p>
+    </div>
+}
+
+@code {
+    [Parameter] public string OrderId { get; set; } = string.Empty;
+
+    private StudentOrder? _order;
+    private string _refundRateNow = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _order = Store.FindOrder(OrderId);
+        if (_order?.NextSessionAt is { } next)
+        {
+            var daysUntil = (next - Clock.GetUtcNow()).TotalDays;
+            var tier = daysUntil switch
+            {
+                >= 14 => RefundTier.FourteenDaysOrMore,
+                >= 7 => RefundTier.SevenToThirteenDays,
+                >= 1 => RefundTier.OneToSixDays,
+                _ => RefundTier.AfterCourseStart,
+            };
+            var rate = RefundPolicy.DefaultPlatformFloor[tier];
+            _refundRateNow = $"{rate:P0}";
+        }
+    }
+}
