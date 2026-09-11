@@ -13,11 +13,19 @@ public sealed record CreateCourseCommand(
 public sealed class CreateCourseHandler(
     ICourseRepository courseRepository, ITeacherProfileRepository teacherRepository, IPlatformFeeSettingRepository feeSettingRepository)
 {
+    /// <summary>
+    /// Task 2.3's spec scenario is explicit: an unverified (or no-profile) teacher calling this API gets
+    /// HTTP 403, not a generic validation error — so this checks verification status itself and throws
+    /// AuthorizationException, rather than letting TeacherProfile.GuardCanCreateOrPublishCourse's
+    /// DomainException (mapped to 400 at the API boundary) leak through.
+    /// </summary>
     public async Task<Course> HandleAsync(CreateCourseCommand command, CancellationToken ct)
     {
-        var teacher = await teacherRepository.FindAsync(command.TeacherId, ct)
-            ?? throw new DomainException("teacher_profile_not_found", "老師尚未提交身分驗證。");
-        teacher.GuardCanCreateOrPublishCourse();
+        var teacher = await teacherRepository.FindAsync(command.TeacherId, ct);
+        if (teacher is null || !teacher.CanCreateOrPublishCourse)
+        {
+            throw new AuthorizationException("老師身分驗證狀態非「已認證」，無法建立課程。");
+        }
 
         var currentSetting = await feeSettingRepository.GetCurrentAsync(ct)
             ?? throw new DomainException("platform_fee_setting_missing", "尚未設定平台退費底線。");

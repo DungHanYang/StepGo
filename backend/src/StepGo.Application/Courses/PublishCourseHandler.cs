@@ -24,10 +24,13 @@ public sealed class PublishCourseHandler(
             throw new StepGo.Application.Common.AuthorizationException("無權發佈其他老師的課程。");
         }
 
-        var teacher = await teacherRepository.FindAsync(command.TeacherId, ct)
-            ?? throw new DomainException("teacher_profile_not_found", "老師尚未提交身分驗證。");
+        var teacher = await teacherRepository.FindAsync(command.TeacherId, ct);
+        if (teacher is null || !teacher.CanCreateOrPublishCourse)
+        {
+            throw new StepGo.Application.Common.AuthorizationException("老師身分驗證狀態非「已認證」，無法發佈課程。");
+        }
 
-        course.Publish(teacher.CanCreateOrPublishCourse);
+        course.Publish(teacherIsVerified: true);
 
         var latestTerms = await termsRepository.GetLatestAsync(ct);
         var latestSetting = await feeSettingRepository.GetLatestPublishedAsync(ct);

@@ -46,6 +46,8 @@ Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也
 - 所有序列化改用 `System.Text.Json` 的 source generator（每個 capability 一個 `JsonSerializerContext`，`[JsonSerializable(typeof(XxxDto))]` 逐一標註 `StepGo.Contracts` 的 DTO），不依賴反射式序列化。
 - AWS SDK 相依套件一律取最新穩定版（`AWSSDK.DynamoDBv2`、`AWSSDK.CognitoIdentityProvider`、`AWSSDK.S3`、`AWSSDK.SecretsManager`、`AWSSDK.SQS`、`AWSSDK.EventBridge`、`AWSSDK.SimpleEmail`、`AWSSDK.StepFunctions` 等），並避開 `Amazon.DynamoDBv2.DocumentModel` 的動態 `Document` 型別，改用強型別的低階 `AttributeValue` 轉換，降低 AOT trim 警告面積。
 - 好處：AOT 原生執行檔啟動速度顯著優於託管 CLR 冷啟動，改變了原先「決策 2 的取捨」與「Risks 一節『.NET 冷啟動高於 Node/Python』」的判斷（見下方 Risks 更新）。
+
+**衍生的專案拆分調整（相對 tasks.md 原文字面描述的偏離，實作階段記錄於此）**：Native AOT 的限制是一個編譯產出的 `bootstrap` 執行檔只能有一個進入點/事件型別，因此同一 capability 若同時要處理 HTTP API 請求與非 HTTP 事件（SQS 訊息、EventBridge 事件、EventBridge Scheduler 排程、Step Functions task），無法共用同一個 `StepGo.Api.<Capability>` 部署產物。實作時把非 HTTP 事件處理拆成獨立的 `StepGo.Worker.<Purpose>` 專案（`StepGo.Worker.PaymentNotificationConsumer`、`StepGo.Worker.PayoutBatchScheduler`、`StepGo.Worker.RefundSlaCheck`、`StepGo.Worker.NotificationDispatcher`、`StepGo.Worker.OverdueOrderScan`），與對應 capability 的 `StepGo.Api.*` 專案各自獨立部署、共用同一份 `StepGo.Application`/`StepGo.Infrastructure` 邏輯。tasks.md 1.3/9.1 提到「`StepGo.Api.Notifications` 訂閱處理」等字面描述因此對應到 `StepGo.Worker.NotificationDispatcher`，而非 `StepGo.Api.Notifications` 本身——後者只保留該 capability 的 HTTP 端點（範本管理 API 等）。
 替代方案：每個 API 路由一個獨立 Lambda——排除，函式數量會膨脹到數十個，部署與觀測成本過高，且 MVP 流量不需要這種細粒度的獨立擴縮。
 替代方案：沿用 `Amazon.Lambda.AspNetCoreServer.Hosting` 託管執行環境（非 AOT）——排除，使用者已明確要求 Lambda 端要用 Native AOT 部署。
 
