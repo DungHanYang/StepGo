@@ -35,8 +35,8 @@
 4. **共用元件庫：以 Razor Class Library（RCL）專案 `StepGo.UI` 實作，涵蓋 Button、Card、Table、StatusTag、StepIndicator、OwlTip、Wizard 等元件，四個應用皆參照此專案。**
    對應設計文件「UI 元件層」的要求；四個應用的表格、篩選器、狀態標籤共用同一套語意（例如付款狀態的顏色定義只在一處維護）。
 
-5. **資料請求：型別化的 `HttpClient` 包裝層（`StepGo.ApiClient` 專案），以 `System.Net.Http.Json` 呼叫後端 API Gateway 端點。**
-   目前沒有 OpenAPI schema，故先手刻符合 specs 定義欄位的 C# record/DTO（例如 `Order`、`RefundTicket`、`PayoutBatch`）；待後端 change 產出契約後，可將包裝層置換為由 schema 產生的 client（例如 NSwag/Kiota 產生的 client），呼叫端元件不需大改。伺服器狀態快取以 Blazor 內建的 `CascadingState`/簡單記憶體快取處理，MVP 階段不需要引入額外的狀態管理套件。
+5. **資料請求：型別化的 `HttpClient` 包裝層（`StepGo.ApiClient` 專案），以 `System.Net.Http.Json` 呼叫後端 API Gateway 端點，DTO 直接 project reference 後端 change（`backend-serverless-scaffold`）的 `StepGo.Contracts` 專案，不在前端另外手刻或維護一份 DTO。**
+   前後端同屬一個 monorepo 且都是 .NET/C#，因此不採「先手刻 DTO、待 OpenAPI schema 定案後置換」的作法：`StepGo.Contracts` 是後端唯一允許前端 project reference 的專案（零依賴，不牽動 Domain/Application/Infrastructure），`StepGo.ApiClient` 只負責用這些型別發送/解析 HTTP 請求，不自行定義資料結構。在 `StepGo.Contracts` 專案存在之前（例如尚未執行後端 change 的 apply 階段），暫以本地 mock 專案內的假 DTO 頂著，一旦 `StepGo.Contracts` 建立即改為直接參照。伺服器狀態快取以 Blazor 內建的 `CascadingState`/簡單記憶體快取處理，MVP 階段不需要引入額外的狀態管理套件。
 
 6. **表單：Blazor `EditForm` + `DataAnnotations`（或 FluentValidation，若規則複雜度超出 DataAnnotations 表達能力）。**
    驗證規則直接編碼可在前端獨立驗證的業務規則（例如：手機必填、Email 選填、退費比例不得低於底線、老師核准退款金額不得超過原始繳費金額），在欄位失焦或送出時即時回饋，不等後端往返。
@@ -85,6 +85,7 @@
 
 ## Open Questions
 
-- 後端最終 API 契約（欄位命名、分頁、錯誤格式）——由後續後端 change 決定；不影響本次前端 specs/tasks 的範圍或狀態機定義，届時只需置換 `StepGo.ApiClient` 的實作。
-- 綠界/藍新的付款頁呈現方式（導轉外部頁面 vs. iframe 嵌入）——由後端/金流串接 change 決定；`frontend-student-portal` 的 Checkout 規格只定義前端可觀察的狀態機（待付款/付款中/已付款/待撥款相關唯讀狀態），不預設特定金流商的頁面嵌入方式。
-- 認證 token 的簽發者（Cognito Hosted UI/Amazon Cognito SDK 直接整合 vs. 後端自行簽發 JWT）——由後端 change 決定；前端 `frontend-auth` 僅假設「登入後可取得含角色 claim 的 token」，不預設簽發來源。
+- ~~後端最終 API 契約（欄位命名、分頁、錯誤格式）~~ → **已解答**：`backend-serverless-scaffold` design.md 決策 9 已定案，分頁用 `nextCursor`、錯誤格式為 `{ code, message }`，且直接以共用的 `StepGo.Contracts` 專案承載，前端不需另外維護 DTO（見本文件決策 5）。
+- ~~綠界/藍新的付款頁呈現方式（導轉外部頁面 vs. iframe 嵌入）~~ → **已解答**：`backend-serverless-scaffold` design.md 決策 9 已定案採**導轉外部付款頁（Redirect）**，不做 iframe 嵌入；`frontend-student-portal` 的 Checkout 規格維持只定義前端可觀察的狀態機（待付款/付款中/已付款/待撥款相關唯讀狀態），實作時導向金流商頁面即可。
+- ~~認證 token 的簽發者~~ → **已解答**：`backend-serverless-scaffold` design.md 決策 3 已定案為 **Amazon Cognito**（老師/學生共用 Pool，Admin 獨立 Pool + 強制 MFA），見本文件決策 7。
+- **CI/CD 管線與部署權限尚未定案**：與後端 change 共用同一個未決事項——環境分級、部署觸發方式、給開發代理人（Claude Code）的 AWS 操作權限範圍——待使用者決定後，回頭補上四個前端部署目標對應的 CI/CD 任務。

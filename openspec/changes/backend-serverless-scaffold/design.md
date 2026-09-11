@@ -21,18 +21,33 @@
 
 ## Decisions
 
-### 1. API 層：API Gateway HTTP API + Lambda（.NET 8）
+### 1. 程式碼分層與跨專案合約：DDD（Domain/Application/Infrastructure）+ 獨立的 `StepGo.Contracts`
+前後端同屬一個 repo（monorepo），且都是 .NET/C#，因此用一個獨立、零依賴的合約專案取代「維護 OpenAPI schema 再產生 client」的做法：
+- **`StepGo.Domain`**：entity、value object、領域事件、repository 介面、純業務規則（退費底線驗證、費用計算核心邏輯、狀態機轉換規則）。不依賴任何其他層。
+- **`StepGo.Application`**：use case（command/query handler），定義對外部依賴的 port 介面（`IPaymentGateway`、`INotificationSender`、`IUnitOfWork` 等）；只依賴 `StepGo.Domain`。
+- **`StepGo.Infrastructure`**：DynamoDB repository 實作、Cognito、綠界/藍新 client、SES/LINE、EventBridge/SQS/Step Functions 整合；實作 `StepGo.Application` 定義的 port，依賴 `StepGo.Domain` 與 `StepGo.Application`。
+- **`StepGo.Contracts`**：純 DTO/enum（例如 `OrderDto`、`RefundTicketDto`、`PayoutBatchDto`），**零依賴**（不 reference Domain/Application/Infrastructure 任何一層）。這是唯一前端四個 Blazor 應用允許 reference 的後端專案。
+- **`StepGo.Api.<Capability>`**（Lambda composition root）：依賴 `StepGo.Application` + `StepGo.Infrastructure` + `StepGo.Contracts`，負責在請求進入時把 HTTP 請求映射成 Application 的 command/query，處理完後把 Application 回傳的結果映射成 `StepGo.Contracts` 的 DTO 再序列化回應——這一層是 Domain/Application 內部模型與對外合約之間唯一的轉譯點。
+
+依賴方向為單向：`Domain ← Application ← Infrastructure`，`StepGo.Api.*` 同時依賴三者並對外曝露 `StepGo.Contracts`；前端只依賴 `StepGo.Contracts`，不會、也不能拉到 Domain/Application/Infrastructure（以及它們攜帶的 AWS SDK/DynamoDB 相依性）。
+
+`StepGo.Contracts` 內部可依 8 個 capability 分 namespace（`Contracts.Orders`、`Contracts.RefundTickets`…）方便對照，但 MVP 階段先放同一個專案，不拆成多個獨立套件，避免過度模組化；若之後真的變得難維護再拆。
+
+替代方案：讓前端直接消費 Application 層的 command/query 物件——排除，因為 Application 層的形狀會跟著 use case 內部重構變動，直接暴露會讓前端被迫跟著每次內部重構改動；也會把 Infrastructure 的 AWS SDK 相依性透過 project reference 鏈條帶進前端專案。
+替代方案：用 OpenAPI schema + 產生的 client（NSwag/Kiota）取代共用專案——保留作為未來若要支援非 .NET 的第三方客戶端時的路徑，但既然前後端目前都是同一個 repo 裡的 C#，直接共用型別更簡單、零轉譯成本，MVP 階段不需要多一層 schema 產生流程。
+
+### 2. API 層：API Gateway HTTP API + Lambda（.NET 8）
 選用 HTTP API 而非 REST API：延遲更低、成本更低，且 MVP 不需要 REST API 才有的請求驗證/WAF 整合等進階功能（admin 的 IP 白名單改由 CloudFront + WAF 在前端那層處理，不需要 API Gateway REST API 的資源政策）。
 Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也非單一巨石函式）：`Orders`、`Payouts`、`RefundTickets`、`Courses`、`Teachers`、`Admin`、`Notifications`——每個函式用 `Amazon.Lambda.AspNetCoreServer.Hosting` 包裝一個小型 ASP.NET Core Minimal API，內部路由用一般的 Minimal API endpoint 定義，降低冷啟動數量與部署複雜度之間的取捨。
 替代方案：每個 API 路由一個獨立 Lambda——排除，函式數量會膨脹到數十個，部署與觀測成本過高，且 MVP 流量不需要這種細粒度的獨立擴縮。
 
-### 2. 認證：Amazon Cognito，老師/學生共用一個 User Pool，Admin 獨立一個 User Pool（強制 MFA）
+### 3. 認證：Amazon Cognito，老師/學生共用一個 User Pool，Admin 獨立一個 User Pool（強制 MFA）
 - 老師/學生 User Pool：Email 或手機號碼可作登入識別（對應業務規則「手機必填、Email 選填」，Cognito 的 username 用系統內部 user id，手機/Email 存為 attribute），簽發 JWT（access token 含自訂 claim：`role`=teacher/student）。
 - Admin User Pool：獨立 pool，強制 MFA（TOTP），呼應設計文件「Admin 獨立網域、強制雙因素驗證」的要求。
 - API Gateway 用 Cognito JWT authorizer 驗證 token，Lambda 內再依 `role` claim 做細粒度授權（例如老師只能操作 `teacher_id` 等於自己 user id 的資源，對應業務規則文件第十二節「RBAC + Row-level 權限控管」）。
 - 回應前端 change 的 Open Question：token 由 **Cognito** 簽發，前端 `AuthenticationStateProvider` 直接解析 Cognito 簽發的 JWT 即可取得 `role` claim，不需要後端自行簽發 token。
 
-### 3. 資料層：DynamoDB 單表設計（`StepGoTable`），以 access pattern 驅動
+### 4. 資料層：DynamoDB 單表設計（`StepGoTable`），以 access pattern 驅動
 先列出 MVP 已知的存取模式（來自業務規則文件與前端 specs）：
 
 | # | 存取模式 | 來源 |
@@ -77,25 +92,25 @@ GSI2（依狀態查退課工單，對應第 9 項）：
 - **彙總數字**：Admin 金流總覽與老師收入總覽需要的即時加總數字，不現場 scan 計算，而是在每次相關寫入時以 transaction 同步更新對應的滾動彙總 item（`AGGREGATE#PLATFORM`、`TEACHER#<id>#SUMMARY`）。
 - **超出 GSI 覆蓋範圍的未來報表需求**（例如管理者要做跨老師、跨月份的任意維度分析）：MVP 不做，若未來需要，走 DynamoDB Streams → Kinesis Firehose → S3 → Athena 的旁路分析管道，不影響本表設計。
 
-### 4. 非同步與排程：EventBridge Scheduler + SQS + Step Functions
+### 5. 非同步與排程：EventBridge Scheduler + SQS + Step Functions
 - **金流背景通知接收**：API Gateway 端點接收綠界/藍新的 webhook → 立即寫入 SQS（避免 Lambda 短暫故障或流量尖峰丟單）→ 另一 Lambda 消費 SQS 更新訂單狀態（冪等處理，見上）。
 - **月結撥款批次**：EventBridge Scheduler 於每月 5 日觸發 Lambda，篩選「可撥款」訂單、依老師分組、判斷同行/跨行轉帳費（比對老師撥款帳戶銀行代碼與平台永豐帳戶）、產生撥款批次草稿（MVP 為人工確認後才真正標記已撥款，不自動轉帳）。
 - **退課工單 SLA 自動升級**：老師進入 `teacher_reviewing` 狀態時，啟動一個 **Step Functions** 執行（`Wait` 5 個工作日 → 檢查工單狀態是否仍為 `teacher_reviewing` → 若是則自動轉為 `admin_arbitration`）。選用 Step Functions 而非單純的 EventBridge 定時任務，因為需要「等待期間工單狀態可能被老師的動作打斷（老師核准/駁回）」——用 Step Functions 的 `Wait` + 條件檢查表達這種「除非提前發生某事，否則等到期限做某事」的邏輯最直接，且執行歷程可觀測、可重試。
 - **通知派送**：訂單狀態變更等事件透過 EventBridge 自訂 event bus 發布，`Notifications` Lambda 訂閱後依業務規則的管道優先順序（Email 保底、站內必留、LINE 選用加值）分別呼叫 SES/寫入通知資料/呼叫 LINE Messaging API。
 
-### 5. 檔案儲存：S3（老師身分證照片等私有物件）
+### 6. 檔案儲存：S3（老師身分證照片等私有物件）
 獨立的私有 bucket，物件金鑰包含 teacher id，存取一律透過後端產生的短效 presigned URL，僅限 Admin 角色的 API 呼叫可取得，不開放公開讀取。
 
-### 6. 機密管理：Secrets Manager
+### 7. 機密管理：Secrets Manager
 存放綠界/藍新的 API 金鑰、LINE Messaging API channel secret；Lambda 執行角色僅有讀取自己需要的機密的權限（依 capability 分開的 secret，不共用一份萬能機密）。
 
-### 7. IaC：AWS CDK（C#），與前端 change 共用同一個 CDK app 但不同 stack
-延續前端 change 已決定的 CDK 選型；後端新增 `BackendStack`（Lambda、API Gateway、DynamoDB、Cognito、SQS、EventBridge、Step Functions、S3、Secrets）獨立於前端的 `MarketingStack`/`PortalStack`，兩者透過 CDK 的 cross-stack reference 傳遞 API Gateway 端點網址給前端。
+### 8. IaC：AWS CDK（C#），與前端 change 共用同一個 CDK app 但不同 stack
+延續前端 change 已決定的 CDK 選型；後端新增 `BackendStack`（Lambda、API Gateway、DynamoDB、Cognito、SQS、EventBridge、Step Functions、S3、Secrets）獨立於前端的 `MarketingStack`/`PortalStack`，兩者透過 CDK 的 cross-stack reference 傳遞 API Gateway 端點網址給前端。CI/CD 管線與「如何授權開發者/自動化代理人操作 AWS」的細節（IAM 權限邊界、部署環境分級）留待下一輪決策，尚未定案（見 Open Questions）。
 
-### 8. 前端假設驗證結果
+### 9. 前端假設驗證結果
 逐一回應 `frontend-mvp-scaffold` design.md 的 Open Questions：
-- **認證 token 簽發者** → 已在本文件決策 2 中確定為 Cognito。
-- **API 契約細節（欄位命名、分頁、錯誤格式）** → 分頁採 DynamoDB 原生的 `LastEvaluatedKey` 轉換成 opaque cursor 字串回傳給前端（`nextCursor`），不做 offset 分頁；錯誤格式採統一的 `{ code, message }` JSON 結構。前端 `StepGo.ApiClient` 的 DTO 待本 change 進入 apply 階段產出實際 API 後回頭核對調整。
+- **認證 token 簽發者** → 已在本文件決策 3 中確定為 Cognito。
+- **API 契約細節（欄位命名、分頁、錯誤格式）** → 分頁採 DynamoDB 原生的 `LastEvaluatedKey` 轉換成 opaque cursor 字串回傳給前端（`nextCursor`），不做 offset 分頁；錯誤格式採統一的 `{ code, message }` JSON 結構。這些形狀直接體現在 `StepGo.Contracts` 的 DTO 定義中（決策 1），前端不需要另外維護一份手刻 DTO 或等 OpenAPI 產生 client——直接 project reference `StepGo.Contracts` 即可拿到與後端一致的型別。
 - **綠界/藍新付款頁呈現方式** → 採用金流商提供的**導轉外部付款頁**（Redirect），不做 iframe 嵌入，理由：兩大金流商官方 SDK 對 Redirect 模式的文件與範例最完整、風險最低，MVP 不需要為了避免跳轉這種次要體驗優化增加整合複雜度與 PCI-DSS 相關的合規負擔。此決策需回頭更新 `frontend-mvp-scaffold` 的對應 Open Question為「已解答」。
 
 ## Risks / Trade-offs
@@ -124,3 +139,5 @@ GSI2（依狀態查退課工單，對應第 9 項）：
 
 - 綠界/藍新特店申請進度與正式 API 金鑰取得時間——不影響本次規劃的架構決策，只影響 apply 階段何時能接上真實金流商（開發期間先用 sandbox/模擬 webhook）。
 - LINE 官方帳號正式申請與 Messaging API channel 設定——同上，不影響架構決策，`backend-notification` 的 LINE 管道在真正申請下來前以介面留空/mock 驗證。
+- **CI/CD 管線設計尚未定案**：環境分級（dev/staging/prod）、每個 push/PR 觸發什麼檢查、`cdk deploy` 由誰/什麼機制觸發（人工核准 vs 自動部署）、四個前端部署目標與後端 `BackendStack` 是否共用同一條 pipeline 或分開——這會改變 tasks.md 的驗證方式（目前多數任務寫的是 `dotnet build`/`cdk synth` 這種本地可執行的驗證，CI/CD 定案後可能要補上「PR 檢查通過」「部署到 dev 環境驗證」等驗證方式），需要使用者決定後再回頭補這部分的 design 與 tasks。
+- **給開發代理人（Claude Code）的 AWS 操作權限範圍尚未定案**：是否允許直接 `cdk deploy` 到真實 AWS 帳號、用哪個 IAM 角色/權限邊界、是否只給 dev/sandbox 帳號的權限而 staging/prod 一律要人工執行——這是需要使用者明確決定的信任邊界問題，不由本設計自行假設，待決定後補充到本文件的 IaC/CI-CD 決策中。

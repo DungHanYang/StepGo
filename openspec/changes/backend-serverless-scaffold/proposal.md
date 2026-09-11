@@ -26,7 +26,8 @@
 
 ## Impact
 
-- 新增程式碼：Lambda 函式（依 capability 分組，例如 `StepGo.Api.Orders`、`StepGo.Api.Payouts` 等）、共用的 DynamoDB 存取層、AWS CDK 基礎設施專案（實際建立於後續 apply 階段，本 change 僅規劃）。
+- 架構分層：採 DDD（`StepGo.Domain`/`StepGo.Application`/`StepGo.Infrastructure`）+ 獨立零依賴的 `StepGo.Contracts` 專案；`StepGo.Contracts` 是前端（`frontend-mvp-scaffold`）唯一允許 project reference 的後端專案，取代原本「前端手刻 DTO、待後端契約定案後置換」的做法。
+- 新增程式碼：上述分層專案、Lambda composition root（依 capability 分組，例如 `StepGo.Api.Orders`、`StepGo.Api.Payouts` 等）、AWS CDK 基礎設施專案（實際建立於後續 apply 階段，本 change 僅規劃）。
 - 不影響任何既有程式碼（目前 repo 內除設計交付檔案、業務規則文件與前端規劃外沒有其他程式碼）。
 - 依賴：綠界/藍新的正式特店身分與 API 金鑰尚未取得，開發期間以金流商提供的測試環境（sandbox）或本地模擬 webhook 取代；LINE 官方帳號的正式帳號與 Messaging API channel 尚未申請，通知能力的 LINE 管道在 MVP 開發期間可先以介面留空/mock 方式驗證，不阻塞其他能力開發。
 - 影響前端規劃：本 change 完成後，`frontend-mvp-scaffold` 的 Open Questions（API 契約、付款頁呈現方式、token 簽發者）需要回頭確認是否已被本次決策解答，若有落差需回去更新前端 change。
