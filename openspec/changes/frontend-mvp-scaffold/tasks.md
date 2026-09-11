@@ -22,10 +22,10 @@
 
 ## 4. `frontend-auth`（登入註冊，供後台導向使用）
 
-- [ ] 4.1 實作共用登入頁與角色分流註冊入口，驗證方式：測試涵蓋老師登入導向老師後台、學生登入導向學生會員中心兩個情境
-- [ ] 4.2 實作學生註冊表單（手機必填、Email 選填+提示文案）與對應 `DataAnnotations`/FluentValidation 驗證規則，驗證方式：unit test 覆蓋手機空白擋下送出、Email 空白仍可送出兩種情境
-- [ ] 4.3 實作表單即時驗證回饋（欄位失焦觸發、送出觸發），驗證方式：測試涵蓋 Email 格式錯誤即時顯示錯誤訊息且不觸發任何網路請求
-- [ ] 4.4 實作 `AuthenticationStateProvider`，從假設的 JWT 中解析角色 claim 並驅動導向邏輯，驗證方式：unit test 覆蓋含不同角色 claim 的假 token 導向至正確後台
+- [x] 4.1 實作共用登入頁與角色分流註冊入口，驗證方式：測試涵蓋老師登入導向老師後台、學生登入導向學生會員中心兩個情境
+- [x] 4.2 實作學生註冊表單（手機必填、Email 選填+提示文案）與對應 `DataAnnotations`/FluentValidation 驗證規則，驗證方式：unit test 覆蓋手機空白擋下送出、Email 空白仍可送出兩種情境
+- [x] 4.3 實作表單即時驗證回饋（欄位失焦觸發、送出觸發），驗證方式：測試涵蓋 Email 格式錯誤即時顯示錯誤訊息且不觸發任何網路請求
+- [x] 4.4 實作 `AuthenticationStateProvider`，從假設的 JWT 中解析角色 claim 並驅動導向邏輯，驗證方式：unit test 覆蓋含不同角色 claim 的假 token 導向至正確後台
 
 ## 5. `apps/teacher-portal`（frontend-teacher-portal，Blazor WASM standalone）
 
