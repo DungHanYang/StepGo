@@ -1,0 +1,33 @@
+@namespace StepGo.UI.Components
+
+<div class="stepgo-wizard-container">
+    <StepIndicator StepCount="@Steps.Count" CurrentStepIndex="@CurrentStepIndex" Labels="@Steps" AriaLabel="@AriaLabel" />
+
+    <div>
+        @ChildContent
+    </div>
+
+    @if (Footer is not null)
+    {
+        <div class="flex items-center justify-between">
+            @Footer
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Step labels; also determines the total step count.</summary>
+    [Parameter, EditorRequired] public IReadOnlyList<string> Steps { get; set; } = Array.Empty<string>();
+
+    /// <summary>0-indexed.</summary>
+    [Parameter, EditorRequired] public int CurrentStepIndex { get; set; }
+
+    /// <summary>Current step's body content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Navigation controls (e.g. Back/Next buttons) — left to the caller since
+    /// gating rules differ per wizard (course creation vs. checkout).</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    [Parameter] public string AriaLabel { get; set; } = "步驟";
+}

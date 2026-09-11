@@ -1,0 +1,44 @@
+@namespace StepGo.UI.Components
+
+<ol class="flex items-center gap-2" aria-label="@AriaLabel">
+    @for (var i = 0; i < StepCount; i++)
+    {
+        var index = i;
+        var isCurrent = index == CurrentStepIndex;
+        var isComplete = index < CurrentStepIndex;
+        <li class="flex items-center gap-2">
+            <span class="stepgo-step h-8 w-8 @StepClass(isCurrent, isComplete)"
+                  aria-current="@(isCurrent ? "step" : null)">
+                @(index + 1)
+            </span>
+            @if (Labels is not null && index < Labels.Count)
+            {
+                <span class="text-sm @(isCurrent ? "text-stepgo-ink font-medium" : "text-stepgo-ink-subtle")">@Labels[index]</span>
+            }
+            @if (index < StepCount - 1)
+            {
+                <span class="mx-1 h-px w-6 bg-stepgo-border" aria-hidden="true"></span>
+            }
+        </li>
+    }
+</ol>
+
+@code {
+    [Parameter, EditorRequired] public int StepCount { get; set; }
+
+    /// <summary>0-indexed.</summary>
+    [Parameter, EditorRequired] public int CurrentStepIndex { get; set; }
+
+    [Parameter] public IReadOnlyList<string>? Labels { get; set; }
+    [Parameter] public string AriaLabel { get; set; } = "步驟";
+
+    // Deliberately role-agnostic (frontend-design-system spec: StepIndicator takes only
+    // step count + current index, so teacher's 4-step wizard and student's 3-step
+    // checkout render identically rather than each picking a role accent color).
+    private static string StepClass(bool isCurrent, bool isComplete) => (isCurrent, isComplete) switch
+    {
+        (true, _) => "border-stepgo-ink bg-stepgo-ink text-white",
+        (false, true) => "border-stepgo-ink bg-stepgo-card text-stepgo-ink",
+        _ => "border-stepgo-border bg-stepgo-card text-stepgo-ink-subtle",
+    };
+}

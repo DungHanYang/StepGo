@@ -1,0 +1,18 @@
+@namespace StepGo.UI.Components
+
+<div class="stepgo-owl-tip" role="note" aria-label="@AriaLabel">
+    <img src="_content/StepGo.UI/img/owl-icon.png" alt="" aria-hidden="true" class="h-6 w-6 shrink-0 rounded-full" />
+    <div>
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <p class="mb-1 font-medium text-stepgo-ink">@Title</p>
+        }
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string AriaLabel { get; set; } = "提示";
+}

@@ -1,0 +1,38 @@
+@namespace StepGo.UI.Components
+@typeparam TItem
+
+<table class="stepgo-table" aria-label="@AriaLabel">
+    @if (HeaderTemplate is not null)
+    {
+        <thead>
+            <tr>@HeaderTemplate</tr>
+        </thead>
+    }
+    <tbody>
+        @if (!Items.Any() && EmptyTemplate is not null)
+        {
+            <tr>
+                <td colspan="100%">@EmptyTemplate</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Items)
+            {
+                <tr>@RowTemplate(item)</tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter, EditorRequired] public IEnumerable<TItem> Items { get; set; } = Array.Empty<TItem>();
+    [Parameter, EditorRequired] public RenderFragment<TItem> RowTemplate { get; set; } = null!;
+    [Parameter] public RenderFragment? HeaderTemplate { get; set; }
+
+    /// <summary>Shown instead of the row list when <see cref="Items"/> is empty (frontend-marketing-site
+    /// "搜尋無結果顯示空狀態" and similar empty-state requirements across apps).</summary>
+    [Parameter] public RenderFragment? EmptyTemplate { get; set; }
+
+    [Parameter] public string AriaLabel { get; set; } = string.Empty;
+}

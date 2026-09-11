@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * NOTE: intentionally NOT wrapped in `@layer base` / `@layer components`.
+ * With this Tailwind CLI (v3.4.x) + content globs matching .razor/.cshtml
+ * files, any custom CSS placed inside a `@layer` block is silently dropped
+ * from the output (utilities generated from `@tailwind utilities` are
+ * unaffected). Plain CSS placed between the @tailwind directives keeps the
+ * intended cascade order (base resets, then these defaults/components,
+ * then utilities so a utility class can still override a single property).
+ */
+
+body {
+  @apply bg-stepgo-bg text-stepgo-ink font-sans;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
+
+/* Button — variants correspond to role-specific accent tokens (design.md decision 3). */
+.stepgo-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-stepgo border px-4 py-2
+    font-sans font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+.stepgo-btn--primary {
+  @apply border-stepgo-teacher bg-stepgo-teacher text-white hover:bg-stepgo-teacher-hover;
+}
+.stepgo-btn--student {
+  @apply border-stepgo-student bg-stepgo-student text-white hover:bg-stepgo-student-hover;
+}
+.stepgo-btn--secondary {
+  @apply border-stepgo-border bg-stepgo-card text-stepgo-ink hover:bg-stepgo-bg;
+}
+.stepgo-btn--danger {
+  @apply border-stepgo-danger bg-stepgo-danger text-white hover:bg-stepgo-danger-hover;
+}
+
+/* Card */
+.stepgo-card {
+  @apply rounded-stepgo-lg border border-stepgo-border bg-stepgo-card p-4;
+}
+
+/* Table */
+.stepgo-table {
+  @apply w-full border-collapse text-left text-sm;
+}
+.stepgo-table th {
+  @apply border-b border-stepgo-border px-3 py-2 font-sans font-medium text-stepgo-ink-muted;
+}
+.stepgo-table td {
+  @apply border-b border-stepgo-border px-3 py-2 text-stepgo-ink;
+}
+
+/* StatusTag — variant colors map 1:1 to StepGo.UI.Status.StatusTagVariant. */
+.stepgo-status-tag {
+  @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium;
+}
+.stepgo-status-tag--neutral {
+  @apply border-stepgo-border bg-stepgo-card text-stepgo-ink-muted;
+}
+.stepgo-status-tag--positive {
+  @apply border-stepgo-student bg-stepgo-student/10 text-stepgo-student;
+}
+.stepgo-status-tag--warning {
+  @apply border-stepgo-teacher bg-stepgo-teacher/10 text-stepgo-teacher-hover;
+}
+.stepgo-status-tag--negative {
+  @apply border-stepgo-danger bg-stepgo-danger/10 text-stepgo-danger;
+}
+.stepgo-status-tag--info {
+  @apply border-stepgo-ink-subtle bg-stepgo-bg text-stepgo-ink-subtle;
+}
+
+/* StepIndicator */
+.stepgo-step {
+  @apply flex items-center justify-center rounded-full border font-number text-sm;
+}
+
+/* OwlTip */
+.stepgo-owl-tip {
+  @apply flex items-start gap-2 rounded-stepgo-lg border border-stepgo-border bg-stepgo-card p-3 text-sm text-stepgo-ink-muted;
+}
+
+/* Wizard */
+.stepgo-wizard-container {
+  @apply flex flex-col gap-6;
+}

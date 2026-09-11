@@ -7,10 +7,10 @@
 
 ## 2. 設計系統（StepGo.UI）
 
-- [ ] 2.1 依設計交付 README 建立 Tailwind 設定與建置腳本（色彩、Noto Serif TC/Noto Sans TC/EB Garamond 字體、1px 邊框、3–4px 圓角、無陰影），輸出 CSS 供四個 Blazor app 引用，驗證方式：四個 app 套用產出的 CSS 後可正確渲染代幣色彩
-- [ ] 2.2 定義系統頁（1080px/980px）與行銷頁（900px/640px）響應式斷點常數，驗證方式：以一個測試頁面在三種視窗寬度下手動驗證版面切換
-- [ ] 2.3 實作 Button、Card、Table、StatusTag、StepIndicator、OwlTip、Wizard 等 Razor 元件，驗證方式：每個元件搭配 bUnit 撰寫 render 測試（元件成功渲染、必要 aria 屬性存在），並在一個元件展示頁列出所有互動範例
-- [ ] 2.4 定義 `StatusTag` 的狀態語意對照（付款狀態、驗證狀態、撥款帳戶狀態、退課工單狀態）為共用的 enum/型別，驗證方式：四個 app 皆從 `StepGo.UI` 引用同一組型別，不各自定義重複的狀態列舉
+- [x] 2.1 依設計交付 README 建立 Tailwind 設定與建置腳本（色彩、Noto Serif TC/Noto Sans TC/EB Garamond 字體、1px 邊框、3–4px 圓角、無陰影），輸出 CSS 供四個 Blazor app 引用，驗證方式：四個 app 套用產出的 CSS 後可正確渲染代幣色彩
+- [x] 2.2 定義系統頁（1080px/980px）與行銷頁（900px/640px）響應式斷點常數，驗證方式：以一個測試頁面在三種視窗寬度下手動驗證版面切換
+- [x] 2.3 實作 Button、Card、Table、StatusTag、StepIndicator、OwlTip、Wizard 等 Razor 元件，驗證方式：每個元件搭配 bUnit 撰寫 render 測試（元件成功渲染、必要 aria 屬性存在），並在一個元件展示頁列出所有互動範例
+- [x] 2.4 定義 `StatusTag` 的狀態語意對照（付款狀態、驗證狀態、撥款帳戶狀態、退課工單狀態）為共用的 enum/型別，驗證方式：四個 app 皆從 `StepGo.UI` 引用同一組型別，不各自定義重複的狀態列舉
 
 ## 3. `apps/marketing`（frontend-marketing-site，Blazor Web App / Static SSR）
 

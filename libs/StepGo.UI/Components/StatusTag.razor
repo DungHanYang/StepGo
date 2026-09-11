@@ -1,0 +1,13 @@
+@namespace StepGo.UI.Components
+@using StepGo.UI.Status
+
+<span class="@CssClass">@Label</span>
+
+@code {
+    /// <summary>Display text — callers pass the tuple from a domain status's <c>ToDisplay()</c> extension.</summary>
+    [Parameter, EditorRequired] public string Label { get; set; } = string.Empty;
+
+    [Parameter] public StatusTagVariant Variant { get; set; } = StatusTagVariant.Neutral;
+
+    private string CssClass => $"stepgo-status-tag stepgo-status-tag--{Variant.ToString().ToLowerInvariant()}";
+}
