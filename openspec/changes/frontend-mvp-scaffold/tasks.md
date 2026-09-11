@@ -14,11 +14,11 @@
 
 ## 3. `apps/marketing`（frontend-marketing-site，Blazor Web App / Static SSR）
 
-- [ ] 3.1 實作首頁（雙入口 CTA、費用試算摘要區塊、正在招生課程清單），驗證方式：bUnit/整合測試涵蓋兩個入口的導向行為，且確認頁面預設為 Static SSR render mode（無需 JS 即可看到完整內容）
-- [ ] 3.2 實作課程列表頁（類別篩選、關鍵字搜尋、空狀態）與課程詳情頁，驗證方式：搜尋無結果情境有對應測試斷言空狀態元件被渲染；課程詳情頁的「立即報名」互動按鈕標記為 `InteractiveWebAssembly` island 且不影響其餘內容的 SSR
-- [ ] 3.3 實作費用試算工具頁，呼叫 `StepGo.PricingRules` 的固定費率公式計算（信用卡 2.89%、ATM 每筆 NT$15、平台服務費 10%、撥款轉帳費同行/跨行），驗證方式：unit test 覆蓋至少 3 組輸入（純 ATM、純信用卡、切換方式）驗證計算結果與明細顯示正確，且測試確認過程中無網路請求
-- [ ] 3.4 實作 About、Terms（老師條款/學生退費雙分頁）、For Teachers、For Students 靜態頁，驗證方式：Terms 頁分頁切換有對應互動測試
-- [ ] 3.5 設定 CloudFront 對行銷頁的快取策略（例如課程列表頁短 TTL），驗證方式：CDK stack 中的 CloudFront 快取行為設定可在本地 `cdk synth` 產出的樣板中檢視到對應 cache policy
+- [x] 3.1 實作首頁（雙入口 CTA、費用試算摘要區塊、正在招生課程清單），驗證方式：bUnit/整合測試涵蓋兩個入口的導向行為，且確認頁面預設為 Static SSR render mode（無需 JS 即可看到完整內容）
+- [x] 3.2 實作課程列表頁（類別篩選、關鍵字搜尋、空狀態）與課程詳情頁，驗證方式：搜尋無結果情境有對應測試斷言空狀態元件被渲染；課程詳情頁的「立即報名」互動按鈕標記為 `InteractiveWebAssembly` island 且不影響其餘內容的 SSR
+- [x] 3.3 實作費用試算工具頁，呼叫 `StepGo.PricingRules` 的固定費率公式計算（信用卡 2.89%、ATM 每筆 NT$15、平台服務費 10%、撥款轉帳費同行/跨行），驗證方式：unit test 覆蓋至少 3 組輸入（純 ATM、純信用卡、切換方式）驗證計算結果與明細顯示正確，且測試確認過程中無網路請求
+- [x] 3.4 實作 About、Terms（老師條款/學生退費雙分頁）、For Teachers、For Students 靜態頁，驗證方式：Terms 頁分頁切換有對應互動測試
+- [x] 3.5 設定 CloudFront 對行銷頁的快取策略（例如課程列表頁短 TTL），驗證方式：CDK stack 中的 CloudFront 快取行為設定可在本地 `cdk synth` 產出的樣板中檢視到對應 cache policy
 
 ## 4. `frontend-auth`（登入註冊，供後台導向使用）
 

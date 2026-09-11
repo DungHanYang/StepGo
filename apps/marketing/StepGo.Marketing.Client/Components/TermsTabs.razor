@@ -1,0 +1,38 @@
+@namespace StepGo.Marketing.Client.Components
+
+<div>
+    <div class="mb-3 flex gap-2" role="tablist" aria-label="合作條款分頁">
+        <button type="button" role="tab" aria-selected="@(_active == Tab.Teacher)"
+                class="stepgo-btn @(_active == Tab.Teacher ? "stepgo-btn--primary" : "stepgo-btn--secondary")"
+                @onclick="() => _active = Tab.Teacher">
+            @TeacherTabLabel
+        </button>
+        <button type="button" role="tab" aria-selected="@(_active == Tab.Student)"
+                class="stepgo-btn @(_active == Tab.Student ? "stepgo-btn--student" : "stepgo-btn--secondary")"
+                @onclick="() => _active = Tab.Student">
+            @StudentTabLabel
+        </button>
+    </div>
+
+    <div role="tabpanel" hidden="@(_active != Tab.Teacher)" data-testid="teacher-panel">
+        @((MarkupString)TeacherContentHtml)
+    </div>
+    <div role="tabpanel" hidden="@(_active != Tab.Student)" data-testid="student-panel">
+        @((MarkupString)StudentContentHtml)
+    </div>
+</div>
+
+@code {
+    private enum Tab { Teacher, Student }
+
+    private Tab _active = Tab.Teacher;
+
+    [Parameter] public string TeacherTabLabel { get; set; } = "老師合作條款";
+    [Parameter] public string StudentTabLabel { get; set; } = "學生退費規則";
+
+    // Content crosses the static-SSR -> interactive-WebAssembly render-mode boundary as a
+    // plain string (RenderFragment/EventCallback parameters are NOT allowed there — Blazor
+    // Web App requires interactive-component parameters to be JSON-serializable).
+    [Parameter, EditorRequired] public string TeacherContentHtml { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string StudentContentHtml { get; set; } = string.Empty;
+}
