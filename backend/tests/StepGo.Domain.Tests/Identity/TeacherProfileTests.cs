@@ -1,5 +1,5 @@
-using StepGo.Domain.Identity;
-using StepGo.Domain.SharedKernel;
+using StepGo.Identity.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.Identity;
 

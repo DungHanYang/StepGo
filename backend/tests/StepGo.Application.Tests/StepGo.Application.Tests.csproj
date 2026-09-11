@@ -20,7 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\StepGo.Application\StepGo.Application.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Shared\StepGo.Shared.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Identity\StepGo.Identity.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Courses\StepGo.Courses.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Orders\StepGo.Orders.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Payouts\StepGo.Payouts.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.RefundTickets\StepGo.RefundTickets.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Governance\StepGo.Governance.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Notifications\StepGo.Notifications.csproj" />
   </ItemGroup>
 
 </Project>

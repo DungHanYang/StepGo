@@ -1,11 +1,11 @@
 using Moq;
-using StepGo.Application.Common;
-using StepGo.Application.FeeLedger;
-using StepGo.Application.Orders;
-using StepGo.Domain.Courses;
-using StepGo.Domain.FeeLedger;
-using StepGo.Domain.Orders;
-using StepGo.Domain.SharedKernel;
+using StepGo.Shared.Application;
+using StepGo.Shared.Application.FeeLedger;
+using StepGo.Orders.Application;
+using StepGo.Courses.Domain;
+using StepGo.Shared.Domain.FeeLedger;
+using StepGo.Orders.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Application.Tests.Orders;
 

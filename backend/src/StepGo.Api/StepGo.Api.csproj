@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\StepGo.Api.Shared\StepGo.Api.Shared.csproj" />
+    <ProjectReference Include="..\StepGo.Shared\StepGo.Shared.csproj" />
+    <ProjectReference Include="..\StepGo.Identity\StepGo.Identity.csproj" />
+    <ProjectReference Include="..\StepGo.Courses\StepGo.Courses.csproj" />
+    <ProjectReference Include="..\StepGo.Orders\StepGo.Orders.csproj" />
+    <ProjectReference Include="..\StepGo.Payouts\StepGo.Payouts.csproj" />
+    <ProjectReference Include="..\StepGo.RefundTickets\StepGo.RefundTickets.csproj" />
+    <ProjectReference Include="..\StepGo.Governance\StepGo.Governance.csproj" />
+    <ProjectReference Include="..\StepGo.Notifications\StepGo.Notifications.csproj" />
+    <ProjectReference Include="..\StepGo.Contracts\StepGo.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishAot>true</PublishAot>
+    <AssemblyName>bootstrap</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <StripSymbols>true</StripSymbols>
+  </PropertyGroup>
+
+</Project>

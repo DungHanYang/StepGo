@@ -1,5 +1,5 @@
-using StepGo.Domain.Notifications;
-using StepGo.Domain.SharedKernel;
+using StepGo.Notifications.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.Notifications;
 

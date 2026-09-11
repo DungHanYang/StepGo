@@ -1,7 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Moq;
-using StepGo.Infrastructure.Dynamo;
+using StepGo.Shared.Infrastructure.Dynamo;
 
 namespace StepGo.Infrastructure.Tests.Dynamo;
 

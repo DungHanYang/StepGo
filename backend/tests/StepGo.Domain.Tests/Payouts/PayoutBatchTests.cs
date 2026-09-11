@@ -1,5 +1,5 @@
-using StepGo.Domain.Payouts;
-using StepGo.Domain.SharedKernel;
+using StepGo.Payouts.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.Payouts;
 

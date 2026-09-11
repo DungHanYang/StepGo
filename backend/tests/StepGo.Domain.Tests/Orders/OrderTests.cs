@@ -1,7 +1,7 @@
-using StepGo.Domain.Courses;
-using StepGo.Domain.FeeLedger;
-using StepGo.Domain.Orders;
-using StepGo.Domain.SharedKernel;
+using StepGo.Courses.Domain;
+using StepGo.Shared.Domain.FeeLedger;
+using StepGo.Orders.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.Orders;
 

@@ -1,4 +1,4 @@
-using StepGo.Infrastructure.Dynamo;
+using StepGo.Shared.Infrastructure.Dynamo;
 
 namespace StepGo.Infrastructure.Tests.Dynamo;
 

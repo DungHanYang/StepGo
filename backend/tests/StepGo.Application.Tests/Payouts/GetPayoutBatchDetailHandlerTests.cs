@@ -1,9 +1,9 @@
 using Moq;
-using StepGo.Application.Common;
-using StepGo.Application.Payouts;
-using StepGo.Domain.Identity;
-using StepGo.Domain.Payouts;
-using StepGo.Domain.SharedKernel;
+using StepGo.Shared.Application;
+using StepGo.Payouts.Application;
+using StepGo.Identity.Domain;
+using StepGo.Payouts.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Application.Tests.Payouts;
 

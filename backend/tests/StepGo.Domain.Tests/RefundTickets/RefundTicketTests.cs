@@ -1,5 +1,5 @@
-using StepGo.Domain.RefundTickets;
-using StepGo.Domain.SharedKernel;
+using StepGo.RefundTickets.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.RefundTickets;
 

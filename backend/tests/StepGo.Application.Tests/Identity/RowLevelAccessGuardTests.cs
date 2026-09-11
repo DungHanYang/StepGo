@@ -1,6 +1,6 @@
-using StepGo.Application.Common;
-using StepGo.Application.Identity;
-using StepGo.Domain.Identity;
+using StepGo.Shared.Application;
+using StepGo.Identity.Application;
+using StepGo.Identity.Domain;
 
 namespace StepGo.Application.Tests.Identity;
 
