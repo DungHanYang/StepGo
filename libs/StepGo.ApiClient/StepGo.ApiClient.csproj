@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.31" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StepGo.UI\StepGo.UI.csproj" />
+    <ProjectReference Include="..\StepGo.PricingRules\StepGo.PricingRules.csproj" />
+  </ItemGroup>
+
 </Project>

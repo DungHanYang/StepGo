@@ -62,9 +62,9 @@
 
 ## 8. Mock API 圖層、AWS 部署與跨應用整合驗收
 
-- [ ] 8.1 建立本地 Mock API 專案（ASP.NET Core Minimal API 或 WireMock.Net），涵蓋四個核心狀態機（付款 5 狀態、身分驗證 4 狀態、撥款帳戶 4 狀態、退課工單多階段流程）的假資料情境集，驗證方式：每個狀態機至少各狀態有一組可切換的 mock 情境，並在對應頁面測試中驗證能正確渲染每個狀態
-- [ ] 8.2 將 `StepGo.ApiClient` 的 DTO 對齊 specs 中列出的欄位（`Order`、`RefundTicket`、`PayoutBatch`、`Teacher` 等），驗證方式：編譯通過且 mock API 回應符合宣告的 DTO 結構
-- [ ] 8.3 完成 CDK stack：`apps/marketing` 部署到 Lambda + API Gateway，三個後台部署到各自的 S3 + CloudFront，`admin` 額外設定 AWS WAF IP allow list，驗證方式：`cdk deploy`（或 `cdk synth` 若無實際 AWS 帳號可測）成功產出四個部署目標的資源定義，且 admin 的樣板中可見 WAF 關聯
-- [ ] 8.4 執行四個應用在系統頁/行銷頁兩組響應式斷點下的手動 QA（含側邊選單收合已知坑驗證），驗證方式：於 1080px/980px（系統頁）與 900px/640px（行銷頁）四個關鍵寬度下逐頁截圖比對，確認無版面破版與側邊選單收合正常
-- [ ] 8.5 驗證 `apps/marketing` 的 SSR 頁面在未啟用 JavaScript/WebAssembly 的情況下仍能顯示完整內容（SEO 檢核），驗證方式：以停用 JS 的瀏覽器或簡易 HTTP 請求檢視首頁與課程列表頁的原始回應 HTML，確認關鍵內容（課程名稱、售價）存在於初始 HTML 中
-- [ ] 8.6 整理「前端對後端 API 的假設清單」（角色導向登入、訂單狀態唯讀、費用試算為前端計算、認證 token 含角色 claim、費率常數需與 Admin 設定同步等），作為後續後端 change 的輸入，驗證方式：清單以文件形式產出並列出每項假設對應的 spec 需求編號
+- [x] 8.1 建立本地 Mock API 專案（ASP.NET Core Minimal API 或 WireMock.Net），涵蓋四個核心狀態機（付款 5 狀態、身分驗證 4 狀態、撥款帳戶 4 狀態、退課工單多階段流程）的假資料情境集，驗證方式：每個狀態機至少各狀態有一組可切換的 mock 情境，並在對應頁面測試中驗證能正確渲染每個狀態
+- [x] 8.2 將 `StepGo.ApiClient` 的 DTO 對齊 specs 中列出的欄位（`Order`、`RefundTicket`、`PayoutBatch`、`Teacher` 等），驗證方式：編譯通過且 mock API 回應符合宣告的 DTO 結構
+- [x] 8.3 完成 CDK stack：`apps/marketing` 部署到 Lambda + API Gateway，三個後台部署到各自的 S3 + CloudFront，`admin` 額外設定 AWS WAF IP allow list，驗證方式：`cdk deploy`（或 `cdk synth` 若無實際 AWS 帳號可測）成功產出四個部署目標的資源定義，且 admin 的樣板中可見 WAF 關聯
+- [x] 8.4 執行四個應用在系統頁/行銷頁兩組響應式斷點下的手動 QA（含側邊選單收合已知坑驗證），驗證方式：於 1080px/980px（系統頁）與 900px/640px（行銷頁）四個關鍵寬度下逐頁截圖比對，確認無版面破版與側邊選單收合正常
+- [x] 8.5 驗證 `apps/marketing` 的 SSR 頁面在未啟用 JavaScript/WebAssembly 的情況下仍能顯示完整內容（SEO 檢核），驗證方式：以停用 JS 的瀏覽器或簡易 HTTP 請求檢視首頁與課程列表頁的原始回應 HTML，確認關鍵內容（課程名稱、售價）存在於初始 HTML 中
+- [x] 8.6 整理「前端對後端 API 的假設清單」（角色導向登入、訂單狀態唯讀、費用試算為前端計算、認證 token 含角色 claim、費率常數需與 Admin 設定同步等），作為後續後端 change 的輸入，驗證方式：清單以文件形式產出並列出每項假設對應的 spec 需求編號
