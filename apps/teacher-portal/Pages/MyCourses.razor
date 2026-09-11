@@ -1,0 +1,24 @@
+@page "/my-courses"
+@using StepGo.TeacherPortal.Services
+@inject TeacherDataStore Store
+
+<PageTitle>我的課程 — StepGo</PageTitle>
+
+<h1>我的課程</h1>
+
+@if (Store.MyCourseNames.Count == 0)
+{
+    <div class="stepgo-card flex flex-col items-start gap-2" data-testid="my-courses-empty">
+        <p>你還沒有建立任何課程。</p>
+        <a href="/courses/new" class="stepgo-btn stepgo-btn--primary">建立第一堂課</a>
+    </div>
+}
+else
+{
+    <div class="grid grid-cols-1 gap-4 sys-mid:grid-cols-2 sys-wide:grid-cols-3" data-testid="my-courses-list">
+        @foreach (var name in Store.MyCourseNames)
+        {
+            <Card>@name</Card>
+        }
+    </div>
+}

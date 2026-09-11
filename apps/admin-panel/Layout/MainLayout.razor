@@ -1,0 +1,15 @@
+@inherits LayoutComponentBase
+
+<div class="stepgo-system-shell">
+    <nav class="stepgo-system-sidebar !bg-stepgo-admin-sidebar-bg !text-stepgo-admin-sidebar-text" aria-label="管理者後台導覽">
+        <a href="/" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">金流總覽</a>
+        <a href="/fees" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">費用設定</a>
+        <a href="/directory" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">老師與課程目錄</a>
+        <a href="/accounts" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">帳號與權限</a>
+        <a href="/audit-log" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">操作日誌</a>
+        <a href="/arbitration" class="rounded-stepgo px-3 py-2 hover:bg-stepgo-admin-sidebar-active">平台仲裁</a>
+    </nav>
+    <main class="stepgo-system-main">
+        @Body
+    </main>
+</div>

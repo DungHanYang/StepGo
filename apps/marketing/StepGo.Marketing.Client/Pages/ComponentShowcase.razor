@@ -1,0 +1,133 @@
+@page "/dev/components"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>StepGo.UI 元件展示</PageTitle>
+
+<div class="mx-auto flex max-w-3xl flex-col gap-8 p-6">
+    <h1>StepGo.UI 元件展示</h1>
+
+    <section class="flex flex-col gap-2">
+        <h2>Button</h2>
+        <div class="flex flex-wrap gap-2">
+            <Button Variant="primary" OnClick="() => _clicks++">老師端主要按鈕</Button>
+            <Button Variant="student" OnClick="() => _clicks++">學生端主要按鈕</Button>
+            <Button Variant="secondary" OnClick="() => _clicks++">次要按鈕</Button>
+            <Button Variant="danger" OnClick="() => _clicks++">危險操作</Button>
+            <Button Variant="primary" Disabled="true">停用狀態</Button>
+        </div>
+        <p>點擊次數：@_clicks</p>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>Card</h2>
+        <Card>
+            <p>Card 內容區塊，套用共用邊框／圓角／底色代幣。</p>
+        </Card>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>Table（含空狀態）</h2>
+        <Table TItem="SampleOrder" Items="_orders" AriaLabel="範例訂單列表">
+            <HeaderTemplate>
+                <th>學生</th>
+                <th>課程</th>
+                <th>付款狀態</th>
+            </HeaderTemplate>
+            <RowTemplate Context="order">
+                <td>@order.StudentName</td>
+                <td>@order.CourseName</td>
+                <td><StatusTag Label="@order.Status.ToDisplay().Label" Variant="@order.Status.ToDisplay().Variant" /></td>
+            </RowTemplate>
+        </Table>
+
+        <p>空狀態範例：</p>
+        <Table TItem="SampleOrder" Items="_emptyOrders" AriaLabel="無資料範例">
+            <RowTemplate Context="order"><td></td></RowTemplate>
+            <EmptyTemplate>找不到符合條件的訂單，<a href="/dev/components">清除篩選條件</a></EmptyTemplate>
+        </Table>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>StatusTag（四組共用狀態語意）</h2>
+        <div class="flex flex-wrap gap-2">
+            @foreach (PaymentStatus s in Enum.GetValues<PaymentStatus>())
+            {
+                var (label, variant) = s.ToDisplay();
+                <StatusTag Label="@label" Variant="@variant" />
+            }
+        </div>
+        <div class="flex flex-wrap gap-2">
+            @foreach (VerificationStatus s in Enum.GetValues<VerificationStatus>())
+            {
+                var (label, variant) = s.ToDisplay();
+                <StatusTag Label="@label" Variant="@variant" />
+            }
+        </div>
+        <div class="flex flex-wrap gap-2">
+            @foreach (PayoutAccountStatus s in Enum.GetValues<PayoutAccountStatus>())
+            {
+                var (label, variant) = s.ToDisplay();
+                <StatusTag Label="@label" Variant="@variant" />
+            }
+        </div>
+        <div class="flex flex-wrap gap-2">
+            @foreach (RefundTicketStatus s in Enum.GetValues<RefundTicketStatus>())
+            {
+                var (label, variant) = s.ToDisplay();
+                <StatusTag Label="@label" Variant="@variant" />
+            }
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>StepIndicator</h2>
+        <StepIndicator StepCount="4" CurrentStepIndex="1" Labels="@(new[] { "基本資料", "定價與付款", "退費規則", "招生頁" })" />
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>OwlTip</h2>
+        <OwlTip Title="小提醒">填寫 Email 才能收到自動通知。</OwlTip>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>響應式斷點（系統頁 1080px/980px）</h2>
+        <p class="text-sm text-stepgo-ink-subtle">
+            側邊選單版面範例：寬螢幕（≥1080px）為直向側邊欄；980–1079px 為中間態；
+            窄於 980px 收合為橫向列（見 frontend-design-system spec「系統頁側邊選單在窄螢幕收合為橫向列」）。
+        </p>
+        <div id="breakpoint-demo" class="flex flex-col gap-2 border border-stepgo-border p-3 sys-wide:flex-row sys-mid:flex-row">
+            <aside class="stepgo-card w-full sys-wide:w-48 sys-mid:w-32" data-testid="sidebar">側邊選單</aside>
+            <div class="stepgo-card flex-1" data-testid="content">主內容區</div>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2>Wizard</h2>
+        <Wizard Steps="@(new[] { "確認課程", "填資料選付款", "結果頁" })" CurrentStepIndex="@_wizardStep">
+            <ChildContent>
+                <p>目前步驟內容（示範用）：第 @(_wizardStep + 1) 步。</p>
+            </ChildContent>
+            <Footer>
+                <Button Variant="secondary" Disabled="@(_wizardStep == 0)" OnClick="() => _wizardStep = Math.Max(0, _wizardStep - 1)">上一步</Button>
+                <Button Variant="primary" Disabled="@(_wizardStep == 2)" OnClick="() => _wizardStep = Math.Min(2, _wizardStep + 1)">下一步</Button>
+            </Footer>
+        </Wizard>
+
+    </section>
+</div>
+
+@code {
+    private int _clicks;
+    private int _wizardStep;
+
+    private record SampleOrder(string StudentName, string CourseName, PaymentStatus Status);
+
+    private readonly SampleOrder[] _orders =
+    [
+        new("王小明", "兒童繪畫班", PaymentStatus.Paid),
+        new("陳小美", "親子瑜伽", PaymentStatus.Pending),
+        new("李小華", "程式設計入門", PaymentStatus.Refunded),
+    ];
+
+    private readonly SampleOrder[] _emptyOrders = [];
+}

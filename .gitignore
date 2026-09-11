@@ -1,0 +1,22 @@
+# .NET build output
+bin/
+obj/
+*.user
+
+# Test results
+[Tt]est[Rr]esult*/
+
+# Node / Tailwind CLI tooling
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# CDK
+cdk.out/
+.cdk.staging/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp

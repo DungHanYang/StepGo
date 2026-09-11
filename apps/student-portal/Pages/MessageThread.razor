@@ -1,0 +1,45 @@
+@page "/orders/{OrderId}/messages"
+@using StepGo.StudentPortal.Models
+@using StepGo.StudentPortal.Services
+@inject StudentDataStore Store
+
+<PageTitle>留言串 — StepGo</PageTitle>
+
+<h1>退課留言串</h1>
+<p class="text-sm text-stepgo-ink-subtle">此留言串僅用於退課/仲裁溝通，作為平台審核與仲裁的依據。一般問題請透過 LINE 官方帳號聯繫。</p>
+
+<div class="mt-4 flex flex-col gap-3" data-testid="message-list">
+    @foreach (var message in Store.GetMessages(OrderId))
+    {
+        <div class="stepgo-card">
+            <p class="text-sm font-medium">@message.Sender</p>
+            <p>@message.Text</p>
+            <p class="text-xs text-stepgo-ink-subtle">@message.SentAt.ToString("yyyy/MM/dd HH:mm")</p>
+        </div>
+    }
+</div>
+
+<div class="mt-4 flex flex-col gap-2">
+    <label class="flex flex-col gap-1">
+        新增留言
+        <input @bind="_newMessage" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+    </label>
+    <Button Variant="student" OnClick="Send">送出</Button>
+</div>
+
+@code {
+    [Parameter] public string OrderId { get; set; } = string.Empty;
+
+    private string _newMessage = string.Empty;
+
+    private void Send()
+    {
+        if (string.IsNullOrWhiteSpace(_newMessage))
+        {
+            return;
+        }
+
+        Store.PostMessage(OrderId, "學生", _newMessage);
+        _newMessage = string.Empty;
+    }
+}

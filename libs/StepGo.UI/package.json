@@ -1,0 +1,11 @@
+{
+  "name": "stepgo-ui-styles",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./Styles/input.css -o ./wwwroot/css/app.css",
+    "build:css:min": "tailwindcss -i ./Styles/input.css -o ./wwwroot/css/app.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

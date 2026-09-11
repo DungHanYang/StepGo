@@ -1,0 +1,52 @@
+@page "/"
+@using StepGo.AdminPanel.Services
+
+<PageTitle>金流總覽 — StepGo Admin</PageTitle>
+
+<h1>金流總覽</h1>
+
+<section class="mt-4 grid grid-cols-1 gap-4 sys-mid:grid-cols-2 sys-wide:grid-cols-4">
+    <Card>
+        <p class="text-sm text-stepgo-admin-sidebar-text">總營收</p>
+        <p class="font-number text-xl">NT$@(Store.RevenueStats.GrossRevenue.ToString("N0"))</p>
+    </Card>
+    <Card>
+        <p class="text-sm text-stepgo-admin-sidebar-text">平台服務費收入</p>
+        <p class="font-number text-xl">NT$@(Store.RevenueStats.PlatformFeeCollected.ToString("N0"))</p>
+    </Card>
+    <Card>
+        <p class="text-sm text-stepgo-admin-sidebar-text">訂單數</p>
+        <p class="font-number text-xl">@Store.RevenueStats.OrderCount</p>
+    </Card>
+    <Card Class="@(Store.ReconciliationStatus.IsBalanced ? "" : "border-2 border-stepgo-danger")">
+        <p class="text-sm text-stepgo-admin-sidebar-text">資金核對</p>
+        <p class="font-number text-xl">@(Store.ReconciliationStatus.IsBalanced ? "已平衡" : $"差異 NT${Store.ReconciliationStatus.Discrepancy:N0}")</p>
+    </Card>
+</section>
+
+<section class="mt-6" aria-labelledby="payout-queue-heading">
+    <h2 id="payout-queue-heading">撥款佇列</h2>
+    <div class="mt-2 flex flex-col gap-3" data-testid="payout-queue">
+        @foreach (var batch in Store.PayoutQueue)
+        {
+            <Card>
+                <p>批次日期：@batch.BatchDate.ToString("yyyy/MM/dd")</p>
+                <p>涵蓋老師數：@batch.TeacherCount 位</p>
+                <p class="font-number">預計撥款總額：NT$@(batch.TotalAmount.ToString("N0"))</p>
+            </Card>
+        }
+    </div>
+</section>
+
+<section class="mt-6" aria-labelledby="refund-overview-heading">
+    <h2 id="refund-overview-heading">退款總覽</h2>
+    <Card>
+        <p>待處理退款：@Store.RefundOverview.PendingCount 筆</p>
+        <p>本月已完成：@Store.RefundOverview.CompletedThisMonth 筆</p>
+        <p class="font-number">本月退款總額：NT$@(Store.RefundOverview.TotalRefundedThisMonth.ToString("N0"))</p>
+    </Card>
+</section>
+
+@code {
+    [Inject] private AdminDataStore Store { get; set; } = null!;
+}

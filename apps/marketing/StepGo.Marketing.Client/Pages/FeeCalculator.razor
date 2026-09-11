@@ -1,0 +1,84 @@
+@page "/fee-calculator"
+@rendermode InteractiveWebAssembly
+@using StepGo.PricingRules
+
+<PageTitle>費用試算工具 — 學步 StepGo</PageTitle>
+
+<div class="mx-auto flex max-w-xl flex-col gap-6 p-6">
+    <h1>費用試算工具</h1>
+    <p class="text-sm text-stepgo-ink-muted">輸入課程售價並選擇付款方式，即時查看金流成本、平台服務費與老師預估淨額（前端純計算，不會呼叫任何 API）。</p>
+
+    <div class="stepgo-card flex flex-col gap-4">
+        <label class="flex flex-col gap-1">
+            售價（NT$）
+            <input type="number" min="0" step="1" value="@_price"
+                   @oninput="OnPriceChanged"
+                   class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1 font-number" />
+        </label>
+
+        <fieldset class="flex flex-col gap-1">
+            <legend>付款方式</legend>
+            <label class="flex items-center gap-2">
+                <input type="radio" name="method" checked="@(_method == PaymentMethod.CreditCard)"
+                       @onchange="() => SetMethod(PaymentMethod.CreditCard)" />
+                信用卡（2.89%）
+            </label>
+            <label class="flex items-center gap-2">
+                <input type="radio" name="method" checked="@(_method == PaymentMethod.Atm)"
+                       @onchange="() => SetMethod(PaymentMethod.Atm)" />
+                ATM 虛擬帳號（每筆 NT$15）
+            </label>
+        </fieldset>
+
+        <fieldset class="flex flex-col gap-1">
+            <legend>撥款轉帳</legend>
+            <label class="flex items-center gap-2">
+                <input type="radio" name="transfer" checked="@(_transfer == PayoutTransferType.SameBank)"
+                       @onchange="() => SetTransfer(PayoutTransferType.SameBank)" />
+                同行（NT$10）
+            </label>
+            <label class="flex items-center gap-2">
+                <input type="radio" name="transfer" checked="@(_transfer == PayoutTransferType.CrossBank)"
+                       @onchange="() => SetTransfer(PayoutTransferType.CrossBank)" />
+                跨行（NT$20）
+            </label>
+        </fieldset>
+
+        <div data-testid="breakdown" class="flex flex-col gap-1 border-t border-stepgo-border pt-3 font-number">
+            <p>金流手續費：NT$@(_breakdown.GatewayFee.ToString("N0"))</p>
+            <p>平台服務費（以原價計算）：NT$@(_breakdown.PlatformFee.ToString("N0"))</p>
+            <p>撥款轉帳費：NT$@(_breakdown.PayoutTransferFee.ToString("N0"))</p>
+            <p class="text-lg font-medium text-stepgo-ink">老師預估淨額：NT$@(_breakdown.TeacherNetAmount.ToString("N0"))</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private decimal _price = 3000m;
+    private PaymentMethod _method = PaymentMethod.CreditCard;
+    private PayoutTransferType _transfer = PayoutTransferType.SameBank;
+    private PricingBreakdown _breakdown = PricingCalculator.Calculate(3000m, PaymentMethod.CreditCard, PayoutTransferType.SameBank);
+
+    private void OnPriceChanged(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        _price = decimal.TryParse(e.Value?.ToString(), out var value) && value >= 0 ? value : 0;
+        Recalculate();
+    }
+
+    private void SetMethod(PaymentMethod method)
+    {
+        _method = method;
+        Recalculate();
+    }
+
+    private void SetTransfer(PayoutTransferType transfer)
+    {
+        _transfer = transfer;
+        Recalculate();
+    }
+
+    private void Recalculate()
+    {
+        _breakdown = PricingCalculator.Calculate(_price, _method, _transfer);
+    }
+}

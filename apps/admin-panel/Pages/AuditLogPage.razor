@@ -1,0 +1,55 @@
+@page "/audit-log"
+@using StepGo.AdminPanel.Models
+@using StepGo.AdminPanel.Services
+@inject AdminDataStore Store
+
+<PageTitle>操作日誌 — StepGo Admin</PageTitle>
+
+<h1>操作日誌</h1>
+
+<label class="mt-4 flex max-w-xs flex-col gap-1 text-sm">
+    類別
+    <select @bind="_categoryFilter" class="rounded-stepgo border border-stepgo-border px-2 py-1">
+        <option value="">全部</option>
+        @foreach (AuditLogCategory category in Enum.GetValues<AuditLogCategory>())
+        {
+            <option value="@category">@CategoryLabel(category)</option>
+        }
+    </select>
+</label>
+
+<div class="mt-4" data-testid="audit-log-table">
+    <Table TItem="AuditLogEntry" Items="@FilteredEntries" AriaLabel="操作日誌">
+        <HeaderTemplate>
+            <th>時間</th>
+            <th>操作者</th>
+            <th>類別</th>
+            <th>異動摘要</th>
+        </HeaderTemplate>
+        <RowTemplate Context="entry">
+            <td class="font-number">@entry.OccurredAt.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@entry.Actor</td>
+            <td>@CategoryLabel(entry.Category)</td>
+            <td>@entry.Summary</td>
+        </RowTemplate>
+        <EmptyTemplate>此類別沒有日誌紀錄。</EmptyTemplate>
+    </Table>
+</div>
+
+@code {
+    private string _categoryFilter = string.Empty;
+
+    private IReadOnlyList<AuditLogEntry> FilteredEntries => AuditLogFiltering.ByCategory(
+        Store.AuditLog,
+        Enum.TryParse<AuditLogCategory>(_categoryFilter, out var c) ? c : null);
+
+    private static string CategoryLabel(AuditLogCategory category) => category switch
+    {
+        AuditLogCategory.FeeRate => "費率",
+        AuditLogCategory.Verification => "驗證",
+        AuditLogCategory.Arbitration => "仲裁",
+        AuditLogCategory.Permission => "權限",
+        AuditLogCategory.Payout => "撥款",
+        _ => category.ToString(),
+    };
+}

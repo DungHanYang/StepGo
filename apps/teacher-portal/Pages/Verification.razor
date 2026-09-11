@@ -1,0 +1,51 @@
+@page "/verification"
+@using StepGo.TeacherPortal.Services
+@using StepGo.UI.Status
+@inject TeacherDataStore Store
+
+<PageTitle>身分驗證 — StepGo</PageTitle>
+
+<h1>身分驗證</h1>
+
+<div class="stepgo-card mt-4 flex flex-col gap-3" data-testid="verification-status">
+    <StatusTag Label="@Store.VerificationStatus.ToDisplay().Label" Variant="@Store.VerificationStatus.ToDisplay().Variant" />
+
+    @if (_resubmitted)
+    {
+        <p class="text-sm text-stepgo-student" role="status">已重新送出，狀態已更新為審核中。</p>
+    }
+
+    @switch (Store.VerificationStatus)
+    {
+        case VerificationStatus.Filling:
+            <p>請上傳身分證明文件以完成驗證。</p>
+            <Button Variant="primary" OnClick="Submit">送出審核</Button>
+            break;
+        case VerificationStatus.UnderReview:
+            <p>你的身分驗證資料正在審核中，請耐心等候。</p>
+            break;
+        case VerificationStatus.Rejected:
+            <p>很抱歉，你的身分驗證未通過，請重新上傳資料。</p>
+            <Button Variant="primary" OnClick="Resubmit">重新上傳並送出</Button>
+            break;
+        case VerificationStatus.Verified:
+            <p>身分驗證已通過，你可以開始建立課程。</p>
+            <a href="/courses/new" class="stepgo-btn stepgo-btn--primary self-start">建立課程</a>
+            break;
+    }
+</div>
+
+@code {
+    private bool _resubmitted;
+
+    private void Submit()
+    {
+        Store.VerificationStatus = VerificationStatus.UnderReview;
+    }
+
+    private void Resubmit()
+    {
+        Store.VerificationStatus = VerificationStatus.UnderReview;
+        _resubmitted = true;
+    }
+}

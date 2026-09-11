@@ -1,0 +1,71 @@
+@page "/courses"
+@using Microsoft.AspNetCore.WebUtilities
+@using StepGo.Marketing.Models
+@inject NavigationManager Nav
+
+<PageTitle>課程列表 — 學步 StepGo</PageTitle>
+
+<div class="mx-auto flex max-w-5xl flex-col gap-6 p-6">
+    <h1>課程列表</h1>
+
+    <form method="get" action="/courses" class="flex flex-wrap items-end gap-3" aria-label="課程篩選">
+        <label class="flex flex-col gap-1 text-sm">
+            類別
+            <select name="category" class="rounded-stepgo border border-stepgo-border bg-stepgo-card px-2 py-1">
+                <option value="">全部</option>
+                @foreach (var category in CourseCatalog.Categories)
+                {
+                    <option value="@category" selected="@(category == _category)">@category</option>
+                }
+            </select>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+            關鍵字
+            <input type="search" name="q" value="@_keyword" placeholder="搜尋課程名稱"
+                   class="rounded-stepgo border border-stepgo-border bg-stepgo-card px-2 py-1" />
+        </label>
+        <button type="submit" class="stepgo-btn stepgo-btn--student">搜尋</button>
+    </form>
+
+    @if (_results.Count == 0)
+    {
+        <div class="stepgo-card flex flex-col items-start gap-2" data-testid="empty-state">
+            <p>找不到符合條件的課程。</p>
+            <a href="/courses" class="stepgo-btn stepgo-btn--secondary">清除篩選條件</a>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 gap-4 mkt-wide:grid-cols-3" data-testid="results">
+            @foreach (var course in _results)
+            {
+                <a href="@($"/courses/{course.Id}")" class="stepgo-card flex flex-col gap-1 no-underline">
+                    <span class="text-xs text-stepgo-ink-subtle">@course.Category</span>
+                    <span class="font-medium text-stepgo-ink">@course.Name</span>
+                    <span class="font-number text-stepgo-ink">NT$@(course.Price.ToString("N0"))</span>
+                    @if (!course.IsEnrolling)
+                    {
+                        <span class="text-xs text-stepgo-ink-subtle">目前非招生中</span>
+                    }
+                </a>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string? _category;
+    private string? _keyword;
+    private List<Course> _results = [];
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        _category = query.TryGetValue("category", out var categoryValue) ? categoryValue.ToString() : null;
+        _keyword = query.TryGetValue("q", out var keywordValue) ? keywordValue.ToString() : null;
+
+        _results = CourseCatalog.Search(_category, _keyword).ToList();
+    }
+}

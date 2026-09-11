@@ -1,0 +1,47 @@
+@page "/auth/register"
+@rendermode InteractiveWebAssembly
+@using Microsoft.AspNetCore.WebUtilities
+@using StepGo.Marketing.Client.Components
+@inject NavigationManager Nav
+
+<PageTitle>註冊 — 學步 StepGo</PageTitle>
+
+<div class="mx-auto flex max-w-sm flex-col gap-4 p-6">
+    @if (_role is null)
+    {
+        <h1>註冊</h1>
+        <p class="text-sm text-stepgo-ink-subtle">請選擇你的身分：</p>
+        <div class="flex flex-col gap-2">
+            <a href="/auth/register?role=teacher" class="stepgo-btn stepgo-btn--primary">我是老師</a>
+            <a href="/auth/register?role=student" class="stepgo-btn stepgo-btn--student">我是學生</a>
+        </div>
+    }
+    else if (_role == "teacher")
+    {
+        <h1 class="text-stepgo-teacher">老師註冊</h1>
+        <TeacherRegisterForm />
+    }
+    else if (_role == "student")
+    {
+        <h1 class="text-stepgo-student">學生註冊</h1>
+        <StudentRegisterForm CourseId="@_courseId" />
+    }
+    else
+    {
+        <p>不支援的身分類型。</p>
+    }
+</div>
+
+@code {
+    private string? _role;
+    private string? _courseId;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        _role = query.TryGetValue("role", out var roleValue) ? roleValue.ToString() : null;
+        _courseId = query.TryGetValue("courseId", out var courseIdValue) ? courseIdValue.ToString() : null;
+    }
+}

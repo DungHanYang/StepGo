@@ -1,0 +1,78 @@
+@page "/fees"
+@using StepGo.AdminPanel.Services
+@using StepGo.PricingRules
+@inject AdminDataStore Store
+@inject TimeProvider Clock
+
+<PageTitle>費用設定 — StepGo Admin</PageTitle>
+
+<h1>費用設定</h1>
+
+<div class="stepgo-card mt-4 flex flex-col gap-3" data-testid="fee-settings-form">
+    <label class="flex flex-col gap-1">
+        平台服務費率（%）
+        <input type="number" min="0" max="100" value="@((Store.FeeSettings.PlatformFeeRate * 100).ToString("N1"))"
+               @onchange="e => _pendingRate = ParsePercent(e)" class="rounded-stepgo border border-stepgo-border px-2 py-1 font-number" />
+    </label>
+
+    <label class="flex flex-col gap-1">
+        生效日
+        <input type="date" @onchange="e => _effectiveDate = ParseDate(e)" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+    </label>
+    @if (_effectiveDateError)
+    {
+        <p class="text-sm text-stepgo-danger" role="alert">生效日不得早於送出當下起算 30 天</p>
+    }
+
+    <Button Variant="primary" OnClick="Submit">送出調整</Button>
+</div>
+
+<section class="mt-6" aria-labelledby="fee-change-log-heading">
+    <h2 id="fee-change-log-heading">變更紀錄</h2>
+    <div class="mt-2 flex flex-col gap-2" data-testid="fee-change-log">
+        @if (Store.FeeChangeLog.Count == 0)
+        {
+            <Card>尚無變更紀錄。</Card>
+        }
+        else
+        {
+            @foreach (var entry in Store.FeeChangeLog)
+            {
+                <Card>
+                    <p>@entry.Summary</p>
+                    <p class="text-sm text-stepgo-ink-subtle">生效日：@entry.EffectiveDate.ToString("yyyy/MM/dd")　操作者：@entry.ChangedBy</p>
+                </Card>
+            }
+        }
+    </div>
+</section>
+
+@code {
+    private decimal? _pendingRate;
+    private DateOnly? _effectiveDate;
+    private bool _effectiveDateError;
+
+    private static decimal ParsePercent(ChangeEventArgs e) =>
+        decimal.TryParse(e.Value?.ToString(), out var v) ? v / 100m : 0m;
+
+    private static DateOnly? ParseDate(ChangeEventArgs e) =>
+        DateOnly.TryParse(e.Value?.ToString(), out var d) ? d : null;
+
+    private void Submit()
+    {
+        var submittedOn = DateOnly.FromDateTime(Clock.GetUtcNow().Date);
+
+        if (_effectiveDate is null || !FeeChangeValidator.IsEffectiveDateAllowed(_effectiveDate.Value, submittedOn))
+        {
+            _effectiveDateError = true;
+            return;
+        }
+
+        _effectiveDateError = false;
+
+        var newRate = _pendingRate ?? Store.FeeSettings.PlatformFeeRate;
+        var summary = $"平台服務費率調整為 {newRate:P1}";
+        Store.FeeSettings.PlatformFeeRate = newRate;
+        Store.RecordFeeChange(summary, _effectiveDate.Value, "平台管理員", Clock.GetUtcNow());
+    }
+}

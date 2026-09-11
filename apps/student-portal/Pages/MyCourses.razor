@@ -1,0 +1,79 @@
+@page "/"
+@using StepGo.StudentPortal.Models
+@using StepGo.StudentPortal.Services
+@using StepGo.UI.Status
+@inject StudentDataStore Store
+@inject TimeProvider Clock
+
+<PageTitle>我的課程 — StepGo</PageTitle>
+
+<h1>我的課程</h1>
+
+<div class="mt-4 flex gap-2" role="tablist" aria-label="我的課程分頁">
+    @foreach (var tab in _tabs)
+    {
+        <button type="button" role="tab" aria-selected="@(_activeTab == tab)"
+                class="stepgo-btn @(_activeTab == tab ? "stepgo-btn--student" : "stepgo-btn--secondary")"
+                @onclick="() => _activeTab = tab">
+            @TabLabel(tab)
+        </button>
+    }
+</div>
+
+@{
+    var ordersInTab = MyCoursesTabClassifier.InTab(Store.Orders, _activeTab, Clock.GetUtcNow());
+}
+
+<div class="mt-4" data-testid="@($"tab-{_activeTab}")">
+    @if (ordersInTab.Count == 0)
+    {
+        <Card>@EmptyStateLabel(_activeTab)</Card>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 gap-4 mkt-wide:grid-cols-2">
+            @foreach (var order in ordersInTab)
+            {
+                <a href="@($"/orders/{order.Id}")" class="no-underline">
+                    <Card>
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-stepgo-ink">@order.CourseName</span>
+                            <StatusTag Label="@order.PaymentStatus.ToDisplay().Label" Variant="@order.PaymentStatus.ToDisplay().Variant" />
+                        </div>
+                        <p class="text-sm text-stepgo-ink-subtle">@order.TeacherName</p>
+                    </Card>
+                </a>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private readonly MyCoursesTab[] _tabs =
+    [
+        MyCoursesTab.AwaitingPayment,
+        MyCoursesTab.Upcoming,
+        MyCoursesTab.Finished,
+        MyCoursesTab.CancelledRefunded,
+    ];
+
+    private MyCoursesTab _activeTab = MyCoursesTab.AwaitingPayment;
+
+    private static string TabLabel(MyCoursesTab tab) => tab switch
+    {
+        MyCoursesTab.AwaitingPayment => "待繳費",
+        MyCoursesTab.Upcoming => "即將上課",
+        MyCoursesTab.Finished => "已結束",
+        MyCoursesTab.CancelledRefunded => "已取消/已退款",
+        _ => tab.ToString(),
+    };
+
+    private static string EmptyStateLabel(MyCoursesTab tab) => tab switch
+    {
+        MyCoursesTab.AwaitingPayment => "目前沒有待繳費的訂單。",
+        MyCoursesTab.Upcoming => "目前沒有即將上課的課程。",
+        MyCoursesTab.Finished => "目前沒有已結束的課程。",
+        MyCoursesTab.CancelledRefunded => "目前沒有已取消或已退款的訂單。",
+        _ => "沒有資料。",
+    };
+}

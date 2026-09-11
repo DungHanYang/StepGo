@@ -1,0 +1,79 @@
+@page "/auth/login"
+@rendermode InteractiveWebAssembly
+@using System.ComponentModel.DataAnnotations
+@using StepGo.ApiClient.Auth
+@using StepGo.Marketing.Client.Auth
+@inject IAuthTokenStore TokenStore
+@inject StepGoAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+
+<PageTitle>登入 — 學步 StepGo</PageTitle>
+
+<div class="mx-auto flex max-w-sm flex-col gap-4 p-6">
+    <h1>登入</h1>
+
+    <EditForm Model="_model" OnValidSubmit="HandleSubmit" class="stepgo-card flex flex-col gap-3">
+        <DataAnnotationsValidator />
+
+        <label class="flex flex-col gap-1">
+            Email
+            <InputText @bind-Value="_model.Email" class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1" />
+            <ValidationMessage For="() => _model.Email" />
+        </label>
+
+        <label class="flex flex-col gap-1">
+            密碼
+            <InputText @bind-Value="_model.Password" type="password" class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1" />
+            <ValidationMessage For="() => _model.Password" />
+        </label>
+
+        @if (_loginFailed)
+        {
+            <p class="text-sm text-stepgo-danger" role="alert">帳號或密碼錯誤，請再試一次。</p>
+        }
+
+        <button type="submit" class="stepgo-btn stepgo-btn--primary">登入</button>
+    </EditForm>
+
+    <p class="text-sm text-stepgo-ink-subtle">
+        還沒有帳號？
+        <a href="/auth/register?role=teacher">我是老師</a> ·
+        <a href="/auth/register?role=student">我是學生</a>
+    </p>
+</div>
+
+@code {
+    private readonly LoginModel _model = new();
+    private bool _loginFailed;
+
+    private void HandleSubmit()
+    {
+        if (!MockAccountDirectory.TryGetRole(_model.Email, out var role) || role is null)
+        {
+            _loginFailed = true;
+            return;
+        }
+
+        _loginFailed = false;
+
+        var token = FakeJwtIssuer.Issue(role, _model.Email);
+        TokenStore.SetToken(token);
+        AuthStateProvider.NotifyTokenChanged();
+
+        var redirectUrl = PortalRedirect.GetRedirectUrl(role, PortalBaseUrls.LocalDev);
+        if (redirectUrl is not null)
+        {
+            Nav.NavigateTo(redirectUrl, forceLoad: true);
+        }
+    }
+
+    private sealed class LoginModel
+    {
+        [Required(ErrorMessage = "請輸入 Email")]
+        [EmailAddress(ErrorMessage = "Email 格式不正確")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "請輸入密碼")]
+        public string Password { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,60 @@
+@namespace StepGo.Marketing.Client.Components
+@using System.ComponentModel.DataAnnotations
+
+@if (_submitted)
+{
+    <div class="stepgo-card flex flex-col gap-2" role="status">
+        <p>註冊完成！接下來請完成身分驗證才能建立課程。</p>
+        <a href="/auth/login" class="stepgo-btn stepgo-btn--primary self-start">前往登入</a>
+    </div>
+}
+else
+{
+    <EditForm Model="_model" OnValidSubmit="HandleValidSubmit" class="stepgo-card flex flex-col gap-3">
+        <DataAnnotationsValidator />
+
+        <label class="flex flex-col gap-1">
+            姓名
+            <InputText @bind-Value="_model.Name" class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1" />
+            <ValidationMessage For="() => _model.Name" />
+        </label>
+
+        <label class="flex flex-col gap-1">
+            Email
+            <InputText @bind-Value="_model.Email" class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1" />
+            <ValidationMessage For="() => _model.Email" />
+        </label>
+
+        <label class="flex flex-col gap-1">
+            手機號碼
+            <InputText @bind-Value="_model.Phone" class="rounded-stepgo border border-stepgo-border bg-white px-2 py-1" />
+            <ValidationMessage For="() => _model.Phone" />
+        </label>
+
+        <button type="submit" class="stepgo-btn stepgo-btn--primary">完成註冊</button>
+    </EditForm>
+}
+
+@code {
+    private readonly TeacherRegisterModel _model = new();
+    private bool _submitted;
+
+    private void HandleValidSubmit()
+    {
+        _submitted = true;
+    }
+
+    public sealed class TeacherRegisterModel
+    {
+        [Required(ErrorMessage = "請輸入姓名")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "請輸入 Email")]
+        [EmailAddress(ErrorMessage = "Email 格式不正確")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "手機號碼為必填")]
+        [Phone(ErrorMessage = "手機號碼格式不正確")]
+        public string Phone { get; set; } = string.Empty;
+    }
+}

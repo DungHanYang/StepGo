@@ -1,0 +1,58 @@
+@page "/login"
+@inject NavigationManager Nav
+
+<PageTitle>管理者登入 — StepGo Admin</PageTitle>
+
+<div class="mx-auto flex max-w-sm flex-col gap-4 p-6" data-testid="admin-login-page">
+    <h1>管理者登入</h1>
+    <p class="text-xs text-stepgo-ink-subtle" data-testid="ip-allowlist-note">
+        本頁面僅開放白名單 IP 存取（實際檢核由後端提供）。
+    </p>
+
+    @if (_step == LoginStep.Credentials)
+    {
+        <div class="stepgo-card flex flex-col gap-3" data-testid="credentials-step">
+            <label class="flex flex-col gap-1">
+                Email
+                <input @bind="_email" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+            </label>
+            <label class="flex flex-col gap-1">
+                密碼
+                <input type="password" @bind="_password" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+            </label>
+            <Button Variant="primary" OnClick="GoToTwoFactorStep">下一步</Button>
+        </div>
+    }
+    else
+    {
+        <div class="stepgo-card flex flex-col gap-3" data-testid="two-factor-step">
+            <p>請輸入寄送至你信箱的六位數驗證碼。</p>
+            <label class="flex flex-col gap-1">
+                驗證碼
+                <input @bind="_code" @bind:event="oninput" class="rounded-stepgo border border-stepgo-border px-2 py-1 font-number" />
+            </label>
+            <Button Variant="primary" OnClick="Submit">登入</Button>
+        </div>
+    }
+</div>
+
+@code {
+    private enum LoginStep { Credentials, TwoFactor }
+
+    private LoginStep _step = LoginStep.Credentials;
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+    private string _code = string.Empty;
+
+    private void GoToTwoFactorStep()
+    {
+        _step = LoginStep.TwoFactor;
+    }
+
+    private void Submit()
+    {
+        // Mock-first: real MFA verification and IP allowlisting are backend concerns
+        // (design.md decision 7) — any non-empty code succeeds here.
+        Nav.NavigateTo("/");
+    }
+}

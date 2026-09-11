@@ -1,0 +1,51 @@
+@page "/"
+@using StepGo.Marketing.Models
+@using StepGo.PricingRules
+
+<PageTitle>學步 StepGo — 老師開課、學生上課的平台</PageTitle>
+
+<div class="mx-auto flex max-w-5xl flex-col gap-10 p-6">
+    <section class="grid grid-cols-1 gap-4 mkt-wide:grid-cols-2" aria-label="雙入口">
+        <a href="/for-teachers" data-testid="cta-teacher" class="stepgo-card flex flex-col gap-3 no-underline hover:bg-stepgo-teacher/5">
+            <h2 class="text-stepgo-teacher">我是老師，想開課</h2>
+            <p class="text-stepgo-ink-muted">建立課程、設定收款方式，讓學步幫你處理金流與撥款。</p>
+            <span class="stepgo-btn stepgo-btn--primary self-start">老師開課</span>
+        </a>
+        <a href="/courses" data-testid="cta-student" class="stepgo-card flex flex-col gap-3 no-underline hover:bg-stepgo-student/5">
+            <h2 class="text-stepgo-student">我是學生，想報名</h2>
+            <p class="text-stepgo-ink-muted">瀏覽正在招生的課程，透明的費用與退費規則一目了然。</p>
+            <span class="stepgo-btn stepgo-btn--student self-start">學生報名</span>
+        </a>
+    </section>
+
+    <section aria-labelledby="pricing-summary-heading" class="stepgo-card flex flex-col gap-2">
+        <h2 id="pricing-summary-heading">費用試算摘要</h2>
+        <p class="text-sm text-stepgo-ink-muted">
+            以售價 NT$@(_samplePrice.ToString("N0")) 的課程為例（信用卡付款）：
+            金流手續費 NT$@(_sample.GatewayFee.ToString("N0"))、平台服務費 NT$@(_sample.PlatformFee.ToString("N0"))、
+            撥款轉帳費 NT$@(_sample.PayoutTransferFee.ToString("N0"))，老師預估淨額約
+            <strong>NT$@(_sample.TeacherNetAmount.ToString("N0"))</strong>。
+        </p>
+        <a href="/fee-calculator" class="stepgo-btn stepgo-btn--secondary self-start">開啟完整費用試算工具</a>
+    </section>
+
+    <section aria-labelledby="enrolling-heading" class="flex flex-col gap-3">
+        <h2 id="enrolling-heading">正在招生</h2>
+        <div class="grid grid-cols-1 gap-4 mkt-wide:grid-cols-3">
+            @foreach (var course in _enrollingCourses)
+            {
+                <a href="@($"/courses/{course.Id}")" class="stepgo-card flex flex-col gap-1 no-underline">
+                    <span class="text-xs text-stepgo-ink-subtle">@course.Category</span>
+                    <span class="font-medium text-stepgo-ink">@course.Name</span>
+                    <span class="font-number text-stepgo-ink">NT$@(course.Price.ToString("N0"))</span>
+                </a>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    private const decimal _samplePrice = 3000m;
+    private readonly PricingBreakdown _sample = PricingCalculator.Calculate(_samplePrice, PaymentMethod.CreditCard);
+    private readonly IReadOnlyList<Course> _enrollingCourses = CourseCatalog.All.Where(c => c.IsEnrolling).ToList();
+}

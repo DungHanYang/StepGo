@@ -1,0 +1,42 @@
+@page "/courses/{CourseId}"
+@using StepGo.Marketing.Models
+@using StepGo.Marketing.Client.Components
+
+@if (_course is null)
+{
+    <div class="mx-auto max-w-3xl p-6">
+        <h1>找不到課程</h1>
+        <a href="/courses" class="stepgo-btn stepgo-btn--secondary">回課程列表</a>
+    </div>
+}
+else
+{
+    <PageTitle>@_course.Name — 學步 StepGo</PageTitle>
+
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 p-6">
+        <span class="text-xs text-stepgo-ink-subtle">@_course.Category</span>
+        <h1>@_course.Name</h1>
+
+        <div class="stepgo-card flex flex-col gap-2">
+            <p><strong>場次：</strong>@_course.ScheduleSummary</p>
+            <p><strong>地點：</strong>@_course.Location</p>
+            <p><strong>售價：</strong>NT$@(_course.Price.ToString("N0"))</p>
+            <p><strong>退費規則：</strong>@_course.RefundPolicySummary</p>
+        </div>
+
+        <!-- Only this button needs client interactivity (design.md decision 1); the rest of
+             this page stays Static SSR so crawlers see the full course details in the initial HTML. -->
+        <EnrollButton CourseId="@_course.Id" CourseName="@_course.Name" @rendermode="InteractiveWebAssembly" />
+    </div>
+}
+
+@code {
+    [Parameter] public string CourseId { get; set; } = string.Empty;
+
+    private Course? _course;
+
+    protected override void OnInitialized()
+    {
+        _course = CourseCatalog.FindById(CourseId);
+    }
+}

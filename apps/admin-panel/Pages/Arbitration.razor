@@ -1,0 +1,92 @@
+@page "/arbitration"
+@using StepGo.AdminPanel.Models
+@using StepGo.AdminPanel.Services
+@inject AdminDataStore Store
+
+<PageTitle>平台仲裁 — StepGo Admin</PageTitle>
+
+<h1>平台仲裁</h1>
+
+@{
+    var pendingCases = Store.ArbitrationCases.Where(c => !c.IsResolved).ToList();
+}
+
+@if (pendingCases.Count == 0)
+{
+    <Card>目前沒有待裁決的案件。</Card>
+}
+else
+{
+    <div class="mt-4 flex flex-col gap-4" data-testid="arbitration-queue">
+        @foreach (var arbitrationCase in pendingCases)
+        {
+            <Card>
+                <div class="flex flex-col gap-2" data-testid="@($"case-{arbitrationCase.Id}")">
+                    <p class="font-medium">@arbitrationCase.StudentName vs. @arbitrationCase.TeacherName — @arbitrationCase.CourseName</p>
+                    <p class="font-number text-sm">爭議金額：NT$@(arbitrationCase.DisputedAmount.ToString("N0"))</p>
+
+                    <div class="flex flex-col gap-1">
+                        @foreach (var statement in arbitrationCase.Statements)
+                        {
+                            <p class="text-sm"><strong>@statement.Author：</strong>@statement.Text</p>
+                        }
+                    </div>
+
+                    <label class="flex flex-col gap-1">
+                        裁決結果
+                        <select @onchange="e => SetRuling(arbitrationCase.Id, e)" class="rounded-stepgo border border-stepgo-border px-2 py-1">
+                            <option value="@ArbitrationRuling.FullRefund">核准全額退款</option>
+                            <option value="@ArbitrationRuling.PartialRefund">核准部分退款</option>
+                            <option value="@ArbitrationRuling.UpholdRejection">維持駁回</option>
+                        </select>
+                    </label>
+
+                    <label class="flex flex-col gap-1">
+                        裁決理由
+                        <input @onchange="e => SetReason(arbitrationCase.Id, e)" class="rounded-stepgo border border-stepgo-border px-2 py-1" />
+                    </label>
+                    @if (_reasonErrors.Contains(arbitrationCase.Id))
+                    {
+                        <p class="text-sm text-stepgo-danger" role="alert">裁決理由為必填</p>
+                    }
+
+                    <Button Variant="primary" OnClick="@(() => SubmitRuling(arbitrationCase))">送出裁決</Button>
+                </div>
+            </Card>
+        }
+    </div>
+}
+
+@code {
+    private readonly Dictionary<string, ArbitrationRuling> _rulings = [];
+    private readonly Dictionary<string, string> _reasons = [];
+    private readonly HashSet<string> _reasonErrors = [];
+
+    private void SetRuling(string caseId, ChangeEventArgs e)
+    {
+        if (Enum.TryParse<ArbitrationRuling>(e.Value?.ToString(), out var ruling))
+        {
+            _rulings[caseId] = ruling;
+        }
+    }
+
+    private void SetReason(string caseId, ChangeEventArgs e)
+    {
+        _reasons[caseId] = e.Value?.ToString() ?? string.Empty;
+    }
+
+    private void SubmitRuling(ArbitrationCase arbitrationCase)
+    {
+        _reasonErrors.Remove(arbitrationCase.Id);
+        var reason = _reasons.GetValueOrDefault(arbitrationCase.Id);
+
+        if (string.IsNullOrWhiteSpace(reason))
+        {
+            _reasonErrors.Add(arbitrationCase.Id);
+            return;
+        }
+
+        var ruling = _rulings.GetValueOrDefault(arbitrationCase.Id, ArbitrationRuling.FullRefund);
+        Store.RuleOnCase(arbitrationCase.Id, ruling, reason);
+    }
+}

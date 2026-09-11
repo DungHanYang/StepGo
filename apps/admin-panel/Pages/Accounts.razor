@@ -1,0 +1,64 @@
+@page "/accounts"
+@using StepGo.AdminPanel.Models
+@using StepGo.AdminPanel.Services
+@inject AdminDataStore Store
+
+<PageTitle>帳號與權限 — StepGo Admin</PageTitle>
+
+<h1>帳號與權限</h1>
+
+<section class="mt-4" aria-labelledby="members-heading">
+    <h2 id="members-heading">成員管理</h2>
+    <div class="mt-2 flex flex-col gap-2">
+        @foreach (var member in Store.Members)
+        {
+            <Card>@member.Name　@member.Email　@member.Role</Card>
+        }
+    </div>
+</section>
+
+<section class="mt-6" aria-labelledby="new-member-heading">
+    <h2 id="new-member-heading">新增成員</h2>
+    <div class="stepgo-card mt-2 flex flex-col gap-3" data-testid="new-member-form">
+        <label class="flex flex-col gap-1">
+            角色
+            <select data-testid="role-select" class="rounded-stepgo border border-stepgo-border px-2 py-1">
+                @foreach (AdminRole role in Enum.GetValues<AdminRole>())
+                {
+                    <option value="@role">@RoleLabel(role)</option>
+                }
+            </select>
+        </label>
+    </div>
+</section>
+
+<section class="mt-6" aria-labelledby="role-matrix-heading">
+    <h2 id="role-matrix-heading">角色權限矩陣</h2>
+    <div class="mt-2 overflow-x-auto" data-testid="role-matrix">
+        <table class="stepgo-table">
+            <thead>
+                <tr>
+                    <th>權限項目</th>
+                    <th>Admin</th>
+                    <!-- Phase 2 roles (e.g. 客服/財務) reserve columns here without a selectable
+                         option anywhere yet — frontend-admin-panel spec: "角色權限矩陣版面 SHALL
+                         保留可擴充的欄位結構供 Phase 2 擴充". -->
+                    <th class="text-stepgo-ink-subtle">（保留擴充欄位）</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>費用設定</td><td>✓</td><td></td></tr>
+                <tr><td>平台仲裁</td><td>✓</td><td></td></tr>
+                <tr><td>帳號管理</td><td>✓</td><td></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@code {
+    private static string RoleLabel(AdminRole role) => role switch
+    {
+        AdminRole.Admin => "平台管理員",
+        _ => role.ToString(),
+    };
+}

@@ -1,0 +1,30 @@
+@page "/terms"
+@using StepGo.Marketing.Client.Components
+
+<PageTitle>合作條款 — 學步 StepGo</PageTitle>
+
+<div class="mx-auto flex max-w-2xl flex-col gap-4 p-6">
+    <h1>合作條款</h1>
+
+    <TermsTabs @rendermode="InteractiveWebAssembly"
+               TeacherContentHtml="@_teacherContentHtml"
+               StudentContentHtml="@_studentContentHtml" />
+</div>
+
+@code {
+    private readonly string _teacherContentHtml =
+        "<div class=\"stepgo-card flex flex-col gap-2\">" +
+        "<h2>老師合作條款</h2>" +
+        "<p>平台服務費為售價的 10%，可由管理者調整，調整需 30 天預告生效。</p>" +
+        "<p>撥款月結每月 5 日，未達 NT$500 累計至下期；戶名須與身分驗證姓名一致，不符將被銀行退回。</p>" +
+        "<p>退費規則採「平台底線 + 老師微調」機制，老師可調整天數門檻與比例，但不得低於平台底線。</p>" +
+        "</div>";
+
+    private readonly string _studentContentHtml =
+        "<div class=\"stepgo-card flex flex-col gap-2\">" +
+        "<h2>學生退費規則</h2>" +
+        "<p>開課前 14 日以上申請退課，可全額退費；7–13 日退 50%；1–6 日退 15%；開課後不予退費（實際比例依各課程頁面公告為準）。</p>" +
+        "<p>退款處理費 NT$25，由退款金額中扣除。</p>" +
+        "<p>退課申請將建立正式留言串，老師須於 5 個工作日內回覆；逾期系統自動核定退費。雙方談不成可升級平台仲裁，仲裁結果為最終決定。</p>" +
+        "</div>";
+}
