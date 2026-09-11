@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2f5560;text-decoration:none}a:hover{color:#1f3c45}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:10px;color:#22201c">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;flex:none">學</div>
+<span style="font:700 16px 'Noto Serif TC',serif">學步</span>
+</a>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ context }}</span>
+</header>
+
+<div style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding:70px 20px">
+<span style="font:400 13px 'EB Garamond',serif;letter-spacing:.24em;color:#6c6659;text-transform:uppercase">{{ code }}</span>
+<div style="width:58px;height:58px;border-radius:50%;border:1px solid #ded7c9;background:#efeade;display:flex;align-items:center;justify-content:center;font:400 24px 'EB Garamond',serif;color:#6c6659">?</div>
+<h1 style="font:700 26px/1.5 'Noto Serif TC',serif;margin:0;text-wrap:pretty">{{ title }}</h1>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:32em;text-wrap:pretty">{{ body }}</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding-top:6px">
+<a href="./StepGo Student Dashboard.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:12px 20px;font:500 14px 'Noto Sans TC'">回我的課程 →</a>
+<a href="./StepGo Courses.dc.html" style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:12px 18px;font:400 14px 'Noto Sans TC'">逛課程</a>
+</div>
+<div style="border-top:1px solid #ded7c9;padding-top:16px;margin-top:6px;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659">連結可能是被複製到別的帳號、訂單已取消，或網址打錯了。如果剛剛還看得到，可以直接問貓頭鷹，或寄信到 <a href="#mail">hello@stepgo.tw</a>。</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;kind&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;order&quot;,&quot;course&quot;],&quot;default&quot;:&quot;order&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;內容&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const kind = this.props.kind ?? "order";
+    const copy = {
+      order: { code: "404 · 找不到訂單", title: "這筆訂單不存在，或不屬於這個帳號", body: "報名編號可能打錯了，或者這筆訂單是用別的帳號報名的。登入正確的帳號後，可以在「我的課程」找到所有訂單。", context: "訂單查詢" },
+      course: { code: "404 · 找不到課程", title: "這堂課已經不在了", body: "課程可能已下架、額滿後被移除，或連結有誤。可以回到課程列表重新找找看。", context: "課程頁" }
+    }[kind];
+    return { ...copy };
+  }
+}
+</script>
+</body>
+</html>

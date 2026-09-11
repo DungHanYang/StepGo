@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}
+.shell{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100vh;align-items:stretch}
+.grid2a{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,1fr);gap:26px;align-items:start}
+.grid2b{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,1fr);gap:26px;align-items:start}
+.grid2c{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,1fr);gap:30px;align-items:start}
+.refundgrid{display:grid;grid-template-columns:minmax(240px,1fr) minmax(230px,300px);gap:0}
+@media(max-width:1080px){
+ .shell{grid-template-columns:1fr}
+ .shell>aside{flex-direction:row !important;align-items:center !important;gap:10px !important;padding:12px 16px !important;overflow:auto}
+ .shell>aside a,.shell>aside button{width:auto !important;flex:none;white-space:nowrap}
+ .shell>aside .acct-block{display:none !important}
+}
+@media(max-width:900px){
+ .grid2a,.grid2b,.grid2c,.refundgrid{grid-template-columns:1fr}
+ .grid2c aside,.grid2c form{min-width:0}
+ .grid2c aside{position:static !important}
+ .refundgrid>div:last-child{border-left:none !important;border-top:1px solid #ece6da}
+}
+@media(max-width:640px){
+ main>header{padding:14px 18px !important}
+ main>div{padding:22px 18px 48px !important}
+}
+</style></helmet>
+
+<div class="shell">
+
+<aside style="background:#22201c;color:#e7e1d5;display:flex;flex-direction:column;gap:4px;padding:20px 14px 24px">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:10px;color:#e7e1d5;padding:4px 8px 18px">
+<div style="width:34px;height:34px;border-radius:50%;border:1px solid #a7622c;background:#2c2925;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;color:#e7e1d5;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span style="font:700 15px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9.5px 'EB Garamond',serif;letter-spacing:.2em;color:#8f887a;text-transform:uppercase">Teacher</span>
+</div>
+</a>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+<button onClick="{{ n.onClick }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:none;cursor:pointer;border-radius:3px;padding:9px 10px;font:{{ n.font }};background:{{ n.bg }};color:{{ n.fg }}">
+<span style="font:400 12px 'EB Garamond',serif;color:{{ n.dim }};width:14px;flex:none">{{ n.num }}</span>{{ n.label }}
+<sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;background:#a7622c;color:#fff;border-radius:99px;font:500 10.5px 'Noto Sans TC';padding:1px 7px">{{ n.badge }}</span></sc-if>
+</button>
+</sc-for>
+<div style="margin-top:auto;border-top:1px solid #38342d;padding-top:14px;display:flex;flex-direction:column;gap:8px" class="acct-block">
+<div style="display:flex;align-items:center;gap:9px;padding:0 8px">
+<div style="width:30px;height:30px;border-radius:50%;background:#3a352d;border:1px solid #4d463b;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;color:#e7e1d5;flex:none">陳</div>
+<div style="display:flex;flex-direction:column;line-height:1.3;min-width:0">
+<span style="font:500 13px 'Noto Sans TC';color:#e7e1d5">陳彥霖</span>
+<span style="font:400 10.5px 'Noto Sans TC';color:#8f887a">已驗證 · 木作工作室</span>
+</div>
+</div>
+<a href="./StepGo Fee Calculator.dc.html" style="font:400 12px 'Noto Sans TC';color:#8f887a;padding:0 8px">費用試算工具 →</a>
+</div>
+</aside>
+
+<main style="min-width:0;display:flex;flex-direction:column;background:#f7f4ee">
+
+<header style="display:flex;align-items:center;gap:16px;padding:17px 34px;border-bottom:1px solid #ded7c9;background:#f7f4ee;position:sticky;top:0;z-index:5">
+<h1 style="font:700 19px 'Noto Serif TC',serif;margin:0">{{ pageTitle }}</h1>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">{{ pageSub }}</span>
+<div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+<button style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:8px 13px;font:400 13px 'Noto Sans TC';cursor:pointer" style-hover="border-color:#22201c;color:#22201c">匯出報表</button>
+<button onClick="{{ goNew }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:9px 15px;font:500 13px 'Noto Sans TC';cursor:pointer">＋ 建立課程</button>
+</div>
+</header>
+
+<div style="padding:30px 34px 60px;display:flex;flex-direction:column;gap:30px">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:30px">
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:17px 19px;display:flex;flex-direction:column;gap:6px">
+<span style="font:400 11.5px 'Noto Sans TC';letter-spacing:.1em;color:#6c6659">{{ s.label }}</span>
+<span style="font:600 30px/1.1 'EB Garamond',serif;color:#22201c">{{ s.value }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:{{ s.noteColor }}">{{ s.note }}</span>
+</div>
+</sc-for>
+</section>
+
+<section style="border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center">
+<div style="display:flex;flex-direction:column;gap:9px;min-width:0">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:7px;height:7px;border-radius:50%;background:#a7622c;flex:none"></span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">下次撥款 2026/10/05</h2>
+</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d;margin:0;max-width:46em;text-wrap:pretty">結算 9 月已完課的 3 門課、共 41 筆報名。以下為預估金額，實際以撥款當日明細為準。</p>
+<div style="display:flex;flex-wrap:wrap;gap:0 26px;font:400 13px/2 'Noto Sans TC';color:#6c6659;padding-top:4px">
+<span>報名總額 <span style="color:#22201c;font-weight:500">NT$ 112,400</span></span>
+<span>平台服務費 <span style="color:#22201c">−11,240</span></span>
+<span>金流手續費 <span style="color:#22201c">−2,856</span></span>
+<span>轉帳費 <span style="color:#22201c">−20</span></span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;border-left:1px solid #ded7c9;padding-left:28px">
+<span style="font:400 11.5px 'Noto Sans TC';letter-spacing:.1em;color:#6c6659">預估實拿</span>
+<span style="font:600 36px/1 'EB Garamond',serif">98,284</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">跨行 · 國泰 **4821</span>
+</div>
+</section>
+
+<section class="grid2a" style="align-items:start">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 19px;border-bottom:1px solid #ded7c9">
+<h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">待你處理</h2>
+<span style="background:#efeade;border:1px solid #ded7c9;border-radius:99px;font:500 11px 'Noto Sans TC';color:#4a463d;padding:1px 8px">{{ todos.length }}</span>
+</div>
+<sc-if value="{{ hasTodos }}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{ todos }}" as="t" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 19px;border-bottom:1px solid #ece6da">
+<div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:500 11px 'Noto Sans TC';color:{{ t.tagFg }};background:{{ t.tagBg }};border-radius:2px;padding:1px 7px">{{ t.tag }}</span>
+<span style="font:500 14px 'Noto Sans TC';color:#22201c">{{ t.title }}</span>
+</div>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ t.meta }}</span>
+</div>
+<div style="display:flex;gap:8px;flex:none">
+<button style="border:1px solid #ded7c9;background:none;color:#4a463d;border-radius:3px;padding:6px 11px;font:400 12.5px 'Noto Sans TC';cursor:pointer">{{ t.secondary }}</button>
+<button style="border:1px solid #22201c;background:#22201c;color:#f7f4ee;border-radius:3px;padding:6px 12px;font:500 12.5px 'Noto Sans TC';cursor:pointer">{{ t.primary }}</button>
+</div>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{ noTodos }}" hint-placeholder-val="{{ false }}">
+<div style="padding:34px 19px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">目前沒有待處理事項</span>
+<span style="font:400 12px 'Noto Sans TC';color:#9a9487">退課申請、這產產審核或進度提釒都會顯示在這裡</span>
+</div>
+</sc-if>
+</div>
+
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="padding:14px 19px;border-bottom:1px solid #ded7c9"><h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">近期入帳</h2></div>
+<sc-if value="{{ hasFeed }}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{ feed }}" as="f" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:11px 19px;border-bottom:1px solid #ece6da;align-items:baseline">
+<div style="min-width:0">
+<div style="font:400 13.5px 'Noto Sans TC';color:#22201c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.who }}</div>
+<div style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ f.what }}</div>
+</div>
+<span style="font:500 13.5px ui-monospace,Menlo,monospace;color:{{ f.color }};white-space:nowrap">{{ f.amount }}</span>
+</div>
+</sc-for>
+<div style="padding:12px 19px"><a href="#ledger" onClick="{{ goLedger }}" style="font:400 13px 'Noto Sans TC'">全部收款紀錄 →</a></div>
+</sc-if>
+<sc-if value="{{ noFeed }}" hint-placeholder-val="{{ false }}">
+<div style="padding:34px 19px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">還沒有入帳紀錄</span>
+<span style="font:400 12px 'Noto Sans TC';color:#9a9487">有學生完成付款後，會在這裡看到</span>
+</div>
+</sc-if>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCourses }}" hint-placeholder-val="{{ false }}">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow-x:auto">
+<div style="display:grid;grid-template-columns:minmax(200px,2.2fr) 82px 82px 88px 52px;gap:10px;padding:12px 20px;background:#efeade;font:500 11.5px 'Noto Sans TC';color:#4a463d;letter-spacing:.05em">
+<span>課程</span><span>狀態</span><span style="text-align:right">報名／名額</span><span style="text-align:right">已收款</span><span></span>
+</div>
+<sc-for list="{{ courses }}" as="c" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(200px,2.2fr) 82px 82px 88px 52px;gap:10px;padding:15px 20px;border-top:1px solid #ece6da;align-items:center">
+<div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+<span style="font:500 14.5px 'Noto Sans TC';color:#22201c;text-wrap:pretty">{{ c.title }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ c.meta }}</span>
+</div>
+<span style="font:500 12px 'Noto Sans TC';color:{{ c.stFg }};background:{{ c.stBg }};border:1px solid {{ c.stBorder }};border-radius:2px;padding:3px 9px;justify-self:start">{{ c.status }}</span>
+<span style="font:400 13.5px ui-monospace,Menlo,monospace;color:#4a463d;text-align:right">{{ c.seats }}</span>
+<span style="font:500 13.5px ui-monospace,Menlo,monospace;color:#22201c;text-align:right">{{ c.revenue }}</span>
+<a href="#manage" style="font:400 13px 'Noto Sans TC';text-align:right">管理</a>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLedger }}" hint-placeholder-val="{{ false }}">
+<div id="ledger" style="display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;flex-wrap:wrap;gap:9px;align-items:center">
+<sc-for list="{{ ledgerFilters }}" as="f" hint-placeholder-count="4">
+<button onClick="{{ f.onClick }}" style="border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';cursor:pointer">{{ f.label }}</button>
+</sc-for>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ ledgerCount }} 筆 · 合計 {{ ledgerSum }}</span>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow-x:auto">
+<div style="display:grid;grid-template-columns:88px minmax(150px,1.6fr) 74px 84px 76px 68px;gap:9px;padding:12px 20px;background:#efeade;font:500 11.5px 'Noto Sans TC';color:#4a463d;letter-spacing:.05em">
+<span>編號</span><span>學生 / 課程</span><span>付款方式</span><span style="text-align:right">金額</span><span style="text-align:right">扣除</span><span style="text-align:right">狀態</span>
+</div>
+<sc-for list="{{ ledger }}" as="r" hint-placeholder-count="8">
+<div style="display:grid;grid-template-columns:88px minmax(150px,1.6fr) 74px 84px 76px 68px;gap:9px;padding:13px 20px;border-top:1px solid #ece6da;align-items:center">
+<span style="font:400 12px ui-monospace,Menlo,monospace;color:#6c6659">{{ r.id }}</span>
+<div style="min-width:0"><div style="font:400 13.5px 'Noto Sans TC';color:#22201c">{{ r.who }}</div><div style="font:400 11.5px 'Noto Sans TC';color:#6c6659;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.course }}</div></div>
+<span style="font:400 12.5px 'Noto Sans TC';color:#4a463d">{{ r.method }}</span>
+<span style="font:500 13.5px ui-monospace,Menlo,monospace;color:{{ r.amtColor }};text-align:right">{{ r.amount }}</span>
+<span style="font:400 12.5px ui-monospace,Menlo,monospace;color:#6c6659;text-align:right">{{ r.fee }}</span>
+<span style="font:500 12px 'Noto Sans TC';color:{{ r.stFg }};text-align:right">{{ r.status }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPayout }}" hint-placeholder-val="{{ false }}">
+<div class="grid2b">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="padding:14px 20px;border-bottom:1px solid #ded7c9"><h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">撥款紀錄</h2></div>
+<sc-for list="{{ payouts }}" as="p" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:16px;padding:15px 20px;border-bottom:1px solid #ece6da;align-items:center">
+<span style="font:500 12.5px ui-monospace,Menlo,monospace;color:#a7622c">{{ p.date }}</span>
+<div style="min-width:0"><div style="font:400 13.5px 'Noto Sans TC';color:#22201c">{{ p.title }}</div><div style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ p.meta }}</div></div>
+<div style="text-align:right"><div style="font:600 16px 'EB Garamond',serif;color:#22201c">{{ p.amount }}</div><div style="font:400 11.5px 'Noto Sans TC';color:{{ p.stFg }}">{{ p.status }}</div></div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px">
+<h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">撥款設定</h2>
+<sc-for list="{{ payoutSettings }}" as="s" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:3px;padding-bottom:12px;border-bottom:1px solid #ece6da">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ s.k }}</span>
+<span style="font:500 14px 'Noto Sans TC';color:#22201c">{{ s.v }}</span>
+</div>
+</sc-for>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">帳戶戶名須與身分驗證姓名一致。變更帳戶後，下一個撥款週期會暫停一次以完成核對。</p>
+<button style="border:1px solid #22201c;background:none;color:#22201c;border-radius:3px;padding:10px;font:500 13px 'Noto Sans TC';cursor:pointer">修改撥款設定</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px;grid-column:1 / -1">
+<h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">通知設定</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border:1px solid #ece6da;border-radius:3px;overflow:hidden">
+<sc-for list="{{ notifyChannels }}" as="n" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-right:1px solid #ece6da">
+<div style="display:flex;align-items:center;gap:9px">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c">{{ n.label }}</span>
+<span style="margin-left:auto;font:500 11px 'Noto Sans TC';color:{{ n.stFg }};background:{{ n.stBg }};border-radius:99px;padding:2px 9px">{{ n.state }}</span>
+</div>
+<span style="font:400 12px/1.6 'Noto Sans TC';color:#6c6659">{{ n.note }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<sc-for list="{{ notifyEvents }}" as="e" hint-placeholder-count="4">
+<div style="display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #ece6da;padding-bottom:9px">
+<span style="font:400 13px 'Noto Sans TC';color:#4a463d">{{ e.label }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ e.via }}</span>
+</div>
+</sc-for>
+</div>
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">站內通知與 Email 一律開啟，確保重要事項不會漏看；LINE 為選用管道，加入官方帳號後即可收到相同內容。</p>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRefund }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<div style="border-left:2px solid #a7622c;padding:5px 0 5px 16px;font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d;max-width:52em;text-wrap:pretty">你有 5 個工作日回覆退課申請。逾期未回覆，系統會依課程頁公告的退費規則自動核定，款項直接退還學生。</div>
+<sc-for list="{{ refunds }}" as="r" hint-placeholder-count="3">
+<section style="border:1px solid {{ r.border }};border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid #ece6da;background:{{ r.headBg }}">
+<span style="font:500 11.5px 'Noto Sans TC';color:{{ r.stFg }};background:{{ r.stBg }};border-radius:2px;padding:2px 9px">{{ r.state }}</span>
+<span style="font:700 15.5px 'Noto Serif TC',serif;color:#22201c">{{ r.student }}</span>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659">{{ r.course }}</span>
+<span style="margin-left:auto;font:400 12px ui-monospace,Menlo,monospace;color:#6c6659">{{ r.id }}</span>
+</div>
+<div class="refundgrid">
+<div style="padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px 'Noto Sans TC';letter-spacing:.1em;color:#6c6659">學生填寫的原因</span>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#22201c;margin:0;text-wrap:pretty">{{ r.reason }}</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ece6da;padding-top:14px">
+<sc-for list="{{ r.timeline }}" as="t" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;font:400 13px/1.7 'Noto Sans TC'">
+<span style="font:500 12px ui-monospace,Menlo,monospace;color:#a7622c">{{ t.when }}</span>
+<span style="color:#4a463d">{{ t.what }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="border-left:1px solid #ece6da;background:#f7f4ee;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">依課程規則應退</span>
+<span style="font:600 28px/1.1 'EB Garamond',serif;color:#22201c">{{ r.refundAmount }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ r.rule }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px;border-top:1px solid #ded7c9;padding-top:12px;font:400 12.5px 'Noto Sans TC'">
+<sc-for list="{{ r.calc }}" as="c" hint-placeholder-count="4">
+<div style="display:flex;justify-content:space-between;gap:12px"><span style="color:#6c6659">{{ c.k }}</span><span style="color:{{ c.color }};font-family:ui-monospace,Menlo,monospace">{{ c.v }}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{ r.actionable }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #ded7c9;padding-top:12px">
+<button style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:11px;font:500 13.5px 'Noto Sans TC';cursor:pointer">核准，依規則退 {{ r.refundAmount }}</button>
+<div style="display:flex;gap:8px">
+<button style="flex:1;border:1px solid #ded7c9;background:none;color:#4a463d;border-radius:3px;padding:9px;font:400 12.5px 'Noto Sans TC';cursor:pointer">改金額</button>
+<button style="flex:1;border:1px solid #ded7c9;background:none;color:#8a4b3f;border-radius:3px;padding:9px;font:400 12.5px 'Noto Sans TC';cursor:pointer">拒絕</button>
+</div>
+<span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659;text-align:center">{{ r.deadline }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ r.resolved }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid #ded7c9;padding-top:12px;font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;text-wrap:pretty">{{ r.outcome }}</div>
+</sc-if>
+</div>
+</div>
+</section>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ isNewSubmitted }}" hint-placeholder-val="{{ false }}">
+<section style="border:1px solid #a7622c;border-radius:4px;background:#fdf7f0;padding:30px 28px;display:flex;flex-direction:column;gap:14px;max-width:44em">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:8px;height:8px;border-radius:50%;background:#a7622c;flex:none"></span>
+<span style="font:500 12px 'Noto Sans TC';letter-spacing:.14em;color:#8a4b3f">審核中 · 剛剛送出</span>
+</div>
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0">「進階榫接：小邊几」已送出審核</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:36em">內容、定價與退費規則將由平台人工檢查，一般於 1 個工作日內完成，通過後立即開放學生報名。</p>
+<div style="display:flex;flex-direction:column;gap:0;padding-top:6px">
+<sc-for list="{{ newSteps }}" as="s" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;align-items:center;height:100%">
+<span style="width:10px;height:10px;border-radius:50%;background:{{ s.dot }};border:1px solid {{ s.ring }};flex:none;margin-top:5px"></span>
+<span style="width:1px;flex:1;min-height:20px;background:{{ s.line }}"></span>
+</div>
+<div style="padding-bottom:12px;min-width:0">
+<div style="font:{{ s.font }};color:{{ s.fg }}">{{ s.title }}</div>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659">{{ s.note }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:4px">
+<button onClick="{{ goCourses }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:12px 20px;font:500 13.5px 'Noto Sans TC';cursor:pointer">回我的課程</button>
+<button onClick="{{ backToDraft }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:12px 18px;font:400 13.5px 'Noto Sans TC';cursor:pointer">改回草稿編輯</button>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{ isNewForm }}" hint-placeholder-val="{{ true }}">
+<div class="grid2c" style="align-items:start">
+<form style="display:flex;flex-direction:column;gap:26px;min-width:0">
+<sc-for list="{{ formGroups }}" as="g" hint-placeholder-count="3">
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">{{ g.num }}</span>
+<h2 style="font:700 16px 'Noto Serif TC',serif;margin:0">{{ g.title }}</h2>
+</div>
+<sc-for list="{{ g.fields }}" as="f" hint-placeholder-count="3">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input value="{{ f.value }}" readOnly="{{ true }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:10px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<sc-if value="{{ f.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659">{{ f.hint }}</span></sc-if>
+</label>
+</sc-for>
+</section>
+</sc-for>
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:11px;border-bottom:1px solid #ece6da;padding-bottom:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">04</span>
+<h2 style="font:700 16px 'Noto Serif TC',serif;margin:0">退費規則</h2>
+</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">這份級距會原樣顯示在課程頁，學生報名前看得到。平台設有底線比例（依系統成本估算），你可以調整天數門檔，退費比例只能等於或高於底線。</p>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 78px 78px;gap:10px;font:500 11px 'Noto Sans TC';color:#6c6659;letter-spacing:.04em;padding-bottom:6px">
+<span>時間門檔</span><span style="text-align:right">平台底線</span><span style="text-align:right">你的設定</span>
+</div>
+<sc-for list="{{ refundRows }}" as="r" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid #ece6da">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 78px 78px;gap:10px;align-items:center">
+<span style="font:400 14px 'Noto Sans TC';color:#4a463d">{{ r.when }}</span>
+<span style="font:500 13px ui-monospace,Menlo,monospace;color:#6c6659;text-align:right">{{ r.floorLabel }}</span>
+<input value="{{ r.amount }}" readOnly="{{ true }}" style="border:1px solid {{ r.border }};border-radius:3px;background:#f7f4ee;padding:7px 10px;font:400 13.5px 'Noto Sans TC';color:#22201c;text-align:right;width:100%;box-sizing:border-box">
+</div>
+<sc-if value="{{ r.belowFloor }}" hint-placeholder-val="{{ false }}">
+<span style="font:400 12px 'Noto Sans TC';color:#8a4b3f">低於平台底線，儲存時會自動調整為 {{ r.floorLabel }}。</span>
+</sc-if>
+</div>
+</sc-for>
+<div style="border-left:2px solid #a7622c;padding:4px 0 4px 14px;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;text-wrap:pretty">底線反映開課前金流手續費、平台服務費等已產生的系統成本，確保退費不會低於平台能吸收的範圍；天數門檔你可自由調整，退費比例可以設得更高，但不能更低。</div>
+</section>
+<div style="display:flex;gap:12px">
+<button onClick="{{ submitReview }}" style="border:none;background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC';cursor:pointer">送出審核</button>
+<button style="border:1px solid #ded7c9;background:none;color:#4a463d;border-radius:3px;padding:13px 22px;font:400 14px 'Noto Sans TC';cursor:pointer">存成草稿</button>
+</div>
+</form>
+
+<aside style="position:sticky;top:88px;border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:22px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:10px"><h2 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">你會實拿多少</h2><span style="font:400 italic 13px 'EB Garamond',serif;color:#6c6659">live</span></div>
+<div style="display:flex;flex-direction:column;gap:2px;border-bottom:1px solid #ded7c9;padding-bottom:13px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">定價 4,800 × 滿班 6 人</span>
+<span style="font:600 26px 'EB Garamond',serif">NT$ 28,800</span>
+</div>
+<sc-for list="{{ breakdown }}" as="b" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;font:400 13.5px 'Noto Sans TC'">
+<span style="color:#6c6659">{{ b.k }}</span><span style="color:{{ b.color }};font-family:ui-monospace,Menlo,monospace;font-size:13px">{{ b.v }}</span>
+</div>
+</sc-for>
+<div style="border-top:1px solid #22201c;padding-top:13px;display:flex;justify-content:space-between;align-items:baseline">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c">滿班實拿</span>
+<span style="font:600 24px 'EB Garamond',serif">25,068</span>
+</div>
+<p style="font:400 12px/1.75 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">以全部學生刷卡、單筆跨行撥款估算。ATM 付款者每筆手續費 15 元，實際金額以撥款明細為準。</p>
+<a href="./StepGo Fee Calculator.dc.html" style="font:400 13px 'Noto Sans TC'">反推定價工具 →</a>
+</aside>
+</div>
+</sc-if>
+</sc-if>
+
+</div>
+</main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;page&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;courses&quot;,&quot;ledger&quot;,&quot;payout&quot;,&quot;refund&quot;,&quot;newc&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;},&quot;demoEmpty&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const PAGES = {
+  home:   { label: "總覽",     num: "01", title: "總覽",       sub: "2026 年 9 月" },
+  courses:{ label: "我的課程", num: "02", title: "我的課程",   sub: "5 門課程", badge: "" },
+  ledger: { label: "收款紀錄", num: "03", title: "收款紀錄",   sub: "含退款與待付款" },
+  payout: { label: "撥款",     num: "04", title: "撥款",       sub: "月結 · 每月 5 日" },
+  refund: { label: "退課申請", num: "05", title: "退課申請",   sub: "2 筆待回覆", badge: "2" },
+  newc:   { label: "建立課程", num: "06", title: "建立課程",   sub: "草稿 · 尚未送審" }
+};
+
+const LEDGER = [
+  { id:"EN-24810", who:"林郁婷", course:"從零開始的木工手作", method:"信用卡", amount:"+3,000", fee:"−387", status:"已成立", kind:"paid" },
+  { id:"EN-24809", who:"蔡孟儒", course:"從零開始的木工手作", method:"ATM 轉帳", amount:"+3,000", fee:"−315", status:"已成立", kind:"paid" },
+  { id:"RF-01142", who:"周思彤", course:"手作木湯匙一日課", method:"信用卡退款", amount:"−1,260", fee:"−25", status:"已退款", kind:"refund" },
+  { id:"EN-24806", who:"何柏勳", course:"手作木湯匙一日課", method:"ATM 轉帳", amount:"+1,800", fee:"—", status:"待入帳", kind:"pending" },
+  { id:"EN-24803", who:"張佩珊", course:"從零開始的木工手作", method:"信用卡", amount:"+3,000", fee:"−387", status:"已成立", kind:"paid" },
+  { id:"EN-24801", who:"王立安", course:"進階榫接：小邊几", method:"信用卡", amount:"+4,800", fee:"−619", status:"已成立", kind:"paid" },
+  { id:"EN-24798", who:"李冠廷", course:"進階榫接：小邊几", method:"ATM 轉帳", amount:"+4,800", fee:"−315", status:"已成立", kind:"paid" },
+  { id:"RF-01139", who:"吳芝妤", course:"進階榫接：小邊几", method:"ATM 退款", amount:"−3,360", fee:"−25", status:"已退款", kind:"refund" },
+  { id:"EN-24795", who:"郭晏如", course:"從零開始的木工手作", method:"信用卡", amount:"+3,000", fee:"−387", status:"已成立", kind:"paid" },
+  { id:"EN-24791", who:"陳柏宇", course:"手作木湯匙一日課", method:"信用卡", amount:"+1,800", fee:"−232", status:"已成立", kind:"paid" }
+];
+
+class Component extends DCLogic {
+  state = { page: null, lf: "all", newSubmitted: false, demoEmpty: false };
+  renderVals() {
+    const page = this.state.page ?? (this.props.page ?? "home");
+    const go = p => () => { this.setState({ page: p }); window.scrollTo(0, 0); };
+    const nav = Object.entries(PAGES).map(([k, p]) => ({
+      label: p.label, num: p.num, onClick: go(k),
+      font: (page === k ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+      bg: page === k ? "#33302a" : "transparent",
+      fg: page === k ? "#f7f4ee" : "#b6afa1",
+      dim: page === k ? "#a7622c" : "#6d675c",
+      hasBadge: !!p.badge, badge: p.badge
+    }));
+
+    const lf = this.state.lf;
+    const ledger = LEDGER.filter(r => lf === "all" || r.kind === lf).map(r => ({
+      ...r,
+      amtColor: r.kind === "refund" ? "#8a4b3f" : r.kind === "pending" ? "#6c6659" : "#22201c",
+      stFg: r.kind === "refund" ? "#8a4b3f" : r.kind === "pending" ? "#a7622c" : "#2f5560"
+    }));
+    const sum = LEDGER.filter(r => lf === "all" || r.kind === lf)
+      .reduce((a, r) => a + Number(r.amount.replace(/[^0-9-]/g, "")) * (r.amount[0] === "−" ? -1 : 1), 0);
+    const lfDefs = [["all","全部"],["paid","已成立"],["pending","待入帳"],["refund","退款"]];
+
+    return {
+      nav, pageTitle: PAGES[page].title, pageSub: PAGES[page].sub,
+      isHome: page === "home", isCourses: page === "courses", isLedger: page === "ledger",
+      isPayout: page === "payout", isRefund: page === "refund", isNew: page === "newc",
+      hasTodos: !(this.state.demoEmpty || this.props.demoEmpty), noTodos: (this.state.demoEmpty || this.props.demoEmpty),
+      hasFeed: !(this.state.demoEmpty || this.props.demoEmpty), noFeed: (this.state.demoEmpty || this.props.demoEmpty),
+      isNewSubmitted: this.state.newSubmitted, isNewForm: !this.state.newSubmitted,
+      submitReview: () => { this.setState({ newSubmitted: true }); window.scrollTo(0, 0); },
+      backToDraft: () => this.setState({ newSubmitted: false }),
+      goCourses: () => { this.setState({ page: "courses", newSubmitted: false }); window.scrollTo(0, 0); },
+      newSteps: [
+        { title: "資料送出", note: "課程內容、定價、退費規則已送出", dot: "#a7622c", ring: "#a7622c", line: "#a7622c", font: "500 14px 'Noto Sans TC'", fg: "#22201c" },
+        { title: "平台審核中", note: "檢查內容完整度與退費規則是否合規，約 1 個工作日", dot: "#fdf7f0", ring: "#a7622c", line: "#ded7c9", font: "500 14px 'Noto Sans TC'", fg: "#a7622c" },
+        { title: "通過後開放報名", note: "課程頁上線，學生可以開始報名", dot: "#fdf7f0", ring: "#ded7c9", line: "transparent", font: "400 14px 'Noto Sans TC'", fg: "#7c7668" }
+      ],
+      refunds: [
+        { id:"RF-01142", student:"周思彤", course:"手作木湯匙一日課", state:"待你回覆",
+          stBg:"#f3e4dc", stFg:"#8a4b3f", border:"#22201c", headBg:"#fdfbf6", actionable:true, resolved:false,
+          reason:"公司臨時排了同一天的教育訓練，沒辦法請假。如果之後有加開場次想優先報名，謝謝老師。",
+          refundAmount:"1,260 元", rule:"開課前 9 日 · 退 70%",
+          calc:[{k:"原報名金額",v:"1,800",color:"#22201c"},{k:"退費比例 70%",v:"1,260",color:"#22201c"},{k:"退款處理費",v:"−25",color:"#8a4b3f"},{k:"學生實收",v:"1,235",color:"#22201c"}],
+          deadline:"回覆期限 2026/09/16（剩 2 個工作日）",
+          timeline:[{when:"09/08 14:22",what:"學生送出退課申請"},{when:"09/09 09:10",what:"系統寄出提醒給你"},{when:"—",what:"等待你的回覆"}] },
+        { id:"RF-01139", student:"吳芝妤", course:"進階榫接：小邊几", state:"待你回覆",
+          stBg:"#f3e4dc", stFg:"#8a4b3f", border:"#22201c", headBg:"#fdfbf6", actionable:true, resolved:false,
+          reason:"報名後才發現自己完全沒有木工經驗，怕跟不上進度，想先上入門課再回來。",
+          refundAmount:"4,800 元", rule:"開課前 16 日 · 全額退費",
+          calc:[{k:"原報名金額",v:"4,800",color:"#22201c"},{k:"退費比例 100%",v:"4,800",color:"#22201c"},{k:"退款處理費",v:"−25",color:"#8a4b3f"},{k:"學生實收",v:"4,775",color:"#22201c"}],
+          deadline:"回覆期限 2026/09/18（剩 4 個工作日）",
+          timeline:[{when:"09/10 20:47",what:"學生送出退課申請"},{when:"—",what:"等待你的回覆"}] },
+        { id:"RF-01131", student:"高子晴", course:"木工工具保養與磨刀", state:"已核准",
+          stBg:"#e3ecec", stFg:"#2f5560", border:"#ded7c9", headBg:"#f7f4ee", actionable:false, resolved:true,
+          reason:"家裡臨時有事，開課當週無法出席。",
+          refundAmount:"840 元", rule:"開課前 4 日 · 退 30%",
+          calc:[{k:"原報名金額",v:"2,800",color:"#22201c"},{k:"退費比例 30%",v:"840",color:"#22201c"},{k:"退款處理費",v:"−25",color:"#8a4b3f"},{k:"學生實收",v:"815",color:"#22201c"}],
+          deadline:"",
+          outcome:"你於 08/30 核准，款項已於 09/03 退回學生信用卡。服務費同步退回，未計入 8 月撥款。",
+          timeline:[{when:"08/28 11:05",what:"學生送出退課申請"},{when:"08/30 08:41",what:"你核准退費 840 元"},{when:"09/03 16:20",what:"退款完成"}] }
+      ],
+      goNew: go("newc"), goLedger: (e) => { e.preventDefault(); go("ledger")(); },
+
+      stats: [
+        { label: "本月報名", value: "41", note: "較上月 +9", noteColor: "#2f5560" },
+        { label: "已收款", value: "112,400", note: "含 2 筆待入帳", noteColor: "#6c6659" },
+        { label: "本月扣除", value: "14,116", note: "佔 12.6%", noteColor: "#6c6659" },
+        { label: "待處理退課", value: "2", note: "最舊已等 3 天", noteColor: "#a7622c" }
+      ],
+      todos: [
+        { tag:"退課", tagBg:"#f3e4dc", tagFg:"#8a4b3f", title:"周思彤 申請退課", meta:"手作木湯匙一日課 · 開課前 9 日 · 依規則退 70%（1,260 元）", secondary:"拒絕", primary:"核准退費" },
+        { tag:"退課", tagBg:"#f3e4dc", tagFg:"#8a4b3f", title:"吳芝妤 申請退課", meta:"進階榫接：小邊几 · 開課前 16 日 · 依規則全額退費", secondary:"拒絕", primary:"核准退費" },
+        { tag:"審核", tagBg:"#efeade", tagFg:"#4a463d", title:"進階榫接：小邊几 待送審", meta:"草稿已完成 · 缺少課程主視覺", secondary:"預覽", primary:"送出審核" },
+        { tag:"待入帳", tagBg:"#eae4d4", tagFg:"#7a6a3c", title:"何柏勳 逾期未付款", meta:"ATM 虛擬帳號 · 保留至今日 23:59", secondary:"延長保留", primary:"釋出名額" }
+      ],
+      feed: [
+        { who:"林郁婷", what:"木工手作 · 信用卡", amount:"+3,000", color:"#22201c" },
+        { who:"蔡孟儒", what:"木工手作 · ATM", amount:"+3,000", color:"#22201c" },
+        { who:"周思彤", what:"木湯匙 · 退款", amount:"−1,260", color:"#8a4b3f" },
+        { who:"張佩珊", what:"木工手作 · 信用卡", amount:"+3,000", color:"#22201c" },
+        { who:"王立安", what:"進階榫接 · 信用卡", amount:"+4,800", color:"#22201c" }
+      ],
+      courses: [
+        { title:"從零開始的木工手作：做一張小板凳", meta:"2026/10/20 開課 · 4 堂 · 台北大同", status:"招生中", stBg:"#e3ecec", stFg:"#2f5560", stBorder:"#c3d6d6", seats:"4 / 8", revenue:"12,000" },
+        { title:"進階榫接：小邊几", meta:"2026/11/03 開課 · 6 堂 · 台北大同", status:"草稿", stBg:"#efeade", stFg:"#6c6659", stBorder:"#ded7c9", seats:"2 / 6", revenue:"9,600" },
+        { title:"手作木湯匙一日課", meta:"2026/10/12 開課 · 1 堂 · 台北大同", status:"招生中", stBg:"#e3ecec", stFg:"#2f5560", stBorder:"#c3d6d6", seats:"7 / 10", revenue:"12,600" },
+        { title:"木工工具保養與磨刀", meta:"2026/09/07 已完課 · 2 堂", status:"已完課", stBg:"#f7f4ee", stFg:"#4a463d", stBorder:"#ded7c9", seats:"8 / 8", revenue:"16,000" },
+        { title:"週末親子木作：小書架", meta:"2026/08/23 已完課 · 1 堂", status:"已完課", stBg:"#f7f4ee", stFg:"#4a463d", stBorder:"#ded7c9", seats:"10 / 10", revenue:"25,000" }
+      ],
+      ledger, ledgerCount: ledger.length,
+      ledgerSum: "NT$ " + sum.toLocaleString("en-US"),
+      ledgerFilters: lfDefs.map(([k, label]) => ({
+        label, onClick: () => this.setState({ lf: k }),
+        border: lf === k ? "#22201c" : "#ded7c9",
+        bg: lf === k ? "#efeade" : "transparent",
+        fg: lf === k ? "#22201c" : "#4a463d"
+      })),
+      payouts: [
+        { date:"2026/10/05", title:"9 月月結（預估）", meta:"3 門課 · 41 筆報名", amount:"98,284", status:"排程中", stFg:"#a7622c" },
+        { date:"2026/09/05", title:"8 月月結", meta:"2 門課 · 18 筆報名", amount:"36,842", status:"已匯出", stFg:"#2f5560" },
+        { date:"2026/08/05", title:"7 月月結", meta:"2 門課 · 22 筆報名", amount:"44,310", status:"已匯出", stFg:"#2f5560" },
+        { date:"2026/07/05", title:"6 月月結", meta:"1 門課 · 9 筆報名", amount:"15,720", status:"已匯出", stFg:"#2f5560" },
+        { date:"2026/06/05", title:"5 月月結", meta:"未達 500 元門檻，累計至下期", amount:"—", status:"已累計", stFg:"#6c6659" }
+      ],
+      notifyChannels: [
+        { label:"站內通知", state:"開啟", stBg:"#e3ecec", stFg:"#2f5560", note:"進站後可在鈴鐺圖示看到，無法關閉。" },
+        { label:"Email", state:"開啟", stBg:"#e3ecec", stFg:"#2f5560", note:"寄送到 chen.yenlin@example.com，無法關閉。" },
+        { label:"LINE 官方帳號", state:"未加入", stBg:"#eae4d4", stFg:"#7a6a3c", note:"加入後可收到相同內容的訊息，免簡訊費用。" }
+      ],
+      notifyEvents: [
+        { label:"退課申請 / 回覆期限提醒", via:"站內 + Email" },
+        { label:"身分驗證 / 帳戶審核結果", via:"站內 + Email" },
+        { label:"撥款入帳", via:"站內 + Email" },
+        { label:"平台仲裁裁定", via:"站內 + Email" }
+      ],
+      payoutSettings: [
+        { k:"撥款週期", v:"月結 · 每月 5 日" },
+        { k:"撥款帳戶", v:"國泰世華 **** 4821" },
+        { k:"戶名", v:"陳彥霖（與驗證一致）" },
+        { k:"轉帳費", v:"跨行 20 元 / 每次" }
+      ],
+      formGroups: [
+        { num:"01", title:"基本資料", fields:[
+          { label:"課程名稱", value:"進階榫接：小邊几" },
+          { label:"一句話說明", value:"六堂課做出一張能用十年的邊几", hasHint:true, hint:"顯示在課程卡片上，40 字以內。" },
+          { label:"難度", value:"需有基礎木工經驗" }
+        ] },
+        { num:"02", title:"時間與地點", fields:[
+          { label:"開課日", value:"2026/11/03（二）" },
+          { label:"上課時間", value:"每週二 19:00–22:00 · 共 6 堂" },
+          { label:"地點", value:"台北市大同區承德路二段" },
+          { label:"人數上限", value:"6 人" }
+        ] },
+        { num:"03", title:"定價與收款", fields:[
+          { label:"課程費用（元）", value:"4,800" },
+          { label:"接受的付款方式", value:"信用卡 · ATM 虛擬帳號" },
+          { label:"繳費期限", value:"報名後 3 日內", hasHint:true, hint:"逾期未付款，名額自動釋出給候補。" }
+        ] }
+      ],
+      refundRows: [
+        { when:"開課前 14 日以上", amount:"100%", floor:100 },
+        { when:"開課前 7–13 日", amount:"70%", floor:50 },
+        { when:"開課前 1–6 日", amount:"30%", floor:15 },
+        { when:"開課後", amount:"0%", floor:0 }
+      ].map(r => {
+        const val = parseInt(r.amount, 10);
+        const below = val < r.floor;
+        return { ...r, floorLabel: r.floor + "%", belowFloor: below, border: below ? "#8a4b3f" : "#ded7c9" };
+      }),
+      breakdown: [
+        { k:"平台服務費 10%", v:"−2,880", color:"#8a4b3f" },
+        { k:"信用卡手續費 2.89%", v:"−832", color:"#8a4b3f" },
+        { k:"撥款轉帳費（跨行）", v:"−20", color:"#8a4b3f" },
+        { k:"退款處理費（預估 0 筆）", v:"−0", color:"#6c6659" }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

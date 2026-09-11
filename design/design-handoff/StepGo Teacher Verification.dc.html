@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}
+.wrap{max-width:1020px;margin:0 auto;padding:0 26px}
+.cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,1fr);gap:34px;align-items:start;padding-bottom:70px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.uploads{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rail{display:flex;align-items:center;gap:0;padding:24px 0 28px;flex-wrap:wrap}
+@media(max-width:900px){
+ .cols{grid-template-columns:1fr;gap:24px}
+ .cols aside{position:static !important}
+}
+@media(max-width:560px){
+ .wrap{padding:0 16px}
+ .uploads{grid-template-columns:1fr}
+ .rail{gap:6px 0;padding:18px 0 22px}
+}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:15px;padding:18px 0;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Teacher Dashboard.dc.html" style="display:flex;align-items:center;gap:10px;color:#22201c">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;flex:none">學</div>
+<span style="font:700 16px 'Noto Serif TC',serif">學步</span>
+</a>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659;border-left:1px solid #ded7c9;padding-left:15px">身分驗證</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">陳彥霖 · 老師帳號</span>
+</header>
+
+<nav class="rail">
+<sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding-right:16px">
+<span style="width:24px;height:24px;border-radius:50%;border:1px solid {{ r.ring }};background:{{ r.bg }};color:{{ r.numFg }};display:flex;align-items:center;justify-content:center;font:500 12px 'EB Garamond',serif;flex:none">{{ r.num }}</span>
+<span style="font:{{ r.font }};color:{{ r.fg }}">{{ r.label }}</span>
+<span style="width:28px;height:1px;background:{{ r.line }};display:block;margin-left:6px"></span>
+</div>
+</sc-for>
+</nav>
+
+<div class="cols">
+<main style="min-width:0;display:flex;flex-direction:column;gap:22px">
+
+<sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:17px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">01</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">本人資料</h2>
+</div>
+<div class="grid2">
+<sc-for list="{{ idFields }}" as="f" hint-placeholder-count="4">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input value="{{ f.value }}" readOnly="{{ true }}" placeholder="{{ f.placeholder }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<sc-if value="{{ f.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659">{{ f.hint }}</span></sc-if>
+</label>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">02</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">上傳證件</h2>
+<span style="margin-left:auto;font:400 12px 'Noto Sans TC';color:#6c6659">JPG／PNG／PDF · 單檔 10MB 內</span>
+</div>
+<div class="uploads">
+<sc-for list="{{ uploads }}" as="u" hint-placeholder-count="2">
+<div style="border:1px dashed {{ u.border }};border-radius:4px;background:{{ u.bg }};padding:20px 18px;display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center;min-height:124px;justify-content:center">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c">{{ u.title }}</span>
+<span style="font:400 11.5px/1.65 'Noto Sans TC';color:#6c6659">{{ u.note }}</span>
+<span style="font:500 12.5px 'Noto Sans TC';color:{{ u.ctaFg }};border:1px solid {{ u.ctaBorder }};border-radius:3px;padding:6px 13px;margin-top:3px">{{ u.cta }}</span>
+</div>
+</sc-for>
+</div>
+<div style="border-left:2px solid #a7622c;padding:3px 0 3px 15px;font:400 12.5px/1.85 'Noto Sans TC';color:#6c6659;text-wrap:pretty">證件僅用於身分核對，審核完成後只保留末四碼與核對結果，影像檔於 30 日內刪除。</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">03</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">撥款帳戶</h2>
+</div>
+<div class="grid2">
+<sc-for list="{{ bankFields }}" as="f" hint-placeholder-count="3">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input value="{{ f.value }}" readOnly="{{ true }}" placeholder="{{ f.placeholder }}" style="border:1px solid {{ f.border }};border-radius:3px;background:#f7f4ee;padding:11px 12px;font:{{ f.font }};color:#22201c;width:100%;box-sizing:border-box">
+<sc-if value="{{ f.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px/1.6 'Noto Sans TC';color:{{ f.hintFg }}">{{ f.hint }}</span></sc-if>
+</label>
+</sc-for>
+</div>
+<div style="border:1px solid #e2cdb7;border-radius:4px;background:#fdf7f0;padding:14px 16px;display:flex;gap:11px;align-items:flex-start">
+<span style="width:17px;height:17px;border-radius:50%;border:1px solid #a7622c;color:#a7622c;font:600 11px 'EB Garamond',serif;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px">!</span>
+<span style="font:400 12.5px/1.85 'Noto Sans TC';color:#4a463d;text-wrap:pretty">戶名須與上方本名完全一致，系統會自動比對，不接受代收帳戶。帳戶錯誤會讓撥款退回並延後一個週期。</span>
+</div>
+</section>
+
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+<button onClick="{{ goPending }}" style="border:none;background:#a7622c;color:#fff;border-radius:3px;padding:14px 26px;font:500 14.5px 'Noto Sans TC';cursor:pointer">送出驗證</button>
+<button style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:14px 20px;font:400 14.5px 'Noto Sans TC';cursor:pointer">存成草稿</button>
+<a href="./StepGo Teacher Dashboard.dc.html" style="font:400 13.5px 'Noto Sans TC';color:#6c6659">稍後再說</a>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPending }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<section style="border:1px solid #a7622c;border-radius:4px;background:#fdf7f0;padding:28px 26px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:8px;height:8px;border-radius:50%;background:#a7622c;flex:none"></span>
+<span style="font:500 12px 'Noto Sans TC';letter-spacing:.14em;color:#8a4b3f">審核中 · 已等候 1 個工作日</span>
+</div>
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0">資料已送出，我們正在核對</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">人工審核一般於 2 個工作日內完成，結果會用 Email 與站內通知寄給你。預計 09/13（五）前回覆。</p>
+<div style="display:flex;flex-direction:column;gap:0;padding-top:6px">
+<sc-for list="{{ pendingSteps }}" as="s" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;align-items:center;height:100%">
+<span style="width:10px;height:10px;border-radius:50%;background:{{ s.dot }};border:1px solid {{ s.ring }};flex:none;margin-top:5px"></span>
+<span style="width:1px;flex:1;min-height:22px;background:{{ s.line }}"></span>
+</div>
+<div style="padding-bottom:14px;min-width:0">
+<div style="font:{{ s.font }};color:{{ s.fg }}">{{ s.title }}</div>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;text-wrap:pretty">{{ s.note }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px 26px;display:flex;flex-direction:column;gap:12px">
+<h3 style="font:700 16px 'Noto Serif TC',serif;margin:0">等待期間你可以做的事</h3>
+<sc-for list="{{ meanwhile }}" as="m" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;border-bottom:1px solid #ece6da;padding-bottom:11px">
+<div style="min-width:0"><div style="font:500 14px 'Noto Sans TC';color:#22201c">{{ m.title }}</div><div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659">{{ m.note }}</div></div>
+<span style="font:400 12.5px 'Noto Sans TC';color:{{ m.tagFg }};background:{{ m.tagBg }};border-radius:2px;padding:3px 9px;white-space:nowrap">{{ m.tag }}</span>
+</div>
+</sc-for>
+</section>
+
+<div style="display:flex;gap:11px;flex-wrap:wrap">
+<a href="./StepGo Teacher Dashboard.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC'">回後台建課程草稿 →</a>
+<button onClick="{{ goRejected }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 18px;font:400 14px 'Noto Sans TC';cursor:pointer">（示範）看未通過的樣子</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRejected }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<section style="border:1px solid #8a4b3f;border-radius:4px;background:#fdf5f2;padding:28px 26px;display:flex;flex-direction:column;gap:14px">
+<div style="width:40px;height:40px;border-radius:50%;border:1.5px solid #8a4b3f;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8a4b3f">!</div>
+<h2 style="font:700 22px/1.4 'Noto Serif TC',serif;margin:0">驗證未通過，需要補件</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">09/13 審核完成。以下兩項需要重新提供，補件後會重新排入審核，一樣約 2 個工作日。</p>
+<div style="display:flex;flex-direction:column;gap:11px;border-top:1px solid #eddcd5;padding-top:16px">
+<sc-for list="{{ issues }}" as="i" hint-placeholder-count="2">
+<div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start">
+<span style="color:#8a4b3f;font:400 14px 'Noto Sans TC'">—</span>
+<div style="min-width:0">
+<div style="font:500 14px 'Noto Sans TC';color:#22201c">{{ i.what }}</div>
+<div style="font:400 13px/1.8 'Noto Sans TC';color:#4a463d">{{ i.why }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:6px">
+<button onClick="{{ goForm }}" style="border:none;background:#a7622c;color:#fff;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC';cursor:pointer">重新提交</button>
+<a href="#help" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 18px;font:400 14px 'Noto Sans TC'">問貓頭鷹</a>
+</div>
+</section>
+<div style="border-left:2px solid #a7622c;padding:4px 0 4px 16px;font:400 13px/1.85 'Noto Sans TC';color:#6c6659;text-wrap:pretty">連續兩次未通過，帳號的開課功能會暫時限制，需聯絡客服協助處理。詳見<a href="./StepGo Terms.dc.html">合作條款 02</a>。</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:22px">
+<section style="border:1px solid #2f5560;border-radius:4px;background:#fdfbf6;padding:30px 26px;display:flex;flex-direction:column;gap:14px">
+<div style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2f5560;display:flex;align-items:center;justify-content:center;font-size:19px;color:#2f5560">✓</div>
+<h2 style="font:700 24px/1.35 'Noto Serif TC',serif;margin:0">驗證通過</h2>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:34em">你的課程頁現在會顯示「已完成身分驗證」，草稿可以送審並開放報名。</p>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ece6da;padding-top:16px;font:400 13.5px/1.6 'Noto Sans TC'">
+<sc-for list="{{ doneFacts }}" as="f" hint-placeholder-count="4">
+<div style="display:flex;gap:14px"><span style="color:#6c6659;width:86px;flex:none">{{ f.k }}</span><span style="color:#22201c">{{ f.v }}</span></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:11px;flex-wrap:wrap;padding-top:8px">
+<a href="./StepGo Teacher Dashboard.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC'">去建立第一堂課 →</a>
+<a href="./StepGo Fee Calculator.dc.html" style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:13px 20px;font:400 14px 'Noto Sans TC'">先試算費用</a>
+</div>
+</section>
+</div>
+</sc-if>
+
+</main>
+
+<aside style="position:sticky;top:22px;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px;display:flex;flex-direction:column;gap:15px">
+<h3 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">為什麼要驗證</h3>
+<p style="font:400 13px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">學步替你代收學生的款項，再撥到你的帳戶。法規要求我們確認收款人身分，也讓學生知道課程頁上的老師是真實存在的人。</p>
+<div style="display:flex;flex-direction:column;gap:11px;border-top:1px solid #ded7c9;padding-top:15px">
+<sc-for list="{{ asideFacts }}" as="a" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ a.k }}</span>
+<span style="font:500 13.5px/1.5 'Noto Sans TC';color:#22201c">{{ a.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="border-top:1px solid #ded7c9;padding-top:14px;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659">驗證卡住了可以直接問貓頭鷹，或寄信到 <a href="#mail">hello@stepgo.tw</a>。</div>
+</aside>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;form&quot;,&quot;pending&quot;,&quot;rejected&quot;,&quot;done&quot;],&quot;default&quot;:&quot;form&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const RAIL = [
+  { key: "form", num: "1", label: "填寫資料" },
+  { key: "pending", num: "2", label: "人工審核" },
+  { key: "done", num: "3", label: "可以開課" }
+];
+
+class Component extends DCLogic {
+  state = { view: null };
+  renderVals() {
+    const view = this.state.view ?? (this.props.view ?? "form");
+    const go = v => () => { this.setState({ view: v }); window.scrollTo(0, 0); };
+    const idx = { form: 0, rejected: 0, pending: 1, done: 2 }[view];
+
+    return {
+      rail: RAIL.map((r, i) => {
+        const on = i <= idx, cur = i === idx;
+        return {
+          num: r.num, label: r.label,
+          ring: on ? "#a7622c" : "#ded7c9",
+          bg: cur ? "#a7622c" : "transparent",
+          numFg: cur ? "#fff" : on ? "#a7622c" : "#7c7668",
+          fg: on ? "#22201c" : "#7c7668",
+          font: (cur ? "500" : "400") + " 13.5px 'Noto Sans TC'",
+          line: i < RAIL.length - 1 ? (i < idx ? "#a7622c" : "#ded7c9") : "transparent"
+        };
+      }),
+      isForm: view === "form", isPending: view === "pending",
+      isRejected: view === "rejected", isDone: view === "done",
+      goForm: go("form"), goPending: go("pending"), goRejected: go("rejected"), goDone: go("done"),
+
+      idFields: [
+        { label: "本名", value: "陳彥霖", placeholder: "", hasHint: true, hint: "與身分證件相同，之後撥款戶名須一致。" },
+        { label: "身分證字號", value: "A12••••••8", placeholder: "" },
+        { label: "出生年月日", value: "1991 / 04 / 17", placeholder: "" },
+        { label: "聯絡手機", value: "0933-217-604", placeholder: "", hasHint: true, hint: "用於驗證結果與撥款通知。" }
+      ],
+      uploads: [
+        { title: "身分證正面", note: "四角完整、文字清晰，勿遮擋", cta: "已上傳 · 重新選擇", border: "#2f5560", bg: "#f2f6f6", ctaFg: "#2f5560", ctaBorder: "#9fbcc0" },
+        { title: "身分證反面", note: "四角完整、文字清晰，勿遮擋", cta: "選擇檔案或拖曳至此", border: "#c9c2b2", bg: "#f7f4ee", ctaFg: "#4a463d", ctaBorder: "#ded7c9" }
+      ],
+      bankFields: [
+        { label: "銀行", value: "（013）國泰世華商業銀行", placeholder: "", border: "#ded7c9", font: "400 14px 'Noto Sans TC'" },
+        { label: "帳號", value: "0932 1055 4821", placeholder: "", border: "#ded7c9", font: "400 14px ui-monospace,Menlo,monospace" },
+        { label: "戶名", value: "陳彥霖", placeholder: "", border: "#2f5560", font: "400 14px 'Noto Sans TC'", hasHint: true, hint: "✓ 與本名一致", hintFg: "#2f5560" }
+      ],
+      pendingSteps: [
+        { title: "資料送出", note: "09/11 16:20 ｜ 證件兩面、撥款帳戶皆已收到", dot: "#a7622c", ring: "#a7622c", line: "#a7622c", font: "500 14px 'Noto Sans TC'", fg: "#22201c" },
+        { title: "人工核對中", note: "核對證件與帳戶戶名是否一致，約 2 個工作日", dot: "#fdf7f0", ring: "#a7622c", line: "#ded7c9", font: "500 14px 'Noto Sans TC'", fg: "#a7622c" },
+        { title: "結果通知", note: "Email 與站內通知同時發出。未通過會列出需補件的項目", dot: "#fdf7f0", ring: "#ded7c9", line: "#ded7c9", font: "400 14px 'Noto Sans TC'", fg: "#7c7668" },
+        { title: "開放報名", note: "通過後草稿即可送審，課程頁顯示「已完成身分驗證」", dot: "#fdf7f0", ring: "#ded7c9", line: "transparent", font: "400 14px 'Noto Sans TC'", fg: "#7c7668" }
+      ],
+      meanwhile: [
+        { title: "建立課程草稿", note: "內容、時間、定價都可以先填好", tag: "可以做", tagBg: "#e3ecec", tagFg: "#2f5560" },
+        { title: "用試算工具定價", note: "確認實拿金額後再決定收多少", tag: "可以做", tagBg: "#e3ecec", tagFg: "#2f5560" },
+        { title: "開放學生報名", note: "驗證通過後草稿才能送審", tag: "需驗證", tagBg: "#f6ece2", tagFg: "#8a4b3f" }
+      ],
+      issues: [
+        { what: "身分證反面照片反光", why: "右下角的發證日期被反光蓋住，請在光線均勻處重拍。" },
+        { what: "撥款帳戶戶名不符", why: "銀行端回覆的戶名為「陳彥霖 商號」，與本名不一致。請改用個人帳戶，或提供商業登記文件。" }
+      ],
+      doneFacts: [
+        { k: "驗證編號", v: "KYC-02418" },
+        { k: "通過時間", v: "2026/09/13 11:05" },
+        { k: "撥款帳戶", v: "國泰世華 **** 4821（戶名已核對）" },
+        { k: "有效期", v: "長期有效，帳戶變更時需重新核對" }
+      ],
+      asideFacts: [
+        { k: "審核時間", v: "2 個工作日內" },
+        { k: "需要的文件", v: "身分證正反面、本人銀行帳戶" },
+        { k: "證件保存", v: "審核後 30 日內刪除影像" },
+        { k: "未通過", v: "可補件重審；連續兩次未通過會限制開課" }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

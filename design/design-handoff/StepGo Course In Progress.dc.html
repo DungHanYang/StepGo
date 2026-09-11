@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f2eee6;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2f5560;text-decoration:none}a:hover{color:#1f3c45}
+.shell{display:grid;grid-template-columns:212px minmax(0,1fr);min-height:100vh;align-items:stretch}
+.cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,1fr);gap:24px;align-items:start}
+@media(max-width:980px){
+ .shell{grid-template-columns:1fr}
+ .shell aside{display:none !important}
+ .cols{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+ main .pad{padding:20px 18px 48px !important}
+ header.top{padding:16px 18px !important}
+}
+</style></helmet>
+
+<div class="shell">
+
+<aside style="background:#1e3339;color:#dfe7e6;display:flex;flex-direction:column;gap:4px;padding:20px 13px 24px">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:10px;color:#dfe7e6;padding:4px 8px 18px">
+<div style="width:34px;height:34px;border-radius:50%;border:1px solid #5b8a92;background:#264148;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;color:#dfe7e6;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span style="font:700 15px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9.5px 'EB Garamond',serif;letter-spacing:.2em;color:#84a0a4;text-transform:uppercase">Student</span>
+</div>
+</a>
+<a href="./StepGo Student Dashboard.dc.html" style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:500 13.5px 'Noto Sans TC';background:#28454c;color:#fff">
+<span style="font:400 12px 'EB Garamond',serif;color:#84a0a4;width:14px;flex:none">01</span>我的課程
+</a>
+<div style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:400 13.5px 'Noto Sans TC';color:#b7c6c8">
+<span style="font:400 12px 'EB Garamond',serif;color:#5b8a92;width:14px;flex:none">02</span>交易紀錄
+</div>
+<div style="display:flex;align-items:center;gap:10px;border-radius:3px;padding:9px 10px;font:400 13.5px 'Noto Sans TC';color:#b7c6c8">
+<span style="font:400 12px 'EB Garamond',serif;color:#5b8a92;width:14px;flex:none">03</span>帳號設定
+</div>
+<div style="margin-top:auto;border-top:1px solid #2c474e;padding-top:14px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:9px;padding:0 8px">
+<div style="width:30px;height:30px;border-radius:50%;background:#264148;border:1px solid #3d616a;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;color:#dfe7e6;flex:none">林</div>
+<div style="display:flex;flex-direction:column;line-height:1.3;min-width:0">
+<span style="font:500 13px 'Noto Sans TC';color:#dfe7e6">林郁婷</span>
+<span style="font:400 10.5px 'Noto Sans TC';color:#84a0a4">已報名 4 門課</span>
+</div>
+</div>
+<a href="./StepGo Courses.dc.html" style="font:400 12px 'Noto Sans TC';color:#84a0a4;padding:0 8px">逛更多課程 →</a>
+</div>
+</aside>
+
+<main style="min-width:0;display:flex;flex-direction:column;background:#f7f4ee">
+
+<header class="top" style="display:flex;align-items:center;gap:14px;padding:17px 32px;border-bottom:1px solid #ded7c9;background:#f7f4ee;position:sticky;top:0;z-index:5;flex-wrap:wrap">
+<a href="./StepGo Student Dashboard.dc.html" style="font:400 13px 'Noto Sans TC';color:#6c6659">← 我的課程</a>
+<span style="width:1px;height:16px;background:#ded7c9"></span>
+<h1 style="font:700 17px 'Noto Serif TC',serif;margin:0;text-wrap:pretty">{{ course.title }}</h1>
+<span style="font:500 11px 'Noto Sans TC';color:#2f5560;background:#e3ecec;border-radius:2px;padding:3px 9px">上課中</span>
+</header>
+
+<div class="pad" style="padding:28px 32px 60px;display:flex;flex-direction:column;gap:24px">
+
+<section style="border:1px solid #2f5560;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">下一堂</div>
+<div style="font:600 20px 'Noto Serif TC',serif">{{ course.nextTitle }}</div>
+<div style="font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d">{{ course.teacher }} · {{ course.place }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">
+<span style="font:600 24px 'EB Garamond',serif">{{ course.nextDate }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#4a463d">{{ course.nextTime }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ course.nextIn }}</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;font:400 12px 'Noto Sans TC';color:#6c6659">
+<span>進度</span><span>{{ course.progressLabel }}</span>
+</div>
+<div style="height:6px;border-radius:99px;background:#ece6da;overflow:hidden">
+<div style="height:100%;width:{{ course.progressPct }};background:#2f5560;border-radius:99px"></div>
+</div>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a href="#calendar" style="border:1px solid #2f5560;color:#2f5560;border-radius:3px;padding:9px 16px;font:500 13px 'Noto Sans TC'">加入行事曆</a>
+<a href="#line" style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:9px 16px;font:400 13px 'Noto Sans TC'">加 LINE 問老師</a>
+</div>
+</section>
+
+<div class="cols">
+<div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="padding:16px 20px;border-bottom:1px solid #ded7c9;display:flex;align-items:baseline;gap:10px">
+<h2 style="font:700 16px 'Noto Serif TC',serif;margin:0">課程進度</h2>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ course.sessionsNote }}</span>
+</div>
+<sc-for list="{{ sessions }}" as="s" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:88px 20px minmax(0,1fr);gap:14px;padding:15px 20px;border-bottom:1px solid #ece6da;align-items:start">
+<div style="font:500 12.5px ui-monospace,Menlo,monospace;color:{{ s.dateFg }}">{{ s.date }}</div>
+<div style="display:flex;flex-direction:column;align-items:center;height:100%">
+<span style="width:11px;height:11px;border-radius:50%;background:{{ s.dot }};border:1px solid {{ s.ring }};flex:none;margin-top:3px"></span>
+</div>
+<div style="min-width:0">
+<div style="font:{{ s.font }};color:{{ s.fg }};text-wrap:pretty">{{ s.title }}</div>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659">{{ s.note }}</div>
+</div>
+</div>
+</sc-for>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px 22px;display:flex;flex-direction:column;gap:14px">
+<h2 style="font:700 16px 'Noto Serif TC',serif;margin:0">老師的通知</h2>
+<sc-for list="{{ updates }}" as="u" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:4px;border-bottom:1px solid #ece6da;padding-bottom:12px">
+<div style="display:flex;gap:10px;align-items:baseline"><span style="font:500 12.5px ui-monospace,Menlo,monospace;color:#6c6659">{{ u.date }}</span><span style="font:500 13.5px 'Noto Sans TC';color:#22201c">{{ u.title }}</span></div>
+<p style="font:400 13px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ u.body }}</p>
+</div>
+</sc-for>
+</section>
+</div>
+
+<aside style="display:flex;flex-direction:column;gap:18px">
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px 22px;display:flex;flex-direction:column;gap:13px">
+<h3 style="font:700 15px 'Noto Serif TC',serif;margin:0">老師</h3>
+<div style="display:flex;gap:13px;align-items:center">
+<div style="width:46px;height:46px;border-radius:50%;background:#efeade;border:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:600 15px 'Noto Serif TC',serif;flex:none">{{ course.teacherInitial }}</div>
+<div style="min-width:0">
+<div style="font:600 14.5px 'Noto Serif TC',serif">{{ course.teacher }}</div>
+<div style="font:400 12px 'Noto Sans TC';color:#6c6659">已完成身分驗證</div>
+</div>
+</div>
+<a href="#line" style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:9px;text-align:center;font:400 13px 'Noto Sans TC'">加 LINE 問老師</a>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:20px 22px;display:flex;flex-direction:column;gap:13px">
+<h3 style="font:700 15px 'Noto Serif TC',serif;margin:0">繳費與退費</h3>
+<div style="display:flex;flex-direction:column;gap:8px;font:400 13px/1.6 'Noto Sans TC'">
+<sc-for list="{{ payFacts }}" as="f" hint-placeholder-count="3">
+<div style="display:flex;gap:12px"><span style="color:#6c6659;width:70px;flex:none">{{ f.k }}</span><span style="color:#22201c">{{ f.v }}</span></div>
+</sc-for>
+</div>
+<div style="border:1px solid #cfdcdd;background:#f2f6f6;border-radius:4px;padding:12px 14px;display:flex;flex-direction:column;gap:4px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#2f5560">現在申請退課，可退</span>
+<span style="font:600 20px 'EB Garamond',serif;color:#22201c">{{ course.refundNow }}</span>
+<span style="font:400 12px/1.6 'Noto Sans TC';color:#6c6659">{{ course.refundRule }}</span>
+</div>
+<a href="./StepGo Refund Review.dc.html" style="border:1px solid #8a4b3f;color:#8a4b3f;border-radius:3px;padding:9px;text-align:center;font:500 13px 'Noto Sans TC'">申請退課</a>
+</section>
+</aside>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      course: {
+        title: "從零開始的木工手作：做一張小板凳",
+        teacher: "陳彥霖", teacherInitial: "陳",
+        place: "台北市大同區承德路二段",
+        nextTitle: "第 3 堂・組裝與校正", nextDate: "11/03", nextTime: "週一 19:00–22:00", nextIn: "還有 6 天",
+        progressLabel: "第 2／4 堂已完成", progressPct: "50%",
+        sessionsNote: "共 4 堂・每週一",
+        refundNow: "0%（開課後）", refundRule: "依合作條款，開課後不再退費；請假可與老師協調補課。"
+      },
+      sessions: [
+        { date: "10/20", title: "第 1 堂・木料、工具與安全", note: "已出席・認識常見木材、手工具握法與磨刀", dot: "#2f5560", ring: "#2f5560", font: "500 14px 'Noto Sans TC'", fg: "#22201c", dateFg: "#6c6659" },
+        { date: "10/27", title: "第 2 堂・下料與榫接放樣", note: "已出席・畫線、鋸切、鑿榫孔", dot: "#2f5560", ring: "#2f5560", font: "500 14px 'Noto Sans TC'", fg: "#22201c", dateFg: "#6c6659" },
+        { date: "11/03", title: "第 3 堂・組裝與校正", note: "即將到來・乾組、膠合、夾持與矯正", dot: "#fdfbf6", ring: "#2f5560", font: "500 14px 'Noto Sans TC'", fg: "#2f5560", dateFg: "#22201c" },
+        { date: "11/10", title: "第 4 堂・修整與塗裝", note: "砂磨、倒角、上木蠟油", dot: "#fdfbf6", ring: "#ded7c9", font: "400 14px 'Noto Sans TC'", fg: "#7c7668", dateFg: "#7c7668" }
+      ],
+      updates: [
+        { date: "10/28", title: "第 3 堂請提早 10 分鐘到", body: "膠合需要比較長的暖機時間，會提早開門，方便的話可以提早到教室。" },
+        { date: "10/20", title: "工作服提醒", body: "上課會噴到木屑與木蠟油，建議穿舊衣或圍裙，工作室備有少量圍裙可借用。" }
+      ],
+      payFacts: [
+        { k: "已付金額", v: "NT$ 3,000" },
+        { k: "付款方式", v: "信用卡" },
+        { k: "報名日", v: "2026/09/08" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2f5560;text-decoration:none}a:hover{color:#1f3c45}image-slot{--is-bg:#efeade;--is-border:#ded7c9}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+@media(max-width:640px){.wrap{padding:0 18px}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</div>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Homepage.dc.html" style="color:#4a463d">首頁</a>
+<a href="./StepGo For Teachers.dc.html" style="color:#4a463d">給老師</a>
+<a href="#top" style="color:#22201c;font-weight:500;border-bottom:1.5px solid #2f5560;padding-bottom:2px">給學生</a>
+<a href="#faq" style="color:#4a463d">常見問題</a>
+</nav>
+<div style="display:flex;align-items:center;gap:14px;font-size:12.5px;color:#6c6659">
+<span style="display:flex;gap:6px"><span style="color:#22201c;font-weight:500">繁中</span><span>·</span><span>EN</span></span>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</div>
+</header>
+
+<section id="top" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;align-items:center;padding:58px 0 48px">
+<div style="display:flex;flex-direction:column;gap:18px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">For students</div>
+<h1 style="font:700 clamp(30px,4.4vw,46px)/1.28 'Noto Serif TC',serif;margin:0;text-wrap:pretty">找到一堂課，<br>然後真的去上</h1>
+<p style="font:400 15.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:32em;text-wrap:pretty">報名前你就會看到繳費期限、上課時間與退費規則。付完款有確認，快上課有提醒，臨時不能去也有處理方式。</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">
+<a href="./StepGo Homepage.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:13px 20px;font-size:14px;font-weight:500">瀏覽課程 →</a>
+<a href="#refund" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:13px 20px;font-size:14px;font-weight:500">退課怎麼辦</a>
+</div>
+</div>
+<image-slot id="sgs-hero" shape="rect" fit="contain" style="width:100%;height:280px" placeholder="人物插畫（透明背景 PNG）"></image-slot>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">三步就上課</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Three steps</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px;display:flex;flex-direction:column;gap:11px">
+<span style="font:600 13px 'EB Garamond',serif;letter-spacing:.2em;color:#2f5560">{{ s.n }}</span>
+<span style="font:700 18px/1.4 'Noto Serif TC',serif">{{ s.t }}</span>
+<span style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659">{{ s.d }}</span>
+<span style="font:400 12.5px/1.7 'Noto Sans TC';color:#2f5560;border-top:1px solid #ded7c9;padding-top:10px;margin-top:auto">{{ s.note }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">付款方式看課程</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">How you pay</span>
+</div>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0 0 24px;max-width:44em">每堂課由老師決定接受哪種付款方式，報名頁只會顯示這堂課能用的選項。</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:24px;display:flex;flex-direction:column;gap:12px">
+<div style="font:700 18px 'Noto Serif TC',serif">信用卡</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">一次點擊完成，付完立刻確認報名成功，不用記期限。</p>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;border-top:1px solid #ded7c9;padding-top:11px">退款可由系統自動處理。</div>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:24px;display:flex;flex-direction:column;gap:12px">
+<div style="font:700 18px 'Noto Serif TC',serif">ATM 虛擬帳號</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">系統給你一組專屬帳號，自行轉帳。有繳費期限，期限前沒繳會提醒你一次。</p>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;border-top:1px solid #ded7c9;padding-top:11px">銀行確認可能要數小時到隔天，狀態會自動更新，不用回報。</div>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">通知你會從哪裡收到</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Notifications</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="padding:24px 22px;display:flex;flex-direction:column;gap:10px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#2f5560">PRIMARY</div>
+<div style="font:700 16px 'Noto Serif TC',serif">Email</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">繳費提醒、開課提醒、退款結果的主要管道。註冊時選填，但強烈建議填。</p>
+</div>
+<div style="padding:24px 22px;display:flex;flex-direction:column;gap:10px;border-left:1px solid #ded7c9">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#2f5560">ALWAYS</div>
+<div style="font:700 16px 'Noto Serif TC',serif">站內會員中心</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">每則通知一律留一份記錄，登入就看得到，不怕漏信。</p>
+</div>
+<div style="padding:24px 22px;display:flex;flex-direction:column;gap:10px;border-left:1px solid #ded7c9">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">OPTIONAL</div>
+<div style="font:700 16px 'Noto Serif TC',serif">LINE 推播</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">主動綁定後才會收到，屬於加值。沒綁也不會漏掉核心通知。</p>
+</div>
+</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:20px 0 0;max-width:44em">手機號碼是註冊必填，用途是身分識別與臨時停課、退課爭議時的直接聯繫，不會用來發行銷簡訊。</p>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">我的課程，四個分頁</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">My courses</span>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<div style="display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #ded7c9">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" style="border:none;background:{{ t.bg }};color:{{ t.fg }};cursor:pointer;padding:15px 22px;font:500 13.5px 'Noto Sans TC';border-right:1px solid #ded7c9">{{ t.label }}</button>
+</sc-for>
+</div>
+<div style="padding:26px 24px;display:flex;flex-direction:column;gap:12px">
+<div style="font:700 17px 'Noto Serif TC',serif">{{ tabTitle }}</div>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0;max-width:40em">{{ tabDesc }}</p>
+<div style="font:400 12.5px/1.7 ui-monospace,Menlo,monospace;color:#6c6659;border-top:1px solid #ded7c9;padding-top:12px">{{ tabRule }}</div>
+</div>
+</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:20px 0 0;max-width:44em">每筆訂單都能下載付款證明：訂單編號、課程名稱、金額、付款時間與付款方式。</p>
+</section>
+
+<section id="refund" style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">不能去了怎麼辦</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">Refunds</span>
+</div>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0 0 24px;max-width:44em">線上申請退課，系統先依課程退費規則試算金額，再交給老師審核。談不成，你可以升級給學步仲裁。</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;overflow:hidden">
+<sc-for list="{{ refundFlow }}" as="r" hint-placeholder-count="4">
+<div style="padding:22px 20px;border-left:1px solid #ded7c9;display:flex;flex-direction:column;gap:9px">
+<span style="font:600 13px 'EB Garamond',serif;letter-spacing:.16em;color:#2f5560">{{ r.n }}</span>
+<span style="font:700 15px/1.4 'Noto Serif TC',serif">{{ r.t }}</span>
+<span style="font:400 13px/1.75 'Noto Sans TC';color:#6c6659">{{ r.d }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:22px">
+<div style="border:1px solid #2f5560;border-radius:4px;padding:20px 22px;background:#f2f6f6">
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-bottom:8px;color:#1f3c45">目前的退費規則</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#2b4a52;margin:0">{{ refundRuleText }}實際比例以各課程頁面標示為準。</p>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:20px 22px">
+<div style="font:700 15.5px 'Noto Serif TC',serif;margin-bottom:8px">老師沒回應呢</div>
+<p style="font:400 13.5px/1.8 'Noto Sans TC';color:#6c6659;margin:0">老師有回應期限，逾期未處理系統會自動把案件升級給學步處理，不會讓你等到沒有下文。</p>
+</div>
+</div>
+</section>
+
+<section id="faq" style="border-top:1px solid #ded7c9;padding:52px 0">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:22px">
+<h2 style="font:700 22px 'Noto Serif TC',serif;margin:0">常見問題</h2>
+<span style="font:400 italic 15px 'EB Garamond',serif;color:#6c6659">FAQ</span>
+</div>
+<div style="border-top:1px solid #ded7c9;max-width:52em">
+<sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+<div style="border-bottom:1px solid #ded7c9">
+<button onClick="{{ f.toggle }}" style="width:100%;background:none;border:none;cursor:pointer;display:flex;gap:16px;align-items:baseline;padding:18px 2px;text-align:left;font:500 15px/1.6 'Noto Sans TC';color:#22201c">
+<span style="flex:1">{{ f.q }}</span>
+<span style="font:400 16px 'EB Garamond',serif;color:#6c6659">{{ f.mark }}</span>
+</button>
+<sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+<p style="font:400 14px/1.9 'Noto Sans TC';color:#4a463d;margin:0;padding:0 40px 20px 2px;max-width:44em;text-wrap:pretty">{{ f.a }}</p>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:56px 0;display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:30em">
+<h2 style="font:700 clamp(23px,3vw,30px)/1.35 'Noto Serif TC',serif;margin:0;text-wrap:pretty">先去看看有什麼課</h2>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0">不用先註冊也能瀏覽，報名時再留手機就好。</p>
+</div>
+<a href="./StepGo Homepage.dc.html" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px 22px;font-size:14px;font-weight:500">瀏覽課程 →</a>
+</section>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用試算</a><a href="#terms" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Homepage.dc.html" style="color:#4a463d">課程列表</a><a href="#faq" style="color:#4a463d">常見問題</a><a href="#refund" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="#arch" style="color:#4a463d">系統架構</a><a href="./StepGo Homepage.dc.html" style="color:#4a463d">關於學步</a></div>
+</footer>
+</div>
+
+<div style="position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:50">
+<sc-if value="{{ owlOpen }}" hint-placeholder-val="{{ false }}">
+<div style="width:272px;background:#fdfbf6;border:1px solid #22201c;border-radius:4px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(34,32,28,.13)">
+<div style="font:700 13.5px 'Noto Serif TC',serif">要我幫你看哪一件事？</div>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ded7c9;padding-top:11px;font-size:13px">
+<a href="#refund">我想退課</a>
+<a href="#faq">ATM 繳費期限過了</a>
+<a href="#top">通知沒收到</a>
+</div>
+</div>
+</sc-if>
+<button onClick="{{ toggleOwl }}" onMouseEnter="{{ openOwl }}" onMouseLeave="{{ closeOwl }}" style="display:flex;align-items:center;gap:9px;background:#fdfbf6;border:1px solid #22201c;border-radius:99px;padding:8px 15px 8px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';color:#22201c;box-shadow:0 4px 14px rgba(34,32,28,.1)" style-hover="background:#f2ece0">
+<img src="./assets/owl-icon.png" alt="貓頭鷹" style="width:32px;height:32px;border-radius:50%;border:1px solid #22201c;object-fit:cover;flex:none">
+<span>{{ owlLabel }}</span>
+</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;refundDays&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:7,&quot;min&quot;:3,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;天&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;退費規則&quot;},&quot;refundPct&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:70,&quot;min&quot;:30,&quot;max&quot;:100,&quot;step&quot;:10,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;退費規則&quot;}}">
+class Component extends DCLogic {
+  state = { tab: 0, owlOpen: false, openFaq: 0 };
+  renderVals() {
+    const days = this.props.refundDays ?? 7;
+    const pct = this.props.refundPct ?? 70;
+    const tabData = [
+      { label: "待繳費", title: "待繳費", desc: "已經報名但還沒付款的課。ATM 訂單會顯示虛擬帳號與繳費期限，期限前沒繳會提醒你一次。", rule: "payment_status = pending" },
+      { label: "即將上課", title: "即將上課", desc: "付款完成、上課時間還沒到的課。開課前會收到上課提醒。", rule: "payment_status = paid 且 場次時間 > 現在" },
+      { label: "已結束", title: "已結束", desc: "已經上完的課，記錄留在這裡，付款證明隨時可以下載。", rule: "payment_status = paid 且 場次時間 < 現在" },
+      { label: "已退款", title: "已取消／已退款", desc: "退課完成或自行取消的課，含退款金額與處理時間。", rule: "退款工單已完成，或學生自行取消" }
+    ];
+    const t = tabData[this.state.tab];
+    const faqData = [
+      { q: "報名一定要填 Email 嗎？", a: "不強制，但建議填。Email 是繳費提醒、開課提醒與退款結果的主要投遞管道。沒填也不會漏掉通知，只是必須登入會員中心才看得到記錄。" },
+      { q: "ATM 繳費期限過了會怎樣？", a: "訂單會失效，名額釋放。想上這堂課需要重新報名，重新取得一組虛擬帳號。" },
+      { q: "轉帳完要回報嗎？", a: "不用。銀行確認後金流商會通知系統，繳費狀態自動更新，通常數小時內，最慢隔天。" },
+      { q: "沒有信用卡可以報名嗎？", a: "看課程。老師可以只開 ATM、只開信用卡或兩者都開，報名頁只會顯示這堂課可用的方式。" },
+      { q: "一定要綁 LINE 嗎？", a: "不用。LINE 推播是加值，綁了會多一個提醒管道，不綁一樣收得到 Email 與站內通知。" },
+      { q: "退款多久會拿到錢？", a: "信用卡由系統向金流商申請退刷，依發卡行作業時間。ATM 訂單需人工轉帳，學步確認帳戶後轉回並回填憑證。" }
+    ];
+    return {
+      owlOpen: this.state.owlOpen,
+      owlLabel: this.state.owlOpen ? "先不用，謝謝" : "問貓頭鷹",
+      toggleOwl: () => this.setState(s => ({ owlOpen: !s.owlOpen })),
+      openOwl: () => this.setState({ owlOpen: true }),
+      closeOwl: () => this.setState({ owlOpen: false }),
+      tabTitle: t.title, tabDesc: t.desc, tabRule: t.rule,
+      tabs: tabData.map((d, i) => ({
+        label: d.label,
+        bg: i === this.state.tab ? "#22201c" : "transparent",
+        fg: i === this.state.tab ? "#f7f4ee" : "#4a463d",
+        pick: () => this.setState({ tab: i })
+      })),
+      faqs: faqData.map((d, i) => ({
+        q: d.q, a: d.a,
+        open: this.state.openFaq === i,
+        mark: this.state.openFaq === i ? "−" : "+",
+        toggle: () => this.setState(s => ({ openFaq: s.openFaq === i ? -1 : i }))
+      })),
+      refundRuleText: "開課前 " + days + " 天以上申請，退 " + pct + "%；期限內由老師審核，逾期系統自動駁回但你仍可申訴。",
+      steps: [
+        { n: "01", t: "找課", d: "課程列表可依日期與類型篩選，詳情頁寫明場次時間、地點與退費規則。", note: "不用註冊也能瀏覽" },
+        { n: "02", t: "報名付款", d: "留手機（必填）與 Email（建議填），選擇這堂課開放的付款方式完成付款。", note: "ATM 會給你虛擬帳號與期限" },
+        { n: "03", t: "上課", d: "報名成功會收到確認，開課前收到提醒。所有課程都在會員中心的「我的課程」。", note: "付款證明可下載列印" }
+      ],
+      refundFlow: [
+        { n: "01", t: "線上申請", d: "在訂單頁提出退課，填寫原因。" },
+        { n: "02", t: "系統試算", d: "依課程退費規則自動判斷是否在期限內、可退多少。" },
+        { n: "03", t: "老師審核", d: "核准或駁回，需要填理由，雙方看得到同一份留言記錄。" },
+        { n: "04", t: "不服可升級", d: "被駁回後你可以選擇接受結案，或升級給學步仲裁做最終裁決。" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

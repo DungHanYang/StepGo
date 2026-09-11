@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#e8e3d9;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}</style></helmet>
+
+<div style="padding:44px 48px 70px;display:flex;flex-direction:column;gap:34px">
+
+<header style="display:flex;flex-direction:column;gap:10px;max-width:46em">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.24em;color:#6c6659;text-transform:uppercase">Mobile · iPhone 402pt</div>
+<h1 style="font:700 30px/1.3 'Noto Serif TC',serif;margin:0">手機版：五個關鍵畫面</h1>
+<p style="font:400 14.5px/1.85 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">對外頁面（首頁、課程）用收合選單的網頁式導覽；學生後台改成底部 tab bar，因為那是會反覆回來的地方，手指要搆得到。老師後台維持桌機優先，手機上只保留通知與退課核准的入口。</p>
+</header>
+
+<div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap">
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">01 首頁</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;overflow:auto;background:#f7f4ee;padding-top:54px">
+<div style="display:flex;align-items:center;gap:9px;padding:10px 18px 12px;border-bottom:1px solid #ded7c9;position:sticky;top:0;background:#f7f4ee;z-index:3">
+<div style="width:32px;height:32px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 14px 'Noto Serif TC',serif;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 14px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 9px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span>
+</div>
+<div style="margin-left:auto;display:flex;flex-direction:column;gap:4px;padding:8px">
+<span style="width:19px;height:1.5px;background:#22201c;display:block"></span>
+<span style="width:19px;height:1.5px;background:#22201c;display:block"></span>
+</div>
+</div>
+<div style="padding:26px 22px 30px;display:flex;flex-direction:column;gap:16px">
+<div style="font:400 10.5px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">Learn, one step at a time</div>
+<h2 style="font:700 27px/1.38 'Noto Serif TC',serif;margin:0;text-wrap:pretty">開一堂課，<br>錢的事我們算給你看</h2>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0">從定價那一刻就知道實拿多少。手續費、退款成本、撥款轉帳費，全部攤開。</p>
+</div>
+<div style="padding:0 22px 26px;display:flex;flex-direction:column;gap:11px">
+<a href="#teacher" style="background:#a7622c;color:#fff;border-radius:3px;padding:15px;text-align:center;font:500 15px 'Noto Sans TC'">我要開課 →</a>
+<a href="#student" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:15px;text-align:center;font:500 15px 'Noto Sans TC'">我要找課 →</a>
+</div>
+<div style="border-top:1px solid #ded7c9;padding:24px 22px;background:#fdfbf6;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:9px"><h3 style="font:700 16px 'Noto Serif TC',serif;margin:0">一堂 3,000 的課</h3><span style="font:400 italic 13px 'EB Garamond',serif;color:#6c6659">實拿</span></div>
+<div style="display:flex;flex-direction:column;gap:8px;font:400 13.5px 'Noto Sans TC'">
+<div style="display:flex;justify-content:space-between"><span style="color:#6c6659">平台服務費 10%</span><span style="font-family:ui-monospace,Menlo,monospace;color:#8a4b3f">−300</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:#6c6659">信用卡 2.89%</span><span style="font-family:ui-monospace,Menlo,monospace;color:#8a4b3f">−87</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:#6c6659">撥款轉帳費</span><span style="font-family:ui-monospace,Menlo,monospace;color:#8a4b3f">−20</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #22201c;padding-top:10px;margin-top:2px"><span style="font:500 14px 'Noto Sans TC'">實拿</span><span style="font:600 24px 'EB Garamond',serif">2,593</span></div>
+</div>
+</div>
+<div style="padding:24px 22px 40px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:10px"><h3 style="font:700 16px 'Noto Serif TC',serif;margin:0">正在招生</h3><a href="#courses" style="margin-left:auto;font-size:13px">全部 →</a></div>
+<div style="display:flex;gap:13px;overflow:auto;padding-bottom:4px">
+<div style="flex:none;width:182px;display:flex;flex-direction:column;gap:8px">
+<div style="height:112px;border-radius:3px;background:#efeade;border:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:400 11px 'Noto Sans TC';color:#9a9487">課程主視覺</div>
+<div style="font:500 14px/1.45 'Noto Sans TC';text-wrap:pretty">從零開始的木工手作</div>
+<div style="font:400 12px 'Noto Sans TC';color:#6c6659">陳彥霖 · 台北</div>
+<div style="font:600 17px 'EB Garamond',serif">3,000</div>
+</div>
+<div style="flex:none;width:182px;display:flex;flex-direction:column;gap:8px">
+<div style="height:112px;border-radius:3px;background:#efeade;border:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:400 11px 'Noto Sans TC';color:#9a9487">課程主視覺</div>
+<div style="font:500 14px/1.45 'Noto Sans TC';text-wrap:pretty">給上班族的鋼筆字練習課</div>
+<div style="font:400 12px 'Noto Sans TC';color:#6c6659">林思如 · 線上</div>
+<div style="font:600 17px 'EB Garamond',serif">1,800</div>
+</div>
+</div>
+</div>
+</div>
+</x-import>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">02 課程列表</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;overflow:auto;background:#f7f4ee;padding-top:54px">
+<div style="display:flex;align-items:center;gap:12px;padding:10px 18px 12px;border-bottom:1px solid #ded7c9;position:sticky;top:0;background:#f7f4ee;z-index:3">
+<span style="font:700 17px 'Noto Serif TC',serif">課程</span>
+<div style="margin-left:auto;display:flex;flex-direction:column;gap:4px;padding:8px"><span style="width:19px;height:1.5px;background:#22201c;display:block"></span><span style="width:19px;height:1.5px;background:#22201c;display:block"></span></div>
+</div>
+<div style="display:flex;gap:8px;overflow:auto;padding:13px 18px;border-bottom:1px solid #ded7c9">
+<span style="flex:none;border:1px solid #22201c;background:#efeade;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC'">全部</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">可用 ATM</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">可刷卡</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">線上課</span>
+</div>
+<div style="padding:18px 18px 44px;display:flex;flex-direction:column;gap:22px">
+<sc-for list="{{ mobileCourses }}" as="c" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:start">
+<div style="height:88px;border-radius:3px;background:#efeade;border:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:400 10.5px 'Noto Sans TC';color:#9a9487">主視覺</div>
+<div style="min-width:0;display:flex;flex-direction:column;gap:5px">
+<span style="font:400 10.5px 'Noto Sans TC';color:#6c6659;letter-spacing:.06em">{{ c.pay }} · {{ c.date }}</span>
+<span style="font:500 14.5px/1.45 'Noto Sans TC';color:#22201c;text-wrap:pretty">{{ c.title }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ c.teacher }} · {{ c.place }}</span>
+<div style="display:flex;align-items:baseline;gap:9px;padding-top:2px"><span style="font:600 17px 'EB Garamond',serif">{{ c.price }}</span><span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ c.seats }}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-import>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">03 課程詳情 · 報名列固定在底</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;position:relative;background:#f7f4ee">
+<div style="height:100%;overflow:auto;padding-top:54px;padding-bottom:104px;box-sizing:border-box">
+<div style="height:196px;background:#efeade;border-bottom:1px solid #ded7c9;display:flex;align-items:center;justify-content:center;font:400 11px 'Noto Sans TC';color:#9a9487">課程主視覺</div>
+<div style="padding:20px 22px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;gap:7px;flex-wrap:wrap;font:400 10.5px 'Noto Sans TC';color:#6c6659">
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">ATM · 信用卡</span>
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">零基礎</span>
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">4 堂・12 小時</span>
+</div>
+<h2 style="font:700 22px/1.38 'Noto Serif TC',serif;margin:0;text-wrap:pretty">從零開始的木工手作：做一張小板凳</h2>
+<p style="font:400 14px/1.9 'Noto Sans TC';color:#4a463d;margin:0">四堂課完成一張可以帶回家的小板凳。全程使用工作室的機具與材料，不需自備工具。</p>
+</div>
+<div style="padding:0 22px 20px;display:flex;flex-direction:column;gap:9px;font:400 13.5px/1.6 'Noto Sans TC'">
+<sc-for list="{{ detailFacts }}" as="f" hint-placeholder-count="5">
+<div style="display:flex;gap:14px;border-bottom:1px solid #ece6da;padding-bottom:8px"><span style="color:#6c6659;width:58px;flex:none">{{ f.k }}</span><span style="color:#22201c">{{ f.v }}</span></div>
+</sc-for>
+</div>
+<div style="padding:4px 22px 20px;display:flex;flex-direction:column;gap:12px">
+<h3 style="font:700 16px 'Noto Serif TC',serif;margin:0">退費規則</h3>
+<sc-for list="{{ detailRefund }}" as="r" hint-placeholder-count="4">
+<div style="display:flex;justify-content:space-between;font:400 13.5px 'Noto Sans TC';color:#4a463d;border-bottom:1px solid #ece6da;padding-bottom:8px"><span>{{ r.when }}</span><span style="color:#22201c;font-weight:500">{{ r.amount }}</span></div>
+</sc-for>
+<p style="font:400 12px/1.75 'Noto Sans TC';color:#6c6659;margin:0">繳費期限：報名後 3 日內完成付款，逾期名額自動釋出。</p>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fdfbf6;border-top:1px solid #ded7c9;padding:14px 20px 40px;display:flex;align-items:center;gap:14px">
+<div style="display:flex;flex-direction:column;line-height:1.25">
+<span style="font:600 22px 'EB Garamond',serif">3,000</span>
+<span style="font:400 11px 'Noto Sans TC';color:#6c6659">剩 4 位</span>
+</div>
+<a href="#enroll" style="margin-left:auto;background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px 26px;font:500 15px 'Noto Sans TC'">報名 →</a>
+</div>
+</div>
+</x-import>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">04 學生後台 · 我的課程</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;position:relative;background:#f7f4ee">
+<div style="height:100%;overflow:auto;padding-top:54px;padding-bottom:108px;box-sizing:border-box">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 20px 13px;border-bottom:1px solid #ded7c9">
+<span style="font:700 17px 'Noto Serif TC',serif">我的課程</span>
+<div style="margin-left:auto;width:30px;height:30px;border-radius:50%;background:#1e3339;display:flex;align-items:center;justify-content:center;font:600 12px 'Noto Serif TC',serif;color:#dfe7e6">林</div>
+</div>
+<div style="margin:16px 18px;border:1px solid #2f5560;border-radius:4px;background:#fdfbf6;padding:16px 18px;display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#2f5560"></span><span style="font:500 11px 'Noto Sans TC';letter-spacing:.12em;color:#2f5560">下一堂課</span><span style="margin-left:auto;font:400 12px 'Noto Sans TC';color:#6c6659">還有 39 天</span></div>
+<div style="font:700 17px/1.4 'Noto Serif TC',serif;text-wrap:pretty">從零開始的木工手作：做一張小板凳</div>
+<div style="font:400 12.5px/1.7 'Noto Sans TC';color:#4a463d">10/20（一）19:00 ｜ 第 1 堂・木料、工具與安全<br>台北市大同區承德路二段</div>
+</div>
+<div style="margin:0 18px 16px;border:1px solid #a7622c;border-radius:4px;background:#fdf7f0;padding:15px 18px;display:flex;flex-direction:column;gap:8px">
+<span style="font:500 11px 'Noto Sans TC';letter-spacing:.1em;color:#8a4b3f">待完成付款 · 保留至 09/13 23:59</span>
+<span style="font:500 14.5px/1.5 'Noto Sans TC'">手沖咖啡入門：從磨豆到萃取</span>
+<span style="font:400 12.5px/1.7 'Noto Sans TC';color:#4a463d">ATM <span style="font-family:ui-monospace,Menlo,monospace">812-0093 4471 2280</span> ｜ NT$ 2,400</span>
+<div style="display:flex;gap:9px;padding-top:3px">
+<span style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:9px 14px;font:500 12.5px 'Noto Sans TC'">改用信用卡付</span>
+<span style="border:1px solid #ded7c9;color:#4a463d;border-radius:3px;padding:9px 13px;font:400 12.5px 'Noto Sans TC'">複製帳號</span>
+</div>
+</div>
+<div style="padding:0 18px">
+<sc-for list="{{ mobileMine }}" as="c" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:5px;padding:14px 0;border-top:1px solid #ece6da">
+<div style="display:flex;align-items:center;gap:8px"><span style="font:500 10.5px 'Noto Sans TC';color:{{ c.stFg }};background:{{ c.stBg }};border-radius:2px;padding:2px 7px">{{ c.status }}</span><span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#2f5560">{{ c.action }} →</span></div>
+<span style="font:500 14.5px/1.45 'Noto Sans TC';text-wrap:pretty">{{ c.title }}</span>
+<span style="font:400 12px/1.6 'Noto Sans TC';color:#6c6659">{{ c.meta }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fdfbf6;border-top:1px solid #ded7c9;padding:9px 8px 30px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
+<sc-for list="{{ tabsHome }}" as="t" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0">
+<span style="width:20px;height:20px;border:1.5px solid {{ t.color }};border-radius:{{ t.radius }};display:block"></span>
+<span style="font:{{ t.font }};color:{{ t.color }}">{{ t.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</x-import>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">05 學生後台 · 付款紀錄</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;position:relative;background:#f7f4ee">
+<div style="height:100%;overflow:auto;padding-top:54px;padding-bottom:108px;box-sizing:border-box">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 20px 13px;border-bottom:1px solid #ded7c9">
+<span style="font:700 17px 'Noto Serif TC',serif">付款紀錄</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">6 筆</span>
+</div>
+<div style="display:flex;gap:8px;overflow:auto;padding:13px 18px;border-bottom:1px solid #ded7c9">
+<span style="flex:none;border:1px solid #2f5560;background:#e3ecec;color:#2f5560;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC'">全部</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">已成立</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">處理中</span>
+<span style="flex:none;border:1px solid #ded7c9;border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';color:#4a463d">退款</span>
+</div>
+<div style="padding:0 18px">
+<sc-for list="{{ mobileOrders }}" as="o" hint-placeholder-count="6">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #ece6da">
+<div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+<span style="font:400 14px/1.4 'Noto Sans TC';color:#22201c;text-wrap:pretty">{{ o.title }}</span>
+<span style="font:400 11.5px 'Noto Sans TC';color:#6c6659">{{ o.id }} ｜ {{ o.date }} ｜ {{ o.method }}</span>
+</div>
+<div style="text-align:right;flex:none">
+<div style="font:500 14px ui-monospace,Menlo,monospace;color:{{ o.amtColor }}">{{ o.amount }}</div>
+<div style="font:500 11px 'Noto Sans TC';color:{{ o.stFg }}">{{ o.status }}</div>
+</div>
+</div>
+</sc-for>
+<p style="font:400 12px/1.8 'Noto Sans TC';color:#6c6659;margin:16px 0 34px">所有金額皆為你實際支付的數字，平台不向學生額外收取手續費。</p>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fdfbf6;border-top:1px solid #ded7c9;padding:9px 8px 30px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
+<sc-for list="{{ tabsOrders }}" as="t" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0">
+<span style="width:20px;height:20px;border:1.5px solid {{ t.color }};border-radius:{{ t.radius }};display:block"></span>
+<span style="font:{{ t.font }};color:{{ t.color }}">{{ t.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</x-import>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font:500 13px 'Noto Sans TC';color:#4a463d">06 老師後台 · 通知</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;overflow:auto;background:#f7f4ee;padding-top:54px">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 20px 13px;border-bottom:1px solid #ded7c9">
+<span style="font:700 17px 'Noto Serif TC',serif">通知</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#a7622c">3 則未讀</span>
+</div>
+<div style="padding:0 18px">
+<sc-for list="{{ teacherNotifs }}" as="n" hint-placeholder-count="6">
+<div style="display:flex;gap:12px;align-items:flex-start;padding:15px 0;border-bottom:1px solid #ece6da;background:{{ n.bg }}">
+<span style="width:8px;height:8px;border-radius:50%;background:{{ n.dot }};flex:none;margin-top:6px"></span>
+<div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:500 10.5px 'Noto Sans TC';color:{{ n.tagFg }};background:{{ n.tagBg }};border-radius:2px;padding:2px 7px">{{ n.tag }}</span>
+<span style="margin-left:auto;font:400 11px 'Noto Sans TC';color:#6c6659">{{ n.time }}</span>
+</div>
+<span style="font:500 14px/1.5 'Noto Sans TC';color:#22201c;text-wrap:pretty">{{ n.title }}</span>
+<span style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659">{{ n.body }}</span>
+</div>
+</div>
+</sc-for>
+<p style="font:400 12px/1.8 'Noto Sans TC';color:#6c6659;margin:16px 0 40px">通知同時會寄到 Email；加入 LINE 官方帳號可收到相同內容，不需額外付費。</p>
+</div>
+</div>
+</x-import>
+</div>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const TAB_DEFS = [
+  { label: "課程", radius: "3px" },
+  { label: "我的課程", radius: "3px" },
+  { label: "付款", radius: "50%" },
+  { label: "帳號", radius: "50%" }
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    const tabs = active => TAB_DEFS.map(t => ({
+      label: t.label, radius: t.radius,
+      color: t.label === active ? "#2f5560" : "#9a9487",
+      font: (t.label === active ? "500" : "400") + " 10.5px 'Noto Sans TC'"
+    }));
+    return {
+      tabsHome: tabs("我的課程"),
+      tabsOrders: tabs("付款"),
+      mobileCourses: [
+        { title:"從零開始的木工手作：做一張小板凳", teacher:"陳彥霖", place:"台北・大同", pay:"ATM · 信用卡", date:"10/20 開課", price:"3,000", seats:"剩 4 位" },
+        { title:"給上班族的鋼筆字練習課", teacher:"林思如", place:"線上", pay:"信用卡", date:"10/26 開課", price:"1,800", seats:"剩 9 位" },
+        { title:"手沖咖啡入門：從磨豆到萃取", teacher:"黃柏睿", place:"台中・西區", pay:"ATM · 信用卡", date:"11/02 開課", price:"2,400", seats:"剩 2 位" },
+        { title:"植物染基礎：藍染方巾兩件", teacher:"吳曉恩", place:"宜蘭・員山", pay:"ATM · 信用卡", date:"11/08 開課", price:"2,200", seats:"剩 6 位" }
+      ],
+      detailFacts: [
+        { k:"開課日", v:"2026/10/20（一）" },
+        { k:"時間", v:"每週一 19:00–22:00" },
+        { k:"地點", v:"台北市大同區承德路二段" },
+        { k:"人數", v:"上限 8 人" },
+        { k:"材料", v:"含木料與五金" }
+      ],
+      detailRefund: [
+        { when:"開課前 14 日以上", amount:"全額退費" },
+        { when:"開課前 7–13 日", amount:"退 70%" },
+        { when:"開課前 6 日內", amount:"退 30%" },
+        { when:"開課後", amount:"不退費" }
+      ],
+      mobileMine: [
+        { title:"植物染基礎：藍染方巾兩件", meta:"吳曉恩 ｜ 11/08 開課 ｜ 退課申請處理中", status:"退課中", stBg:"#efeade", stFg:"#6c6659", action:"看進度" },
+        { title:"給上班族的鋼筆字練習課", meta:"林思如 ｜ 07/26–08/30 ｜ 錄影可看到 11/30", status:"已完課", stBg:"#f7f4ee", stFg:"#4a463d", action:"看錄影" }
+      ],
+      mobileOrders: [
+        { id:"EN-24810", title:"從零開始的木工手作", date:"09/08", method:"信用卡", amount:"3,000", status:"已成立", amtColor:"#22201c", stFg:"#2f5560" },
+        { id:"EN-24822", title:"手沖咖啡入門", date:"09/10", method:"ATM", amount:"2,400", status:"待付款", amtColor:"#22201c", stFg:"#a7622c" },
+        { id:"EN-24779", title:"植物染基礎", date:"08/28", method:"信用卡", amount:"2,200", status:"退課中", amtColor:"#22201c", stFg:"#a7622c" },
+        { id:"EN-24702", title:"給上班族的鋼筆字練習課", date:"07/14", method:"信用卡", amount:"1,800", status:"已完課", amtColor:"#22201c", stFg:"#2f5560" },
+        { id:"RF-01108", title:"用手機把食物拍好看", date:"06/30", method:"信用卡", amount:"−1,175", status:"已退款", amtColor:"#8a4b3f", stFg:"#8a4b3f" },
+        { id:"EN-24655", title:"用手機把食物拍好看", date:"06/22", method:"信用卡", amount:"1,200", status:"已退款", amtColor:"#22201c", stFg:"#8a4b3f" }
+      ],
+      teacherNotifs: [
+        { tag:"退課", tagBg:"#f6ece2", tagFg:"#8a4b3f", title:"周思彤 申請退課，剩 4 小時回覆", body:"手沖咖啡入門：從磨豆到萃取 ｜ 申請退 1,235 元，逾期系統將自動核定。", time:"09:12", dot:"#a7622c", bg:"#fdf7f0" },
+        { tag:"仲裁", tagBg:"#e7e1d5", tagFg:"#4a463d", title:"AB-00042 已升級平台仲裁", body:"你與周思彤就退費比例無法達成共識，平台將於 3 個工作日內裁定。", time:"昨天 21:40", dot:"#22201c", bg:"#fdf7f0" },
+        { tag:"審核", tagBg:"#eae4d4", tagFg:"#7a6a3c", title:"「進階榫接：小邊几」審核通過", body:"課程已開放報名，可在「我的課程」查看報名狀況。", time:"昨天 10:05", dot:"#22201c", bg:"#fdf7f0" },
+        { tag:"撥款", tagBg:"#e3ecec", tagFg:"#2f5560", title:"9 月撥款已入帳 NT$ 6,470", body:"國泰世華 **** 4821，同行轉帳費 10 元已扣除。", time:"09/05", dot:"#ded7c9", bg:"#fdfbf6" },
+        { tag:"驗證", tagBg:"#e3ecec", tagFg:"#2f5560", title:"身分驗證已通過", body:"課程頁現在會顯示「已完成身分驗證」。", time:"09/01", dot:"#ded7c9", bg:"#fdfbf6" },
+        { tag:"退課", tagBg:"#e7e1d5", tagFg:"#4a463d", title:"何柏勳 的退課申請已完成", body:"你已核准，退款 1,400 元已於 09/02 匯出。", time:"08/29", dot:"#ded7c9", bg:"#fdfbf6" }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

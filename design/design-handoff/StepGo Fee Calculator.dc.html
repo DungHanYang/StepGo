@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}input[type=range]{accent-color:#a7622c}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.pairgrid{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.wrap{padding:0 18px}.pairgrid{grid-template-columns:1fr}}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</div>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Homepage.dc.html" style="color:#4a463d">首頁</a>
+<a href="./StepGo For Teachers.dc.html" style="color:#4a463d">給老師</a>
+<a href="#top" style="color:#22201c;font-weight:500;border-bottom:1.5px solid #a7622c;padding-bottom:2px">費用試算</a>
+<a href="./StepGo For Students.dc.html" style="color:#4a463d">給學生</a>
+</nav>
+<div style="display:flex;align-items:center;gap:14px;font-size:12.5px;color:#6c6659">
+<span style="display:flex;gap:6px"><span style="color:#22201c;font-weight:500">繁中</span><span>·</span><span>EN</span></span>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</div>
+</header>
+
+<section id="top" style="padding:52px 0 36px;display:flex;flex-direction:column;gap:16px;max-width:36em">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">Fee calculator</div>
+<h1 style="font:700 clamp(30px,4.2vw,44px)/1.28 'Noto Serif TC',serif;margin:0;text-wrap:pretty">定價之前，先算清楚實拿</h1>
+<p style="font:400 15.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0">輸入售價與報名人數，四層成本與撥款金額即時算出來。也可以反過來——先說你想實拿多少，我們算出該定的價格。</p>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;align-items:start;padding-bottom:52px">
+
+<div style="border:1px solid #ded7c9;background:#fdfbf6;border-radius:4px;padding:26px;display:flex;flex-direction:column;gap:24px">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.18em;color:#6c6659">條件設定　INPUTS</div>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><label style="font:500 13.5px 'Noto Sans TC';color:#4a463d">課程售價</label><span style="font:600 20px 'EB Garamond',serif">{{ priceStr }} 元</span></div>
+<input type="range" min="300" max="20000" step="100" value="{{ price }}" onChange="{{ onPrice }}" style="width:100%" />
+<input type="number" value="{{ price }}" onChange="{{ onPrice }}" style="border:1px solid #ded7c9;background:#fff;border-radius:3px;padding:9px 12px;font:500 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box" />
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><label style="font:500 13.5px 'Noto Sans TC';color:#4a463d">預估報名人數</label><span style="font:600 20px 'EB Garamond',serif">{{ seats }} 人</span></div>
+<input type="range" min="1" max="60" step="1" value="{{ seats }}" onChange="{{ onSeats }}" style="width:100%" />
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<label style="font:500 13.5px 'Noto Sans TC';color:#4a463d">付款方式</label>
+<div style="display:flex;gap:9px;flex-wrap:wrap">
+<sc-for list="{{ methods }}" as="m" hint-placeholder-count="3">
+<button onClick="{{ m.pick }}" style="flex:1 1 90px;border:1px solid #22201c;border-radius:3px;padding:10px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
+</sc-for>
+</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">「兩者都開」以一半一半估算，實際依學生選擇而定。</p>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<label style="font:500 13.5px 'Noto Sans TC';color:#4a463d">你的撥款銀行帳戶</label>
+<div style="display:flex;gap:9px">
+<button onClick="{{ pickSame }}" style="flex:1;border:1px solid #22201c;border-radius:3px;padding:10px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';background:{{ sameBg }};color:{{ sameFg }}">同一家銀行</button>
+<button onClick="{{ pickCross }}" style="flex:1;border:1px solid #22201c;border-radius:3px;padding:10px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';background:{{ crossBg }};color:{{ crossFg }}">其他銀行</button>
+</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">{{ bankNote }}</p>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:22px">
+
+<div style="border:1.5px solid #22201c;border-radius:4px;padding:26px;background:#fdfbf6;display:flex;flex-direction:column;gap:18px">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.18em;color:#6c6659">單筆訂單　PER ORDER</div>
+<div style="display:flex;flex-direction:column;gap:11px;font:400 13.5px 'Noto Sans TC'">
+<div style="display:flex;justify-content:space-between;color:#4a463d"><span>學生付款</span><span style="font:500 16px 'EB Garamond',serif;color:#22201c">{{ priceStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 金流手續費（{{ gatewayLabel }}）</span><span style="font:500 16px 'EB Garamond',serif">−{{ gatewayStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 平台服務費（{{ pctStr }}，以原價計）</span><span style="font:500 16px 'EB Garamond',serif">−{{ platformStr }}</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid #22201c;padding-top:14px">
+<span style="font:700 15px 'Noto Serif TC',serif">單筆淨額</span>
+<span style="font:600 32px 'EB Garamond',serif">{{ netUnitStr }}</span>
+</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">撥款轉帳手續費是每次撥款批次收一筆，不逐筆分攤，所以列在下方批次結算。</p>
+</div>
+
+<div style="border:1px solid #ded7c9;border-radius:4px;padding:26px;display:flex;flex-direction:column;gap:18px">
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.18em;color:#6c6659">本期撥款批次　PAYOUT BATCH</div>
+<div style="display:flex;flex-direction:column;gap:11px;font:400 13.5px 'Noto Sans TC'">
+<div style="display:flex;justify-content:space-between;color:#4a463d"><span>{{ seats }} 筆訂單淨額加總</span><span style="font:500 16px 'EB Garamond',serif;color:#22201c">{{ netTotalStr }}</span></div>
+<div style="display:flex;justify-content:space-between;color:#6c6659"><span>− 撥款轉帳手續費（單筆）</span><span style="font:500 16px 'EB Garamond',serif">−{{ transferStr }}</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid #22201c;padding-top:14px">
+<span style="font:700 15px 'Noto Serif TC',serif">你實收</span>
+<span style="font:600 32px 'EB Garamond',serif">{{ payoutStr }}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:20px;border-top:1px solid #ded7c9;padding-top:14px;font:400 12.5px/1.6 'Noto Sans TC';color:#6c6659">
+<div>總營收（毛額）<br><span style="font:500 15px 'EB Garamond',serif;color:#22201c">{{ grossStr }}</span></div>
+<div>總扣除成本<br><span style="font:500 15px 'EB Garamond',serif;color:#22201c">{{ costTotalStr }}</span></div>
+<div>實拿佔比<br><span style="font:500 15px 'EB Garamond',serif;color:#22201c">{{ keepRateStr }}</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:48px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:12px">
+<h2 style="font:700 21px 'Noto Serif TC',serif;margin:0">反過來算</h2>
+<span style="font:400 italic 14px 'EB Garamond',serif;color:#6c6659">Reverse pricing</span>
+</div>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0">先決定你要實拿多少，我們算出該定的售價。轉帳手續費不計入單筆反推，因為它在批次層級。</p>
+<div style="border:1px solid #ded7c9;background:#fdfbf6;border-radius:4px;padding:22px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<label style="font:500 13.5px 'Noto Sans TC';color:#4a463d">我每位學生想實拿（元）</label>
+<input type="number" value="{{ target }}" onChange="{{ onTarget }}" style="border:1px solid #ded7c9;background:#fff;border-radius:3px;padding:11px 13px;font:600 18px 'EB Garamond',serif;color:#22201c;width:100%;box-sizing:border-box" />
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid #22201c;padding-top:14px">
+<span style="font:700 14px 'Noto Serif TC',serif">建議售價</span>
+<span style="font:600 30px 'EB Garamond',serif">{{ suggestStr }}</span>
+</div>
+<button onClick="{{ applySuggest }}" style="border:1px solid #22201c;background:transparent;color:#22201c;border-radius:3px;padding:11px;cursor:pointer;font:500 13.5px 'Noto Sans TC'" style-hover="background:#efeade">套用到上方試算</button>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:12px">
+<h2 style="font:700 21px 'Noto Serif TC',serif;margin:0">兩種付款方式的差額</h2>
+<span style="font:400 italic 14px 'EB Garamond',serif;color:#6c6659">Side by side</span>
+</div>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:0">以目前售價 {{ priceStr }} 元計算，單筆淨額差 {{ diffStr }} 元。ATM 較省手續費，信用卡通常報名轉換率較高。</p>
+<div style="border:1px solid #ded7c9;border-radius:4px;overflow:hidden;background:#fdfbf6">
+<div style="display:grid;grid-template-columns:1fr 1fr" class="pairgrid">
+<div style="padding:20px;display:flex;flex-direction:column;gap:7px">
+<span style="font:700 15px 'Noto Serif TC',serif">ATM</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">金流 1%，最低 15 元</span>
+<span style="font:600 26px 'EB Garamond',serif">{{ atmNetStr }}</span>
+</div>
+<div style="padding:20px;display:flex;flex-direction:column;gap:7px;border-left:1px solid #ded7c9">
+<span style="font:700 15px 'Noto Serif TC',serif">信用卡</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">金流 {{ creditRateStr }}</span>
+<span style="font:600 26px 'EB Garamond',serif">{{ creditNetStr }}</span>
+</div>
+</div>
+<div style="border-top:1px solid #ded7c9;padding:14px 20px;font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659">ATM 有繳費期限，學生可能忘記繳；信用卡一次點擊完成。差額不大時，通常選信用卡的成交量划算。</div>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid #ded7c9;padding:44px 0 56px;display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between">
+<p style="font:400 13px/1.8 'Noto Sans TC';color:#6c6659;margin:0;max-width:44em">試算採固定費率公式，實際費率以金流商公告與你的平台方案為準。平台服務費以課程原價計算。撥款轉帳手續費同行通常免收，跨行約 15–30 元，每次撥款批次一筆。</p>
+<a href="./StepGo For Teachers.dc.html" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:13px 20px;font-size:14px;font-weight:500;white-space:nowrap">回費用與撥款說明</a>
+</section>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="#top" style="color:#4a463d">費用試算</a><a href="#terms" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Homepage.dc.html" style="color:#4a463d">課程列表</a><a href="./StepGo For Students.dc.html" style="color:#4a463d">常見問題</a><a href="./StepGo For Students.dc.html" style="color:#4a463d">退費政策</a></div>
+</footer>
+</div>
+
+<div style="position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:50">
+<sc-if value="{{ owlOpen }}" hint-placeholder-val="{{ false }}">
+<div style="width:272px;background:#fdfbf6;border:1px solid #22201c;border-radius:4px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(34,32,28,.13)">
+<div style="font:700 13.5px 'Noto Serif TC',serif">這個試算怎麼看</div>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ded7c9;padding-top:11px;font:400 13px/1.7 'Noto Sans TC';color:#4a463d">
+<span>單筆淨額不含轉帳費，轉帳費在批次結算時扣一次。</span>
+<span>人數越多，那筆轉帳費被攤得越薄。</span>
+<span>選同一家銀行的帳戶，這筆費用直接是零。</span>
+</div>
+</div>
+</sc-if>
+<button onClick="{{ toggleOwl }}" onMouseEnter="{{ openOwl }}" onMouseLeave="{{ closeOwl }}" style="display:flex;align-items:center;gap:9px;background:#fdfbf6;border:1px solid #22201c;border-radius:99px;padding:8px 15px 8px 8px;cursor:pointer;font:500 13px 'Noto Sans TC';color:#22201c;box-shadow:0 4px 14px rgba(34,32,28,.1)" style-hover="background:#f2ece0">
+<img src="./assets/owl-icon.png" alt="貓頭鷹" style="width:32px;height:32px;border-radius:50%;border:1px solid #22201c;object-fit:cover;flex:none">
+<span>{{ owlLabel }}</span>
+</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;platformFeePct&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:10,&quot;min&quot;:5,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;費率設定&quot;},&quot;creditRate&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:2.89,&quot;min&quot;:2,&quot;max&quot;:3.5,&quot;step&quot;:0.01,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;費率設定&quot;},&quot;transferFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:20,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:5,&quot;unit&quot;:&quot;元&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;費率設定&quot;}}">
+class Component extends DCLogic {
+  state = { price: 3000, seats: 12, method: "both", sameBank: false, target: 2500, owlOpen: false };
+  gateway(price, method, creditRate) {
+    const atm = Math.max(15, Math.round(price * 0.01));
+    const credit = Math.round(price * creditRate / 100);
+    if (method === "atm") return atm;
+    if (method === "credit") return credit;
+    return Math.round((atm + credit) / 2);
+  }
+  renderVals() {
+    const pct = this.props.platformFeePct ?? 10;
+    const creditRate = this.props.creditRate ?? 2.89;
+    const crossFee = this.props.transferFee ?? 20;
+    const price = Math.max(0, Number(this.state.price) || 0);
+    const seats = Math.max(1, Number(this.state.seats) || 1);
+    const target = Math.max(0, Number(this.state.target) || 0);
+    const transfer = this.state.sameBank ? 0 : crossFee;
+    const gateway = this.gateway(price, this.state.method, creditRate);
+    const platform = Math.round(price * pct / 100);
+    const netUnit = Math.max(0, price - gateway - platform);
+    const netTotal = netUnit * seats;
+    const payout = Math.max(0, netTotal - transfer);
+    const gross = price * seats;
+    const f = n => Math.round(n).toLocaleString("en-US");
+    const on = "#22201c", onFg = "#f7f4ee", off = "transparent", offFg = "#4a463d";
+    const rate = this.state.method === "atm" ? 0.01 : this.state.method === "credit" ? creditRate / 100 : (0.01 + creditRate / 100) / 2;
+    const suggest = Math.ceil(target / Math.max(0.01, 1 - rate - pct / 100) / 10) * 10;
+    const atmNet = Math.max(0, price - this.gateway(price, "atm", creditRate) - platform);
+    const creditNet = Math.max(0, price - this.gateway(price, "credit", creditRate) - platform);
+    const labels = { atm: "只收 ATM", credit: "只收信用卡", both: "兩者都開" };
+    return {
+      price: this.state.price, seats: this.state.seats, target: this.state.target,
+      priceStr: f(price), gatewayStr: f(gateway), platformStr: f(platform),
+      netUnitStr: f(netUnit), netTotalStr: f(netTotal), transferStr: f(transfer),
+      payoutStr: f(payout), grossStr: f(gross), costTotalStr: f(gross - payout),
+      keepRateStr: gross ? Math.round(payout / gross * 100) + "%" : "—",
+      pctStr: pct + "%", creditRateStr: creditRate + "%",
+      gatewayLabel: this.state.method === "atm" ? "1%，最低 15 元" : this.state.method === "credit" ? creditRate + "%" : "兩者平均",
+      atmNetStr: f(atmNet), creditNetStr: f(creditNet), diffStr: f(Math.abs(atmNet - creditNet)),
+      suggestStr: f(suggest),
+      bankNote: this.state.sameBank ? "同行轉帳免手續費，系統自動判斷不收這筆。" : "跨行轉帳約 15–30 元，每次撥款批次收一筆。",
+      sameBg: this.state.sameBank ? on : off, sameFg: this.state.sameBank ? onFg : offFg,
+      crossBg: this.state.sameBank ? off : on, crossFg: this.state.sameBank ? offFg : onFg,
+      methods: ["atm", "credit", "both"].map(m => ({
+        label: labels[m],
+        bg: this.state.method === m ? on : off,
+        fg: this.state.method === m ? onFg : offFg,
+        pick: () => this.setState({ method: m })
+      })),
+      onPrice: e => this.setState({ price: e.target.value }),
+      onSeats: e => this.setState({ seats: e.target.value }),
+      onTarget: e => this.setState({ target: e.target.value }),
+      applySuggest: () => this.setState({ price: suggest }),
+      pickSame: () => this.setState({ sameBank: true }),
+      pickCross: () => this.setState({ sameBank: false }),
+      owlOpen: this.state.owlOpen,
+      owlLabel: this.state.owlOpen ? "先不用，謝謝" : "怎麼看這張表",
+      toggleOwl: () => this.setState(s => ({ owlOpen: !s.owlOpen })),
+      openOwl: () => this.setState({ owlOpen: true }),
+      closeOwl: () => this.setState({ owlOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

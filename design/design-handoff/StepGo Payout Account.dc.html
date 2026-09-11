@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+.cols{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:34px;align-items:start;padding-bottom:72px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.sched{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#ded7c9;border:1px solid #ded7c9;border-radius:4px;overflow:hidden}
+.hist{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:12px 18px;align-items:baseline}
+@media(max-width:980px){
+ .cols{grid-template-columns:1fr;gap:24px}
+ .cols aside{position:static !important}
+ .sched{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+ .wrap{padding:0 16px}
+ .sched{grid-template-columns:1fr}
+ .hist{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
+ .hist .dim{display:none}
+}
+</style></helmet>
+
+<div class="wrap">
+
+<header style="display:flex;align-items:center;gap:15px;padding:18px 0;border-bottom:1px solid #ded7c9;flex-wrap:wrap">
+<a href="./StepGo Teacher Dashboard.dc.html" style="display:flex;align-items:center;gap:10px;color:#22201c">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 15px 'Noto Serif TC',serif;flex:none">學</div>
+<span style="font:700 16px 'Noto Serif TC',serif">學步</span>
+</a>
+<span style="font:400 13px 'Noto Sans TC';color:#6c6659;border-left:1px solid #ded7c9;padding-left:15px">撥款帳戶設定</span>
+<span style="margin-left:auto;font:400 12.5px 'Noto Sans TC';color:#6c6659">陳彥霖 · 老師帳號</span>
+</header>
+
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:26px 0 22px;flex-wrap:wrap">
+<div style="min-width:0">
+<div style="font:600 12px 'EB Garamond',serif;letter-spacing:.2em;color:#a7622c;padding-bottom:7px">PAYOUT ACCOUNT</div>
+<h1 style="font:700 27px/1.35 'Noto Serif TC',serif;margin:0">撥款帳戶</h1>
+<p style="font:400 14px/1.85 'Noto Sans TC';color:#4a463d;margin:8px 0 0;max-width:38em;text-wrap:pretty">學生的款項由學步代收，每月 5 日結算後撥到這個帳戶。戶名必須與身分驗證的姓名一致，否則銀行會退回。</p>
+</div>
+<a href="./StepGo Fee Calculator.dc.html" style="font:400 13.5px 'Noto Sans TC';color:#4a463d;border:1px solid #ded7c9;border-radius:3px;padding:10px 16px;white-space:nowrap">費用試算 →</a>
+</div>
+
+<div class="cols">
+<main style="min-width:0;display:flex;flex-direction:column;gap:22px">
+
+<section style="border:1px solid {{ cardBorder }};border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:18px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">01</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">目前的收款帳戶</h2>
+<span style="margin-left:auto;font:400 12px 'Noto Sans TC';color:{{ statusFg }};border:1px solid {{ statusBorder }};background:{{ statusBg }};border-radius:2px;padding:3px 10px">{{ statusLabel }}</span>
+</div>
+
+<sc-if value="{{ isView }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:18px">
+<div class="grid2">
+<sc-for list="{{ account }}" as="a" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#7c7668">{{ a.k }}</span>
+<span style="font:{{ a.font }};color:#22201c">{{ a.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="border:1px solid #cfdcdd;background:#f2f6f6;border-radius:4px;padding:14px 16px;display:flex;gap:11px;align-items:flex-start">
+<span style="width:17px;height:17px;border-radius:50%;border:1px solid #2f5560;color:#2f5560;font:600 10px 'EB Garamond',serif;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px">✓</span>
+<span style="font:400 12.5px/1.85 'Noto Sans TC';color:#4a463d;text-wrap:pretty">戶名「陳彥霖」與身分驗證（KYC-02418）相符，2026/09/13 核對完成。</span>
+</div>
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+<button onClick="{{ goEdit }}" style="border:none;background:#a7622c;color:#fff;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC';cursor:pointer">變更帳戶</button>
+<span style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;text-wrap:pretty">變更後需重新核對戶名，核對期間的撥款會延到下一個週期。</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:17px">
+<div class="grid2">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">銀行</span>
+<select value="{{ bank }}" onChange="{{ setBank }}" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<sc-for list="{{ banks }}" as="b" hint-placeholder-count="4"><option value="{{ b }}">{{ b }}</option></sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">分行</span>
+<input value="{{ branch }}" onChange="{{ setBranch }}" placeholder="例：南京東路分行" style="border:1px solid #ded7c9;border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">帳號</span>
+<input value="{{ acct }}" onChange="{{ setAcct }}" placeholder="僅輸入數字" style="border:1px solid {{ acctBorder }};border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px ui-monospace,Menlo,monospace;color:#22201c;width:100%;box-sizing:border-box">
+<span style="font:400 11.5px/1.6 'Noto Sans TC';color:{{ acctHintFg }}">{{ acctHint }}</span>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">戶名</span>
+<input value="{{ holder }}" onChange="{{ setHolder }}" placeholder="須與身分驗證姓名相同" style="border:1px solid {{ holderBorder }};border-radius:3px;background:#f7f4ee;padding:11px 12px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<span style="font:500 11.5px/1.6 'Noto Sans TC';color:{{ holderHintFg }}">{{ holderHint }}</span>
+</label>
+</div>
+
+<div style="border:1px dashed #c9c2b2;border-radius:4px;background:#f7f4ee;padding:18px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c">存摺封面影本</span>
+<span style="font:400 11.5px/1.65 'Noto Sans TC';color:#6c6659">需看得到銀行、分行、帳號與戶名 · JPG／PNG／PDF 10MB 內</span>
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d;border:1px solid #ded7c9;border-radius:3px;padding:6px 13px;margin-top:3px">選擇檔案或拖曳至此</span>
+</div>
+
+<div style="border:1px solid #e2cdb7;border-radius:4px;background:#fdf7f0;padding:14px 16px;display:flex;gap:11px;align-items:flex-start">
+<span style="width:17px;height:17px;border-radius:50%;border:1px solid #a7622c;color:#a7622c;font:600 11px 'EB Garamond',serif;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px">!</span>
+<span style="font:400 12.5px/1.85 'Noto Sans TC';color:#4a463d;text-wrap:pretty">只接受本人名下的個人帳戶，不接受代收、公司或他人帳戶。戶名與驗證姓名不符時系統會擋下，避免撥款退回。</span>
+</div>
+
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+<button onClick="{{ submit }}" disabled="{{ cantSubmit }}" style="border:none;background:{{ submitBg }};color:#fff;border-radius:3px;padding:13px 24px;font:500 14px 'Noto Sans TC';cursor:{{ submitCursor }}">送出核對</button>
+<button onClick="{{ goView }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 18px;font:400 14px 'Noto Sans TC';cursor:pointer">取消</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPending }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:36em;text-wrap:pretty">新帳戶已送出，銀行端戶名核對約需 1–2 個工作日。核對完成前，撥款仍會匯入原本的舊帳戶。</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px">
+<sc-for list="{{ compare }}" as="c" hint-placeholder-count="2">
+<div style="border:1px solid {{ c.border }};border-radius:4px;background:{{ c.bg }};padding:16px 17px;display:flex;flex-direction:column;gap:7px">
+<span style="font:500 11.5px 'Noto Sans TC';letter-spacing:.1em;color:{{ c.tagFg }}">{{ c.tag }}</span>
+<span style="font:500 14.5px 'Noto Sans TC';color:#22201c">{{ c.bank }}</span>
+<span style="font:400 13.5px ui-monospace,Menlo,monospace;color:#4a463d">{{ c.acct }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">{{ c.note }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<button onClick="{{ goView }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:3px;padding:13px 18px;font:400 14px 'Noto Sans TC';cursor:pointer">取消這次變更</button>
+<a href="./StepGo Teacher Dashboard.dc.html" style="font:400 13.5px 'Noto Sans TC';color:#6c6659;align-self:center">回後台</a>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRejected }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;gap:11px;align-items:flex-start;border:1px solid #eddcd5;background:#fdf5f2;border-radius:4px;padding:16px 18px">
+<span style="width:20px;height:20px;border-radius:50%;border:1.5px solid #8a4b3f;color:#8a4b3f;font:600 12px 'EB Garamond',serif;display:flex;align-items:center;justify-content:center;flex:none">!</span>
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font:500 14px 'Noto Sans TC';color:#22201c">銀行端核對失敗，帳戶已被退回</span>
+<span style="font:400 12.5px/1.8 'Noto Sans TC';color:#4a463d;text-wrap:pretty">{{ rejectReason }}</span>
+</div>
+</div>
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:16px 17px;display:flex;flex-direction:column;gap:7px;max-width:320px">
+<span style="font:500 11.5px 'Noto Sans TC';letter-spacing:.1em;color:#8a4b3f">被退回的帳戶</span>
+<span style="font:500 14.5px 'Noto Sans TC';color:#22201c">{{ bank }}</span>
+<span style="font:400 13.5px ui-monospace,Menlo,monospace;color:#4a463d">{{ acct }}</span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">戶名：{{ holder }}</span>
+</div>
+<p style="font:400 13.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:36em;text-wrap:pretty">這期撥款仍會匯入原本的舊帳戶，不會遺失。請確認戶名與身分驗證姓名完全一致後重新送出，避免再次被退回。</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<button onClick="{{ goEdit }}" style="border:none;background:#a7622c;color:#fff;border-radius:3px;padding:13px 22px;font:500 14px 'Noto Sans TC';cursor:pointer">重新填寫帳戶</button>
+<a href="./StepGo Teacher Dashboard.dc.html" style="font:400 13.5px 'Noto Sans TC';color:#6c6659;align-self:center">回後台</a>
+</div>
+</div>
+</sc-if>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:17px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">02</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">下次撥款</h2>
+</div>
+<div class="sched">
+<sc-for list="{{ next }}" as="n" hint-placeholder-count="4">
+<div style="background:#fdfbf6;padding:16px 17px;display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px 'Noto Sans TC';color:#7c7668">{{ n.k }}</span>
+<span style="font:{{ n.font }};color:{{ n.fg }}">{{ n.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline">
+<span style="color:#a7622c;font:400 13px 'Noto Sans TC'">—</span>
+<span style="font:400 13px/1.85 'Noto Sans TC';color:#4a463d;text-wrap:pretty">{{ r }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:24px 26px;display:flex;flex-direction:column;gap:15px">
+<div style="border-bottom:1px solid #ece6da;padding-bottom:13px;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
+<span style="font:600 12px 'EB Garamond',serif;letter-spacing:.18em;color:#a7622c">03</span>
+<h2 style="font:700 17px 'Noto Serif TC',serif;margin:0">撥款紀錄</h2>
+<a href="./StepGo Teacher Dashboard.dc.html" style="margin-left:auto;font:400 12.5px 'Noto Sans TC'">全部明細</a>
+</div>
+<div class="hist">
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+<span style="font:500 13.5px 'Noto Sans TC';color:#22201c;min-width:0">{{ h.date }}</span>
+<span class="dim" style="font:400 12.5px 'Noto Sans TC';color:#6c6659;white-space:nowrap">{{ h.acct }}</span>
+<span class="dim" style="font:400 12.5px 'Noto Sans TC';color:#6c6659;white-space:nowrap">{{ h.fee }}</span>
+<span style="font:{{ h.font }};color:{{ h.fg }};white-space:nowrap;text-align:right">{{ h.amount }}</span>
+</sc-for>
+</div>
+</section>
+
+</main>
+
+<aside style="position:sticky;top:22px;border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:22px;display:flex;flex-direction:column;gap:15px">
+<h3 style="font:700 15.5px 'Noto Serif TC',serif;margin:0">一筆學費怎麼變成撥款</h3>
+<div style="display:flex;flex-direction:column;gap:0">
+<sc-for list="{{ flow }}" as="f" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid {{ f.line }}">
+<span style="font:{{ f.font }};color:{{ f.fg }};min-width:0">{{ f.k }}</span>
+<span style="font:{{ f.numFont }};color:{{ f.fg }};white-space:nowrap">{{ f.v }}</span>
+</div>
+</sc-for>
+</div>
+<p style="font:400 12.5px/1.85 'Noto Sans TC';color:#6c6659;margin:0;text-wrap:pretty">以 NT$2,400 課程、信用卡付款、同行撥款為例。完整算法見<a href="./StepGo Fee Calculator.dc.html">費用試算</a>。</p>
+<div style="border-top:1px solid #ded7c9;padding-top:14px;font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659">帳戶被銀行退回時，款項會退回學步帳上並在下個週期重撥，不另收費。</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;view&quot;,&quot;edit&quot;,&quot;pending&quot;,&quot;rejected&quot;],&quot;default&quot;:&quot;view&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const BANKS = ["（013）國泰世華商業銀行", "（822）中國信託商業銀行", "（808）玉山商業銀行", "（012）台北富邦商業銀行", "（700）中華郵政"];
+const KYC_NAME = "陳彥霖";
+
+class Component extends DCLogic {
+  state = { view: null, bank: BANKS[1], branch: "民生分行", acct: "", holder: "" };
+  renderVals() {
+    const view = this.state.view ?? (this.props.view ?? "view");
+    const go = v => () => { this.setState({ view: v }); window.scrollTo(0, 0); };
+    const set = k => e => this.setState({ [k]: e.target.value });
+    const { bank, branch, acct, holder } = this.state;
+    const acctOk = /^[0-9 ]{10,}$/.test(acct);
+    const holderOk = holder.trim() === KYC_NAME;
+    const ready = acctOk && holderOk;
+    const status = {
+      view: { label: "已核對", fg: "#2f5560", bg: "#f2f6f6", border: "#9fbcc0", card: "#ded7c9" },
+      edit: { label: "編輯中", fg: "#a7622c", bg: "#fdf7f0", border: "#e2cdb7", card: "#a7622c" },
+      pending: { label: "核對中 · 1–2 個工作日", fg: "#8a4b3f", bg: "#fdf7f0", border: "#e2cdb7", card: "#a7622c" },
+      rejected: { label: "已被退回", fg: "#8a4b3f", bg: "#fdf5f2", border: "#eddcd5", card: "#8a4b3f" }
+    }[view];
+
+    return {
+      isView: view === "view", isEdit: view === "edit", isPending: view === "pending", isRejected: view === "rejected",
+      rejectReason: "銀行回覆戶名「" + (this.state.holder || "陳彥霖 商號") + "」與身分驗證姓名「陳彥霖」不一致，代收帳戶或商號帳戶皆無法通過核對。",
+      goView: go("view"), goEdit: go("edit"),
+      submit: () => { if (ready) { this.setState({ view: "pending" }); window.scrollTo(0, 0); } },
+      cantSubmit: !ready,
+      submitBg: ready ? "#a7622c" : "#c8b9a6",
+      submitCursor: ready ? "pointer" : "not-allowed",
+      statusLabel: status.label, statusFg: status.fg, statusBg: status.bg, statusBorder: status.border,
+      cardBorder: status.card,
+
+      account: [
+        { k: "銀行", v: "（013）國泰世華商業銀行", font: "500 15px 'Noto Sans TC'" },
+        { k: "分行", v: "內湖分行", font: "400 14.5px 'Noto Sans TC'" },
+        { k: "帳號", v: "0932 1055 4821", font: "400 14.5px ui-monospace,Menlo,monospace" },
+        { k: "戶名", v: "陳彥霖", font: "500 15px 'Noto Sans TC'" }
+      ],
+
+      banks: BANKS, bank, branch, acct, holder,
+      setBank: set("bank"), setBranch: set("branch"), setAcct: set("acct"), setHolder: set("holder"),
+      acctBorder: acct === "" ? "#ded7c9" : acctOk ? "#2f5560" : "#8a4b3f",
+      acctHint: acct === "" ? "不含符號，10–14 碼" : acctOk ? "✓ 格式正確" : "帳號至少 10 碼數字",
+      acctHintFg: acct === "" ? "#7c7668" : acctOk ? "#2f5560" : "#8a4b3f",
+      holderBorder: holder === "" ? "#ded7c9" : holderOk ? "#2f5560" : "#8a4b3f",
+      holderHint: holder === "" ? "驗證姓名：陳彥霖" : holderOk ? "✓ 與身分驗證姓名一致" : "與身分驗證姓名「陳彥霖」不符，無法送出",
+      holderHintFg: holder === "" ? "#7c7668" : holderOk ? "#2f5560" : "#8a4b3f",
+
+      compare: [
+        { tag: "目前使用", bank: "（013）國泰世華商業銀行", acct: "0932 1055 4821", note: "9 月 5 日撥款仍匯入此帳戶", border: "#ded7c9", bg: "#f7f4ee", tagFg: "#6c6659" },
+        { tag: "核對中", bank: bank, acct: acct || "0000 0000 0000", note: "核對通過後自動於下個週期生效", border: "#a7622c", bg: "#fdf7f0", tagFg: "#a7622c" }
+      ],
+
+      next: [
+        { k: "結算日", v: "2026 / 10 / 05", font: "500 16px 'EB Garamond',serif", fg: "#22201c" },
+        { k: "累計可撥", v: "NT$ 6,480", font: "600 18px 'EB Garamond',serif", fg: "#a7622c" },
+        { k: "轉帳費（同行）", v: "－NT$ 10", font: "400 15px 'EB Garamond',serif", fg: "#4a463d" },
+        { k: "預計入帳", v: "NT$ 6,470", font: "600 18px 'EB Garamond',serif", fg: "#22201c" }
+      ],
+      rules: [
+        "每月 5 日結算上個月已完課的款項，遇例假日順延至次一營業日。",
+        "累計金額未達 NT$500 不撥款，會累積到下個月一併結算。",
+        "轉帳費同行 NT$10、跨行 NT$20，由撥款金額中扣除。",
+        "戶名與身分驗證姓名不一致時，撥款會被銀行退回並延後一個週期。"
+      ],
+      history: [
+        { date: "2026 / 09 / 05", acct: "國泰世華 ****4821", fee: "同行 －10", amount: "NT$ 12,230", font: "500 14px 'EB Garamond',serif", fg: "#22201c" },
+        { date: "2026 / 08 / 05", acct: "國泰世華 ****4821", fee: "同行 －10", amount: "NT$ 8,690", font: "500 14px 'EB Garamond',serif", fg: "#22201c" },
+        { date: "2026 / 07 / 05", acct: "—", fee: "未達 500 元", amount: "累計至次月", font: "400 13px 'Noto Sans TC'", fg: "#7c7668" },
+        { date: "2026 / 06 / 05", acct: "國泰世華 ****4821", fee: "同行 －10", amount: "NT$ 5,410", font: "500 14px 'EB Garamond',serif", fg: "#22201c" }
+      ],
+      flow: [
+        { k: "學生付款", v: "NT$ 2,400", font: "400 13px 'Noto Sans TC'", numFont: "400 14px 'EB Garamond',serif", fg: "#4a463d", line: "#ece6da" },
+        { k: "平台服務費 10%", v: "－240", font: "400 13px 'Noto Sans TC'", numFont: "400 14px 'EB Garamond',serif", fg: "#4a463d", line: "#ece6da" },
+        { k: "信用卡 2.89%", v: "－69", font: "400 13px 'Noto Sans TC'", numFont: "400 14px 'EB Garamond',serif", fg: "#4a463d", line: "#ece6da" },
+        { k: "轉帳費（同行）", v: "－10", font: "400 13px 'Noto Sans TC'", numFont: "400 14px 'EB Garamond',serif", fg: "#4a463d", line: "#ded7c9" },
+        { k: "實際入帳", v: "NT$ 2,081", font: "500 13.5px 'Noto Sans TC'", numFont: "600 16px 'EB Garamond',serif", fg: "#22201c", line: "transparent" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

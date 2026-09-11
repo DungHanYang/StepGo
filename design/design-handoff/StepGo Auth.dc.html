@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,0.82fr);min-height:100vh;align-items:stretch}
+.aside{background:#efeade;border-right:1px solid #ded7c9;padding:44px 52px;display:flex;flex-direction:column;gap:26px;justify-content:center}
+.panel{padding:44px 56px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.form{width:100%;max-width:400px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:980px){
+ .split{grid-template-columns:1fr;min-height:0}
+ .aside{border-right:none;border-bottom:1px solid #ded7c9;padding:30px 26px;gap:18px}
+ .panel{padding:32px 26px 56px}
+}
+@media(max-width:560px){
+ .aside{padding:24px 18px}
+ .panel{padding:26px 18px 48px}
+ .row2{grid-template-columns:1fr}
+}
+</style></helmet>
+
+<div class="split">
+
+<aside class="aside">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#f7f4ee;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659">STEPGO</span>
+</div>
+</div>
+<h1 style="font:700 clamp(24px,3.2vw,34px)/1.34 'Noto Serif TC',serif;margin:0;max-width:14em;text-wrap:pretty">{{ asideTitle }}</h1>
+<p style="font:400 14.5px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:26em;text-wrap:pretty">{{ asideBody }}</p>
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #ded7c9;padding-top:20px">
+<sc-for list="{{ asidePoints }}" as="p" hint-placeholder-count="3">
+<div style="display:flex;gap:11px;font:400 13.5px/1.8 'Noto Sans TC';color:#4a463d"><span style="color:{{ p.mark }};flex:none">—</span><span>{{ p.text }}</span></div>
+</sc-for>
+</div>
+</aside>
+
+<section class="panel">
+<div class="form">
+
+<div style="display:flex;gap:0;border-bottom:1px solid #ded7c9;margin-bottom:6px">
+<sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+<button onClick="{{ m.onClick }}" style="border:none;background:none;cursor:pointer;padding:10px 2px;margin-right:26px;font:{{ m.font }};color:{{ m.fg }};border-bottom:2px solid {{ m.line }}">{{ m.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">你想先做哪件事？</span>
+<div class="row2">
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="2">
+<button onClick="{{ r.onClick }}" style="text-align:left;cursor:pointer;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:4px;padding:14px 15px;display:flex;flex-direction:column;gap:4px">
+<span style="font:500 14.5px 'Noto Sans TC';color:{{ r.titleFg }}">{{ r.title }}</span>
+<span style="font:400 12px/1.6 'Noto Sans TC';color:#6c6659">{{ r.note }}</span>
+</button>
+</sc-for>
+</div>
+<span style="font:400 12px/1.7 'Noto Sans TC';color:#6c6659">兩種身分共用一個帳號，之後隨時可以切換。開課需要額外完成身分驗證。</span>
+</div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ fields }}" as="f" hint-placeholder-count="3">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#4a463d">{{ f.label }}</span>
+<input type="{{ f.type }}" value="{{ f.value }}" readOnly="{{ true }}" placeholder="{{ f.placeholder }}" style="border:1px solid #ded7c9;border-radius:3px;background:#fdfbf6;padding:12px 13px;font:400 14.5px 'Noto Sans TC';color:#22201c;width:100%;box-sizing:border-box">
+<sc-if value="{{ f.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px/1.6 'Noto Sans TC';color:#6c6659">{{ f.hint }}</span></sc-if>
+</label>
+</sc-for>
+</div>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font:400 13px 'Noto Sans TC';color:#4a463d">
+<span style="width:16px;height:16px;border:1px solid #a7622c;border-radius:2px;background:#a7622c;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none">✓</span>
+保持登入
+</label>
+<a href="#forgot" style="margin-left:auto;font-size:13px">忘記密碼</a>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+<span style="width:16px;height:16px;border:1px solid #a7622c;border-radius:2px;background:#a7622c;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:3px">✓</span>
+<span style="font:400 12.5px/1.8 'Noto Sans TC';color:#4a463d">我已閱讀並同意<a href="./StepGo Terms.dc.html">服務條款</a>與<a href="./StepGo Terms.dc.html">隱私權政策</a>。</span>
+</label>
+</sc-if>
+
+<button style="border:none;background:{{ ctaBg }};color:#f7f4ee;border-radius:3px;padding:14px;font:500 15px 'Noto Sans TC';cursor:pointer;width:100%">{{ ctaLabel }}</button>
+
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<div style="border:1px solid #ded7c9;border-radius:4px;background:#fdfbf6;padding:14px 16px;display:flex;flex-direction:column;gap:7px">
+<span style="font:500 12.5px 'Noto Sans TC';color:#22201c">{{ nextStepTitle }}</span>
+<span style="font:400 12.5px/1.75 'Noto Sans TC';color:#6c6659;text-wrap:pretty">{{ nextStepBody }}</span>
+</div>
+</sc-if>
+
+<div style="display:flex;align-items:center;gap:12px;padding:2px 0">
+<span style="flex:1;height:1px;background:#ded7c9"></span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">或</span>
+<span style="flex:1;height:1px;background:#ded7c9"></span>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ oauth }}" as="o" hint-placeholder-count="2">
+<button style="cursor:pointer;border:1px solid #ded7c9;background:#fdfbf6;border-radius:3px;padding:12px 14px;display:flex;align-items:center;gap:11px;font:400 14px 'Noto Sans TC';color:#22201c;width:100%">
+<span style="width:20px;height:20px;border-radius:3px;background:{{ o.chip }};flex:none;display:flex;align-items:center;justify-content:center;font:600 10px 'EB Garamond',serif;color:{{ o.chipFg }}">{{ o.mark }}</span>
+{{ o.label }}
+</button>
+</sc-for>
+</div>
+
+<p style="font:400 12.5px/1.8 'Noto Sans TC';color:#6c6659;margin:6px 0 0;text-align:center">{{ switchText }} <a href="#switch" onClick="{{ switchMode }}">{{ switchCta }}</a></p>
+</div>
+</section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;signup&quot;],&quot;default&quot;:&quot;login&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+class Component extends DCLogic {
+  state = { mode: null, role: "student" };
+
+  renderVals() {
+    const mode = this.state.mode ?? (this.props.mode ?? "login");
+    const role = this.state.role;
+    const isSignup = mode === "signup";
+    const teacher = role === "teacher";
+
+    const modes = [["login", "登入"], ["signup", "註冊"]].map(([k, label]) => ({
+      label,
+      onClick: () => this.setState({ mode: k }),
+      font: (mode === k ? "700" : "400") + " 16px 'Noto Serif TC',serif",
+      fg: mode === k ? "#22201c" : "#6c6659",
+      line: mode === k ? "#22201c" : "transparent"
+    }));
+
+    const roles = [
+      { k: "student", title: "我要找課", note: "報名、付款、看上課紀錄" },
+      { k: "teacher", title: "我要開課", note: "建課、收款、管理撥款" }
+    ].map(r => ({
+      ...r,
+      onClick: () => this.setState({ role: r.k }),
+      border: role === r.k ? (r.k === "teacher" ? "#a7622c" : "#2f5560") : "#ded7c9",
+      bg: role === r.k ? (r.k === "teacher" ? "#fdf3ea" : "#eef3f3") : "#fdfbf6",
+      titleFg: role === r.k ? (r.k === "teacher" ? "#8a4b3f" : "#2f5560") : "#22201c"
+    }));
+
+    const loginFields = [
+      { label: "Email", type: "email", value: "yuting.lin@example.com", placeholder: "you@example.com" },
+      { label: "密碼", type: "password", value: "••••••••••", placeholder: "" }
+    ];
+    const signupFields = [
+      { label: "姓名", type: "text", value: "", placeholder: teacher ? "與身分證件相同的本名" : "王小明",
+        hasHint: teacher, hint: "開課後撥款帳戶的戶名必須與這個名字完全一致。" },
+      { label: "Email", type: "email", value: "", placeholder: "you@example.com" },
+      { label: "手機", type: "tel", value: "", placeholder: "09xx-xxx-xxx",
+        hasHint: true, hint: teacher ? "用於身分驗證與撥款通知。" : "課程臨時異動時會用簡訊通知。" },
+      { label: "設定密碼", type: "password", value: "", placeholder: "至少 8 個字元" }
+    ];
+
+    return {
+      modes, roles, isSignup, isLogin: !isSignup,
+      fields: isSignup ? signupFields : loginFields,
+      ctaLabel: isSignup ? (teacher ? "建立帳號並開始驗證" : "建立帳號") : "登入",
+      ctaBg: isSignup && teacher ? "#a7622c" : "#22201c",
+      nextStepTitle: teacher ? "下一步：身分驗證" : "下一步：完成信箱確認",
+      nextStepBody: teacher
+        ? "建立帳號後需上傳身分證件，人工審核約 2 個工作日。驗證完成前可以先建課程草稿，但不能開放報名。"
+        : "我們會寄一封確認信到你的信箱。確認後就能報名課程，不需要額外驗證。",
+      oauth: [
+        { label: "用 Google 繼續", mark: "G", chip: "#efeade", chipFg: "#4a463d" },
+        { label: "用 Apple 繼續", mark: "", chip: "#22201c", chipFg: "#f7f4ee" }
+      ],
+      switchText: isSignup ? "已經有帳號了？" : "還沒有帳號？",
+      switchCta: isSignup ? "改為登入" : "免費註冊",
+      switchMode: (e) => { e.preventDefault(); this.setState({ mode: isSignup ? "login" : "signup" }); },
+
+      asideTitle: !isSignup
+        ? "歡迎回來"
+        : teacher ? "開一堂課，錢的事我們算給你看" : "找一堂課，費用寫在報名之前",
+      asideBody: !isSignup
+        ? "同一組帳號可以同時是老師與學生。登入後會回到你上次待的地方。"
+        : teacher
+        ? "定價那一刻就看得到實拿多少。手續費、退款成本、撥款轉帳費，全部攤開在建課頁上。"
+        : "每堂課的繳費方式、繳費期限與退費規則都寫在報名前。款項由學步代收保管，課程結束後才撥給老師。",
+      asidePoints: !isSignup
+        ? [
+            { text: "老師：管理課程、收款紀錄與撥款", mark: "#a7622c" },
+            { text: "學生：查看報名、付款與退課進度", mark: "#2f5560" },
+            { text: "忘記密碼可用註冊信箱重設", mark: "#6c6659" }
+          ]
+        : teacher
+        ? [
+            { text: "沒有上架費、沒有月費，報名成立才收服務費", mark: "#a7622c" },
+            { text: "每次撥款附完整扣除明細，報表可免費匯出", mark: "#a7622c" },
+            { text: "退課先由你處理，逾期未回覆才由系統核定", mark: "#a7622c" }
+          ]
+        : [
+            { text: "平台不向學生加收任何手續費", mark: "#2f5560" },
+            { text: "退費級距在報名前就看得到", mark: "#2f5560" },
+            { text: "退課線上申請，進度看得到", mark: "#2f5560" }
+          ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

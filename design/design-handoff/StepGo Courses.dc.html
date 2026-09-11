@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><script src="./image-slot.js"></script><style>body{margin:0;background:#f7f4ee;color:#22201c;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#a7622c;text-decoration:none}a:hover{color:#7d461b}image-slot{--is-bg:#efeade;--is-border:#ded7c9}</style></helmet>
+
+<div style="max-width:1180px;margin:0 auto;padding:0 28px">
+
+<header style="display:flex;align-items:center;gap:18px;padding:20px 0 16px;border-bottom:1px solid #ded7c9">
+<a href="./StepGo Homepage.dc.html" style="display:flex;align-items:center;gap:11px;color:#22201c">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid #22201c;background:#efeade;display:flex;align-items:center;justify-content:center;font:700 17px 'Noto Serif TC',serif;color:#22201c;flex:none">學</div>
+<div style="display:flex;flex-direction:column;line-height:1.1">
+<span style="font:700 17px 'Noto Serif TC',serif;letter-spacing:.02em">學步</span>
+<span style="font:500 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">StepGo</span>
+</div>
+</a>
+<nav style="display:flex;gap:22px;margin-left:auto;font-size:13.5px;color:#4a463d">
+<a href="./StepGo Courses.dc.html" style="color:#22201c;font-weight:500;border-bottom:1px solid #22201c;padding-bottom:2px">課程</a>
+<a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用</a>
+<a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a>
+<a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a>
+</nav>
+<a href="#login" style="border:1px solid #22201c;color:#22201c;border-radius:3px;padding:7px 15px;font-size:13px;font-weight:500">登入</a>
+</header>
+
+<sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+<div>
+<section style="padding:48px 0 30px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px">
+<div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px">
+<div style="font:400 11px 'EB Garamond',serif;letter-spacing:.22em;color:#6c6659;text-transform:uppercase">Courses</div>
+<h1 style="font:700 clamp(28px,4vw,40px)/1.3 'Noto Serif TC',serif;margin:0">正在招生的課</h1>
+<p style="font:400 14.5px/1.8 'Noto Sans TC';color:#4a463d;margin:0;max-width:32em;text-wrap:pretty">每堂課的繳費方式、繳費期限與退費規則都寫在報名前。點進課程就看得到完整條件。</p>
+</div>
+<div style="font:400 13px/1.8 'Noto Sans TC';color:#6c6659;border-left:1px solid #ded7c9;padding-left:20px">
+共 <span style="color:#22201c;font-weight:500">{{ count }}</span> 門課<br>依開課日期排序
+</div>
+</section>
+
+<section style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;border-top:1px solid #ded7c9;border-bottom:1px solid #ded7c9;padding:14px 0;margin-bottom:34px">
+<span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659;margin-right:6px">篩選</span>
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.onClick }}" style="border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};border-radius:99px;padding:6px 14px;font:400 13px 'Noto Sans TC';cursor:pointer" style-hover="border-color:#22201c">{{ f.label }}</button>
+</sc-for>
+<div style="display:flex;align-items:center;gap:8px;margin-left:auto;border:1px solid #ded7c9;border-radius:99px;padding:6px 8px 6px 14px;min-width:0">
+<input value="{{ search }}" onChange="{{ setSearch }}" placeholder="搜尋課程名稱、老師或地區" style="border:none;background:transparent;outline:none;font:400 13px 'Noto Sans TC';color:#22201c;width:200px">
+<sc-if value="{{ hasSearch }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ clearSearch }}" style="border:none;background:#efeade;color:#6c6659;border-radius:50%;width:20px;height:20px;flex:none;font:400 12px 'Noto Sans TC';cursor:pointer">×</button>
+</sc-if>
+</div>
+</section>
+
+<sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px 24px;padding-bottom:64px">
+<sc-for list="{{ courses }}" as="c" hint-placeholder-count="6">
+<article style="display:flex;flex-direction:column;gap:12px">
+<a href="#detail" onClick="{{ c.open }}" style="display:block">
+<image-slot id="{{ c.slotId }}" shape="rounded" radius="3" style="width:100%;height:158px" placeholder="課程主視覺"></image-slot>
+</a>
+<div style="display:flex;gap:8px;flex-wrap:wrap;font:400 11px 'Noto Sans TC';color:#6c6659;letter-spacing:.08em">
+<span style="border:1px solid #a7622c;color:#a7622c;border-radius:2px;padding:2px 7px">{{ c.category }}</span>
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:2px 7px">{{ c.pay }}</span>
+<span style="padding:2px 0">{{ c.date }}</span>
+</div>
+<h2 style="font:700 17px/1.45 'Noto Serif TC',serif;margin:0;text-wrap:pretty"><a href="#detail" onClick="{{ c.open }}" style="color:#22201c">{{ c.title }}</a></h2>
+<p style="font:400 13.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">{{ c.teacher }} · {{ c.place }}</p>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:auto;padding-top:8px;border-top:1px solid #ded7c9">
+<span style="font:600 20px 'EB Garamond',serif">{{ c.price }}</span>
+<span style="font:400 12px 'Noto Sans TC';color:#6c6659">{{ c.seats }}</span>
+</div>
+</article>
+</sc-for>
+</section>
+</sc-if>
+
+<sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+<section style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:64px 20px 90px;border-top:1px dashed #ded7c9">
+<div style="width:56px;height:56px;border-radius:50%;border:1px solid #ded7c9;background:#efeade;display:flex;align-items:center;justify-content:center;font:400 22px 'EB Garamond',serif;color:#6c6659">?</div>
+<h2 style="font:700 20px/1.5 'Noto Serif TC',serif;margin:0">找不到符合的課程</h2>
+<p style="font:400 14px/1.9 'Noto Sans TC';color:#4a463d;margin:0;max-width:30em;text-wrap:pretty">「<span style="color:#22201c;font-weight:500">{{ search }}</span>」目前沒有對到任何課程，可能是關鍵字太具體，或篩選條件太窄。</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding-top:4px">
+<button onClick="{{ clearSearch }}" style="border:1px solid #22201c;background:#22201c;color:#f7f4ee;border-radius:99px;padding:9px 18px;font:400 13.5px 'Noto Sans TC';cursor:pointer">清除搜尋文字</button>
+<button onClick="{{ resetFilter }}" style="border:1px solid #ded7c9;background:transparent;color:#4a463d;border-radius:99px;padding:9px 18px;font:400 13.5px 'Noto Sans TC';cursor:pointer">回到全部課程</button>
+</div>
+<div style="border-top:1px solid #ded7c9;padding-top:20px;margin-top:8px;display:flex;flex-direction:column;gap:6px">
+<span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">也可以試試</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.onClick }}" style="border:1px solid #ded7c9;background:#fdfbf6;color:#4a463d;border-radius:99px;padding:7px 14px;font:400 13px 'Noto Sans TC';cursor:pointer">{{ s.label }}</button>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<div id="detail">
+<div style="padding:22px 0 0;font-size:13px;color:#6c6659">
+<a href="#list" onClick="{{ backToList }}">← 回課程列表</a>
+</div>
+
+<section style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:44px;padding:26px 0 56px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+<image-slot id="{{ d.slotId }}" shape="rounded" radius="3" style="width:100%;height:300px" placeholder="課程主視覺"></image-slot>
+<div style="display:flex;gap:8px;flex-wrap:wrap;font:400 11px 'Noto Sans TC';color:#6c6659;letter-spacing:.08em">
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">{{ d.pay }}</span>
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">{{ d.level }}</span>
+<span style="border:1px solid #ded7c9;border-radius:2px;padding:3px 8px">{{ d.sessions }}</span>
+</div>
+<h1 style="font:700 clamp(26px,3.4vw,36px)/1.32 'Noto Serif TC',serif;margin:0;text-wrap:pretty">{{ d.title }}</h1>
+<p style="font:400 15px/1.9 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ d.intro }}</p>
+
+<div style="border-top:1px solid #ded7c9;padding-top:22px;display:flex;flex-direction:column;gap:14px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0">課程安排</h2>
+<sc-for list="{{ d.schedule }}" as="s" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:92px minmax(0,1fr);gap:16px;padding-bottom:12px;border-bottom:1px solid #ece6da">
+<div style="font:500 12.5px/1.7 ui-monospace,Menlo,monospace;color:#a7622c">{{ s.when }}</div>
+<div>
+<div style="font:500 14.5px/1.6 'Noto Sans TC';color:#22201c">{{ s.title }}</div>
+<div style="font:400 13px/1.7 'Noto Sans TC';color:#6c6659">{{ s.note }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="border-top:1px solid #ded7c9;padding-top:22px;display:flex;flex-direction:column;gap:12px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0">關於老師</h2>
+<div style="display:flex;gap:18px;align-items:flex-start">
+<image-slot id="{{ d.teacherSlot }}" shape="circle" style="width:74px;height:74px;flex:none" placeholder="老師"></image-slot>
+<div style="min-width:0">
+<div style="font:700 16px 'Noto Serif TC',serif">{{ d.teacher }}</div>
+<div style="font:400 12.5px 'Noto Sans TC';color:#6c6659;margin:3px 0 8px">{{ d.teacherTitle }} · 已完成身分驗證</div>
+<p style="font:400 14px/1.8 'Noto Sans TC';color:#4a463d;margin:0;text-wrap:pretty">{{ d.teacherBio }}</p>
+</div>
+</div>
+</div>
+
+<div style="border-top:1px solid #ded7c9;padding-top:22px;display:flex;flex-direction:column;gap:12px">
+<h2 style="font:700 18px 'Noto Serif TC',serif;margin:0">退費規則</h2>
+<sc-for list="{{ d.refund }}" as="r" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 84px;gap:16px;font:400 14px/1.7 'Noto Sans TC';color:#4a463d;padding-bottom:10px;border-bottom:1px solid #ece6da">
+<span>{{ r.when }}</span>
+<span style="text-align:right;color:#22201c;font-weight:500">{{ r.amount }}</span>
+</div>
+</sc-for>
+<p style="font:400 12.5px/1.75 'Noto Sans TC';color:#6c6659;margin:0">金流手續費依實際扣除計算，退款時不重複收取。完整條件見 <a href="./StepGo Terms.dc.html">退費政策</a>。</p>
+</div>
+</div>
+
+<aside style="position:sticky;top:20px;display:flex;flex-direction:column;gap:16px;border:1px solid #22201c;border-radius:4px;background:#fdfbf6;padding:24px">
+<div>
+<div style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">課程費用</div>
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:600 34px 'EB Garamond',serif">{{ d.price }}</span><span style="font:400 13px 'Noto Sans TC';color:#6c6659">元 / 全期</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #ded7c9;padding-top:14px;font:400 13.5px/1.6 'Noto Sans TC'">
+<sc-for list="{{ d.facts }}" as="f" hint-placeholder-count="5">
+<div style="display:flex;gap:12px"><span style="color:#6c6659;width:64px;flex:none">{{ f.k }}</span><span style="color:#22201c">{{ f.v }}</span></div>
+</sc-for>
+</div>
+<div style="border-top:1px solid #ded7c9;padding-top:14px;display:flex;flex-direction:column;gap:6px">
+<div style="font:500 13px 'Noto Sans TC';color:#22201c">繳費期限</div>
+<p style="font:400 12.5px/1.7 'Noto Sans TC';color:#6c6659;margin:0">{{ d.deadline }}</p>
+</div>
+<a href="#enroll" style="background:#22201c;color:#f7f4ee;border-radius:3px;padding:14px;text-align:center;font-size:14.5px;font-weight:500">報名這門課 →</a>
+<div style="font:400 12px/1.7 'Noto Sans TC';color:#6c6659;text-align:center">{{ d.seats }}</div>
+</aside>
+</section>
+</div>
+</sc-if>
+
+<footer style="border-top:1px solid #ded7c9;padding:32px 0 48px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px;margin-right:auto">
+<span style="font:700 15px 'Noto Serif TC',serif">學步 <span style="font:500 12px 'EB Garamond',serif;letter-spacing:.2em;color:#6c6659">STEPGO</span></span>
+<span style="font:400 12.5px 'Noto Sans TC';color:#6c6659">課程平台 · 代收轉付 · 台灣</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">老師</span><a href="./StepGo For Teachers.dc.html" style="color:#4a463d">費用與撥款</a><a href="./StepGo Fee Calculator.dc.html" style="color:#4a463d">費用試算</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">合作條款</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">學生</span><a href="./StepGo Courses.dc.html" style="color:#4a463d">課程列表</a><a href="./StepGo For Students.dc.html" style="color:#4a463d">給學生</a><a href="./StepGo Terms.dc.html" style="color:#4a463d">退費政策</a></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><span style="font:400 11px 'Noto Sans TC';letter-spacing:.16em;color:#6c6659">平台</span><a href="./StepGo About.dc.html" style="color:#4a463d">關於學步</a><a href="./StepGo Wireframes.dc.html" style="color:#4a463d">線框總覽</a></div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;detail&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;檢視&quot;}}">
+const COURSES = [
+  { slotId:"c1", category:"手作工藝", title:"從零開始的木工手作：做一張小板凳", teacher:"陳彥霖", teacherTitle:"木作工作室主理人", place:"台北・大同", pay:"ATM · 信用卡", payKind:"both", date:"10/20 開課", price:"3,000", seats:"剩 4 位", level:"零基礎", sessions:"4 堂・共 12 小時",
+    intro:"從認識木料與手工具開始，四堂課完成一張可以帶回家的小板凳。全程使用工作室的機具與材料，不需自備工具。",
+    teacherBio:"做了九年家具，前四年在工廠、後五年自己開工作室。教過兩百多位第一次拿鑿刀的學生。",
+    facts:[{k:"開課日",v:"2026/10/20（一）"},{k:"時間",v:"每週一 19:00–22:00"},{k:"地點",v:"台北市大同區承德路二段"},{k:"人數",v:"上限 8 人"},{k:"材料",v:"含木料與五金"}],
+    deadline:"報名後 3 日內完成付款，逾期名額自動釋出。ATM 轉帳虛擬帳號於報名後立即發送。",
+    schedule:[{when:"第 1 堂",title:"木料、工具與安全",note:"認識常見木材，手工具握法與磨刀"},{when:"第 2 堂",title:"下料與榫接放樣",note:"畫線、鋸切、鑿榫孔"},{when:"第 3 堂",title:"組裝與校正",note:"乾組、膠合、夾持與矯正"},{when:"第 4 堂",title:"修整與塗裝",note:"砂磨、倒角、上木蠟油"}],
+    refund:[{when:"開課前 14 日以上",amount:"全額退費"},{when:"開課前 7–13 日",amount:"退 70%"},{when:"開課前 6 日內",amount:"退 30%"},{when:"開課後",amount:"不退費"}] },
+  { slotId:"c2", category:"藝術書寫", title:"給上班族的鋼筆字練習課", teacher:"林思如", teacherTitle:"書寫教學者", place:"線上", pay:"信用卡", payKind:"card", date:"10/26 開課", price:"1,800", seats:"剩 9 位", level:"入門", sessions:"6 堂・共 9 小時",
+    intro:"每週九十分鐘的線上練字課，從握筆與基本筆畫開始，目標是把日常手寫字寫得整齊好讀。",
+    teacherBio:"教硬筆字六年，學生多半是想改善工作場合手寫字的上班族。",
+    facts:[{k:"開課日",v:"2026/10/26（日）"},{k:"時間",v:"每週日 20:00–21:30"},{k:"地點",v:"線上（會後提供錄影）"},{k:"人數",v:"上限 20 人"},{k:"材料",v:"需自備鋼筆與方格紙"}],
+    deadline:"信用卡付款即時成立，報名截止至 10/24 23:59。",
+    schedule:[{when:"第 1 堂",title:"握筆與運筆",note:"筆壓、角度、坐姿"},{when:"第 2 堂",title:"基本筆畫",note:"橫豎撇捺的起收筆"},{when:"第 3 堂",title:"結構比例",note:"部件安排與重心"},{when:"第 4 堂",title:"行氣與字距",note:"整行整段的視覺節奏"},{when:"第 5 堂",title:"日常應用",note:"簽名、便條、卡片"},{when:"第 6 堂",title:"作品與講評",note:"一對一批改"}],
+    refund:[{when:"開課前 7 日以上",amount:"全額退費"},{when:"開課前 1–6 日",amount:"退 50%"},{when:"開課後",amount:"不退費"}] },
+  { slotId:"c3", category:"飲食", title:"手沖咖啡入門：從磨豆到萃取", teacher:"黃柏睿", teacherTitle:"咖啡師", place:"台中・西區", pay:"ATM · 信用卡", payKind:"both", date:"11/02 開課", price:"2,400", seats:"剩 2 位", level:"零基礎", sessions:"3 堂・共 6 小時",
+    intro:"三堂課建立一套自己沖得出來的方法：研磨度、水溫、注水節奏，每堂都實作三杯並對照風味。",
+    teacherBio:"在自家烘豆店工作七年，日常工作之一是教新進夥伴穩定沖煮。",
+    facts:[{k:"開課日",v:"2026/11/02（一）"},{k:"時間",v:"每週一 14:00–16:00"},{k:"地點",v:"台中市西區美村路一段"},{k:"人數",v:"上限 6 人"},{k:"材料",v:"含三款單品豆"}],
+    deadline:"報名後 3 日內完成付款。ATM 入帳約需 1 個工作日確認。",
+    schedule:[{when:"第 1 堂",title:"豆子與研磨",note:"烘焙度、研磨粗細對照"},{when:"第 2 堂",title:"水溫與注水",note:"悶蒸、分段注水"},{when:"第 3 堂",title:"調整與紀錄",note:"用沖煮紀錄反推問題"}],
+    refund:[{when:"開課前 10 日以上",amount:"全額退費"},{when:"開課前 3–9 日",amount:"退 60%"},{when:"開課前 2 日內",amount:"不退費"}] },
+  { slotId:"c4", category:"手作工藝", title:"植物染基礎：藍染方巾兩件", teacher:"吳曉恩", teacherTitle:"染織工作者", place:"宜蘭・員山", pay:"ATM · 信用卡", payKind:"both", date:"11/08 開課", price:"2,200", seats:"剩 6 位", level:"零基礎", sessions:"2 堂・共 7 小時",
+    intro:"從建藍到綁紮防染，兩天完成兩件自己的方巾。",
+    teacherBio:"在宜蘭經營染坊，長期與在地小農合作取得染材。",
+    facts:[{k:"開課日",v:"2026/11/08（日）"},{k:"時間",v:"11/08、11/15 各 13:00–16:30"},{k:"地點",v:"宜蘭縣員山鄉"},{k:"人數",v:"上限 10 人"},{k:"材料",v:"含棉布與染料"}],
+    deadline:"報名後 3 日內完成付款，逾期名額自動釋出。",
+    schedule:[{when:"第 1 堂",title:"建藍與試染",note:"染液狀態判斷"},{when:"第 2 堂",title:"綁紮與定色",note:"夾染、縫染、水洗定色"}],
+    refund:[{when:"開課前 14 日以上",amount:"全額退費"},{when:"開課前 3–13 日",amount:"退 50%"},{when:"開課前 2 日內",amount:"不退費"}] },
+  { slotId:"c5", category:"攝影", title:"用手機把食物拍好看", teacher:"鄭立群", teacherTitle:"商業攝影師", place:"線上", pay:"信用卡", payKind:"card", date:"11/12 開課", price:"1,200", seats:"剩 15 位", level:"入門", sessions:"2 堂・共 3 小時",
+    intro:"不買器材，用現有手機與窗邊自然光，練出穩定可複製的拍攝流程。",
+    teacherBio:"拍餐飲品牌菜單十年，近年開始教店家自己拍。",
+    facts:[{k:"開課日",v:"2026/11/12（四）"},{k:"時間",v:"11/12、11/19 各 20:00–21:30"},{k:"地點",v:"線上"},{k:"人數",v:"上限 30 人"},{k:"材料",v:"自備手機"}],
+    deadline:"信用卡付款即時成立，開課前 1 小時仍可報名。",
+    schedule:[{when:"第 1 堂",title:"光線與角度",note:"窗光方向、反光板替代品"},{when:"第 2 堂",title:"擺盤與修圖",note:"構圖規則與手機修圖流程"}],
+    refund:[{when:"開課前 3 日以上",amount:"全額退費"},{when:"開課前 2 日內",amount:"不退費"}] },
+  { slotId:"c6", category:"手作工藝", title:"陶土手捏：一套自己的餐具", teacher:"許雅涵", teacherTitle:"陶藝家", place:"高雄・鹽埕", pay:"ATM", payKind:"atm", date:"11/16 開課", price:"3,600", seats:"剩 3 位", level:"零基礎", sessions:"5 堂・共 15 小時",
+    intro:"五堂課做出一個碗、一個盤與一只杯，含素燒與釉燒，作品約課後三週領取。",
+    teacherBio:"開窯八年，擅長手捏與化妝土裝飾。",
+    facts:[{k:"開課日",v:"2026/11/16（一）"},{k:"時間",v:"每週一 18:30–21:30"},{k:"地點",v:"高雄市鹽埕區"},{k:"人數",v:"上限 8 人"},{k:"材料",v:"含陶土、釉藥與窯燒"}],
+    deadline:"僅收 ATM 轉帳，報名後 3 日內完成匯款。",
+    schedule:[{when:"第 1 堂",title:"認識土性",note:"揉土、練土、基本手勢"},{when:"第 2 堂",title:"捏碗",note:"厚薄控制"},{when:"第 3 堂",title:"捏盤與杯",note:"接把手"},{when:"第 4 堂",title:"修坯與裝飾",note:"化妝土、刻紋"},{when:"第 5 堂",title:"上釉",note:"釉色選擇與施釉"}],
+    refund:[{when:"開課前 14 日以上",amount:"全額退費"},{when:"開課前 7–13 日",amount:"退 70%"},{when:"開課前 6 日內",amount:"退 30%"},{when:"開課後",amount:"不退費"}] }
+];
+
+class Component extends DCLogic {
+  state = { view: null, openId: "c1", filter: "all", search: "" };
+  renderVals() {
+    const view = this.state.view ?? (this.props.view ?? "list");
+    const filter = this.state.filter;
+    const search = this.state.search;
+    const q = search.trim().toLowerCase();
+    const categories = [...new Set(COURSES.map(c => c.category))];
+    let list = COURSES.filter(c => {
+      if (filter === "all") return true;
+      if (filter === "online") return c.place === "線上";
+      if (filter === "atm" || filter === "card") return c.payKind === filter || c.payKind === "both";
+      return c.category === filter;
+    });
+    if (q) list = list.filter(c => (c.title + c.teacher + c.place + c.category).toLowerCase().includes(q));
+    const defs = [["all","全部"], ...categories.map(cat => [cat, cat]), ["atm","可用 ATM"],["card","可刷卡"],["online","線上課"]];
+    const filters = defs.map(([k, label]) => ({
+      label, border: filter === k ? "#22201c" : "#ded7c9",
+      bg: filter === k ? "#efeade" : "transparent",
+      fg: filter === k ? "#22201c" : "#4a463d",
+      onClick: () => this.setState({ filter: k })
+    }));
+    const d = COURSES.find(c => c.id === this.state.openId) || COURSES.find(c => c.slotId === this.state.openId) || COURSES[0];
+    const suggestions = [
+      { label: "看全部課程", onClick: () => this.setState({ filter: "all", search: "" }) },
+      { label: "只看線上課", onClick: () => this.setState({ filter: "online", search: "" }) },
+      { label: "訂閱新課通知", onClick: () => {} }
+    ];
+    return {
+      isList: view === "list", isDetail: view === "detail",
+      count: list.length, filters,
+      search, hasSearch: q.length > 0,
+      setSearch: e => this.setState({ search: e.target.value }),
+      clearSearch: () => this.setState({ search: "" }),
+      resetFilter: () => this.setState({ filter: "all", search: "" }),
+      hasResults: list.length > 0, noResults: list.length === 0,
+      suggestions,
+      courses: list.map(c => ({ ...c, open: (e) => { e.preventDefault(); this.setState({ view: "detail", openId: c.slotId }); window.scrollTo(0, 0); } })),
+      backToList: (e) => { e.preventDefault(); this.setState({ view: "list" }); window.scrollTo(0, 0); },
+      d: { ...d, slotId: d.slotId + "-hero", teacherSlot: d.slotId + "-teacher" }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
