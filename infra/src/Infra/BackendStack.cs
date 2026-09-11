@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Amazon.CDK;
 using Amazon.CDK.AWS.Apigatewayv2;
 using Amazon.CDK.AWS.CloudWatch;
@@ -35,55 +34,56 @@ namespace Infra
     {
         private const string BackendPublishRoot = "../backend/src";
 
-        private sealed record RouteSpec(string Method, string Path, string CapabilityProjectName, bool RequiresAuth);
+        private sealed record RouteSpec(string Method, string Path, bool RequiresAuth);
 
-        // Every route below mirrors the MiniRouter mappings coded in each StepGo.Api.*/Program.cs exactly —
-        // this table IS the API Gateway <-> Lambda contract, so a new endpoint must be added in both places.
+        // Every route below mirrors the MiniRouter mappings coded in the StepGo.Api */Routes.cs files
+        // exactly — this table IS the API Gateway <-> Lambda contract, so a new endpoint must be added in
+        // both places. All routes are proxied to the single StepGo.Api Lambda (see CreateApiFunction).
         private static readonly RouteSpec[] Routes =
         [
-            new("GET", "/identity/health", "StepGo.Api.Identity", false),
-            new("POST", "/users", "StepGo.Api.Identity", false),
-            new("POST", "/teachers/{teacherId}/verification", "StepGo.Api.Identity", true),
-            new("POST", "/teachers/{teacherId}/verification/review", "StepGo.Api.Identity", true),
-            new("GET", "/teachers/{teacherId}/verification", "StepGo.Api.Identity", true),
+            new("GET", "/identity/health", false),
+            new("POST", "/users", false),
+            new("POST", "/teachers/{teacherId}/verification", true),
+            new("POST", "/teachers/{teacherId}/verification/review", true),
+            new("GET", "/teachers/{teacherId}/verification", true),
 
-            new("GET", "/courses/health", "StepGo.Api.Courses", false),
-            new("POST", "/courses", "StepGo.Api.Courses", true),
-            new("POST", "/courses/{courseId}/publish", "StepGo.Api.Courses", true),
-            new("GET", "/courses/{courseId}", "StepGo.Api.Courses", false),
-            new("GET", "/teachers/{teacherId}/courses", "StepGo.Api.Courses", false),
+            new("GET", "/courses/health", false),
+            new("POST", "/courses", true),
+            new("POST", "/courses/{courseId}/publish", true),
+            new("GET", "/courses/{courseId}", false),
+            new("GET", "/teachers/{teacherId}/courses", false),
 
-            new("GET", "/orders/health", "StepGo.Api.Orders", false),
-            new("POST", "/orders", "StepGo.Api.Orders", true),
-            new("GET", "/orders/{orderId}", "StepGo.Api.Orders", true),
-            new("GET", "/students/{studentId}/orders", "StepGo.Api.Orders", true),
-            new("POST", "/webhooks/payment-notifications", "StepGo.Api.Orders", false),
+            new("GET", "/orders/health", false),
+            new("POST", "/orders", true),
+            new("GET", "/orders/{orderId}", true),
+            new("GET", "/students/{studentId}/orders", true),
+            new("POST", "/webhooks/payment-notifications", false),
 
-            new("GET", "/payouts/health", "StepGo.Api.Payouts", false),
-            new("GET", "/payout-batches/{payoutBatchId}", "StepGo.Api.Payouts", true),
-            new("GET", "/teachers/{teacherId}/payout-batches", "StepGo.Api.Payouts", true),
-            new("POST", "/payout-batches/{payoutBatchId}/mark-paid", "StepGo.Api.Payouts", true),
-            new("POST", "/payout-batches/{payoutBatchId}/mark-bank-rejected", "StepGo.Api.Payouts", true),
+            new("GET", "/payouts/health", false),
+            new("GET", "/payout-batches/{payoutBatchId}", true),
+            new("GET", "/teachers/{teacherId}/payout-batches", true),
+            new("POST", "/payout-batches/{payoutBatchId}/mark-paid", true),
+            new("POST", "/payout-batches/{payoutBatchId}/mark-bank-rejected", true),
 
-            new("GET", "/refund-tickets/health", "StepGo.Api.RefundTickets", false),
-            new("POST", "/refund-tickets", "StepGo.Api.RefundTickets", true),
-            new("GET", "/refund-tickets/{ticketId}", "StepGo.Api.RefundTickets", true),
-            new("POST", "/refund-tickets/{ticketId}/teacher-decision", "StepGo.Api.RefundTickets", true),
-            new("POST", "/refund-tickets/{ticketId}/escalate", "StepGo.Api.RefundTickets", true),
-            new("POST", "/refund-tickets/{ticketId}/admin-arbitration", "StepGo.Api.RefundTickets", true),
-            new("POST", "/refund-tickets/{ticketId}/thread", "StepGo.Api.RefundTickets", true),
-            new("POST", "/refund-tickets/{ticketId}/internal-notes", "StepGo.Api.RefundTickets", true),
+            new("GET", "/refund-tickets/health", false),
+            new("POST", "/refund-tickets", true),
+            new("GET", "/refund-tickets/{ticketId}", true),
+            new("POST", "/refund-tickets/{ticketId}/teacher-decision", true),
+            new("POST", "/refund-tickets/{ticketId}/escalate", true),
+            new("POST", "/refund-tickets/{ticketId}/admin-arbitration", true),
+            new("POST", "/refund-tickets/{ticketId}/thread", true),
+            new("POST", "/refund-tickets/{ticketId}/internal-notes", true),
 
-            new("GET", "/governance/health", "StepGo.Api.Governance", false),
-            new("POST", "/governance/fee-settings", "StepGo.Api.Governance", true),
-            new("GET", "/governance/change-log/{category}", "StepGo.Api.Governance", true),
-            new("POST", "/governance/terms", "StepGo.Api.Governance", true),
-            new("POST", "/teachers/{teacherId}/terms-consent", "StepGo.Api.Governance", true),
+            new("GET", "/governance/health", false),
+            new("POST", "/governance/fee-settings", true),
+            new("GET", "/governance/change-log/{category}", true),
+            new("POST", "/governance/terms", true),
+            new("POST", "/teachers/{teacherId}/terms-consent", true),
 
-            new("GET", "/notifications/health", "StepGo.Api.Notifications", false),
-            new("POST", "/notification-templates/{key}", "StepGo.Api.Notifications", true),
-            new("GET", "/users/{userId}/notifications", "StepGo.Api.Notifications", true),
-            new("POST", "/account/notification-settings", "StepGo.Api.Notifications", true),
+            new("GET", "/notifications/health", false),
+            new("POST", "/notification-templates/{key}", true),
+            new("GET", "/users/{userId}/notifications", true),
+            new("POST", "/account/notification-settings", true),
         ];
 
         public Table Table { get; }
@@ -113,16 +113,16 @@ namespace Infra
                 ["STEPGO_PLATFORM_BANK_CODE"] = "807",
             };
 
-            var apiFunctions = CreateApiFunctions(sharedEnvironment);
-            HttpApi = CreateHttpApi(apiFunctions, teacherStudentAppClient);
+            var apiFunction = CreateApiFunction(sharedEnvironment);
+            HttpApi = CreateHttpApi(apiFunction, teacherStudentAppClient);
 
-            var paymentConsumer = CreateWorkerFunction("PaymentNotificationConsumer", "StepGo.Worker.PaymentNotificationConsumer", sharedEnvironment);
+            var paymentConsumer = CreateWorkerFunction("PaymentNotificationConsumer", "payment-notification-consumer", sharedEnvironment);
             paymentConsumer.AddEventSource(new Amazon.CDK.AWS.Lambda.EventSources.SqsEventSource(PaymentNotificationQueue));
 
-            var overdueScan = CreateWorkerFunction("OverdueOrderScan", "StepGo.Worker.OverdueOrderScan", sharedEnvironment);
-            var payoutScheduler = CreateWorkerFunction("PayoutBatchScheduler", "StepGo.Worker.PayoutBatchScheduler", sharedEnvironment);
-            var notificationDispatcher = CreateWorkerFunction("NotificationDispatcher", "StepGo.Worker.NotificationDispatcher", sharedEnvironment);
-            var refundSlaCheck = CreateWorkerFunction("RefundSlaCheck", "StepGo.Worker.RefundSlaCheck", sharedEnvironment);
+            var overdueScan = CreateWorkerFunction("OverdueOrderScan", "overdue-order-scan", sharedEnvironment);
+            var payoutScheduler = CreateWorkerFunction("PayoutBatchScheduler", "payout-batch-scheduler", sharedEnvironment);
+            var notificationDispatcher = CreateWorkerFunction("NotificationDispatcher", "notification-dispatcher", sharedEnvironment);
+            var refundSlaCheck = CreateWorkerFunction("RefundSlaCheck", "refund-sla-check", sharedEnvironment);
 
             Table.GrantReadWriteData(paymentConsumer);
             Table.GrantReadWriteData(overdueScan);
@@ -131,16 +131,15 @@ namespace Infra
             Table.GrantReadWriteData(refundSlaCheck);
             EventBus.GrantPutEventsTo(paymentConsumer);
             EventBus.GrantPutEventsTo(overdueScan);
-            secrets.EcpaySecret.GrantRead(apiFunctions["StepGo.Api.Orders"]);
+            secrets.EcpaySecret.GrantRead(apiFunction);
 
             CreateScheduledRules(overdueScan, payoutScheduler);
             CreateNotificationEventRule(notificationDispatcher);
             RefundSlaStateMachine = CreateRefundSlaStateMachine(refundSlaCheck);
             CreateDlqAlarm(notificationDlq);
 
-            var refundTicketsFunction = apiFunctions["StepGo.Api.RefundTickets"];
-            refundTicketsFunction.AddEnvironment("STEPGO_REFUND_SLA_STATE_MACHINE_ARN", RefundSlaStateMachine.StateMachineArn);
-            RefundSlaStateMachine.GrantStartExecution(refundTicketsFunction);
+            apiFunction.AddEnvironment("STEPGO_REFUND_SLA_STATE_MACHINE_ARN", RefundSlaStateMachine.StateMachineArn);
+            RefundSlaStateMachine.GrantStartExecution(apiFunction);
 
             new CfnOutput(this, "HttpApiEndpoint", new CfnOutputProps { Value = HttpApi.AttrApiEndpoint });
         }
@@ -279,45 +278,51 @@ namespace Infra
             return (ecpay, newebpay, line);
         }
 
-        /// <summary>One Lambda per StepGo.Api.* HTTP composition root (design.md decision 2), AOT/provided.al2023.</summary>
-        private Dictionary<string, Function> CreateApiFunctions(Dictionary<string, string> sharedEnvironment)
+        /// <summary>
+        /// Single Lambda for the whole HTTP API surface (all 8 capabilities' MiniRouter routes are
+        /// registered on it in StepGo.Api/Program.cs) — one cold start, one deployable, AOT/provided.al2023.
+        /// </summary>
+        private Function CreateApiFunction(Dictionary<string, string> sharedEnvironment)
         {
-            var capabilities = Routes.Select(r => r.CapabilityProjectName).Distinct();
-
-            var functions = new Dictionary<string, Function>();
-            foreach (var capability in capabilities)
-            {
-                var function = CreateBootstrapFunction(capability.Replace("StepGo.Api.", ""), capability, sharedEnvironment);
-                Table.GrantReadWriteData(function);
-                EventBus.GrantPutEventsTo(function);
-                TeacherIdPhotosBucket.GrantReadWrite(function);
-                PaymentNotificationQueue.GrantSendMessages(function);
-                functions[capability] = function;
-            }
-            return functions;
+            var function = CreateBootstrapFunction("Api", "stepgo-api", "StepGo.Api", sharedEnvironment);
+            Table.GrantReadWriteData(function);
+            EventBus.GrantPutEventsTo(function);
+            TeacherIdPhotosBucket.GrantReadWrite(function);
+            PaymentNotificationQueue.GrantSendMessages(function);
+            return function;
         }
 
-        private Function CreateWorkerFunction(string logicalSuffix, string projectName, Dictionary<string, string> sharedEnvironment)
-            => CreateBootstrapFunction(logicalSuffix, projectName, sharedEnvironment);
-
-        private Function CreateBootstrapFunction(string logicalId, string projectName, Dictionary<string, string> sharedEnvironment) => new(this, logicalId, new FunctionProps
+        /// <summary>
+        /// Every worker shares one StepGo.Worker build artifact; STEPGO_WORKER_NAME (env var, distinct per
+        /// deployed function) tells that one executable which handler to bootstrap as. Each still gets its
+        /// own Lambda function resource because its AWS trigger (Scheduler, SQS, Step Functions, EventBridge
+        /// rule) targets a specific function ARN — but there is exactly one project/one codebase behind them.
+        /// </summary>
+        private Function CreateWorkerFunction(string workerName, string kebabName, Dictionary<string, string> sharedEnvironment)
         {
-            FunctionName = $"stepgo-{projectName.Replace("StepGo.Api.", "api-").Replace("StepGo.Worker.", "worker-").ToLowerInvariant()}",
+            var environment = new Dictionary<string, string>(sharedEnvironment) { ["STEPGO_WORKER_NAME"] = workerName };
+            return CreateBootstrapFunction(workerName, $"stepgo-worker-{kebabName}", "StepGo.Worker", environment);
+        }
+
+        private Function CreateBootstrapFunction(string logicalId, string functionName, string projectName, Dictionary<string, string> environment) => new(this, logicalId, new FunctionProps
+        {
+            FunctionName = functionName,
             Runtime = Runtime.PROVIDED_AL2023,
             Handler = "bootstrap",
             Code = Code.FromAsset($"{BackendPublishRoot}/{projectName}/bin/Release/net10.0/linux-x64/publish"),
             MemorySize = 512,
             Timeout = Duration.Seconds(29),
             Architecture = Architecture.X86_64,
-            Environment = sharedEnvironment,
+            Environment = environment,
         });
 
         /// <summary>
-        /// HTTP API wired from the Routes table above using L1 constructs: one CfnIntegration per Lambda,
-        /// one CfnAuthorizer (Cognito JWT) shared by every authenticated route, one CfnRoute per table
-        /// entry, and a single auto-deployed $default stage (design.md decision 3).
+        /// HTTP API wired from the Routes table above using L1 constructs: one CfnIntegration for the
+        /// single StepGo.Api Lambda (every route proxies to it), one CfnAuthorizer (Cognito JWT) shared by
+        /// every authenticated route, one CfnRoute per table entry, and a single auto-deployed $default
+        /// stage (design.md decision 3).
         /// </summary>
-        private CfnApi CreateHttpApi(Dictionary<string, Function> apiFunctions, UserPoolClient teacherStudentAppClient)
+        private CfnApi CreateHttpApi(Function apiFunction, UserPoolClient teacherStudentAppClient)
         {
             var httpApi = new CfnApi(this, "StepGoHttpApi", new CfnApiProps { Name = "stepgo-api", ProtocolType = "HTTP" });
 
@@ -334,19 +339,16 @@ namespace Infra
                 },
             });
 
-            var integrations = apiFunctions.ToDictionary(
-                kvp => kvp.Key,
-                kvp => new CfnIntegration(this, $"{kvp.Key.Replace("StepGo.Api.", "")}Integration", new CfnIntegrationProps
-                {
-                    ApiId = httpApi.Ref,
-                    IntegrationType = "AWS_PROXY",
-                    IntegrationUri = kvp.Value.FunctionArn,
-                    PayloadFormatVersion = "2.0",
-                }));
+            var integration = new CfnIntegration(this, "ApiIntegration", new CfnIntegrationProps
+            {
+                ApiId = httpApi.Ref,
+                IntegrationType = "AWS_PROXY",
+                IntegrationUri = apiFunction.FunctionArn,
+                PayloadFormatVersion = "2.0",
+            });
 
             foreach (var route in Routes)
             {
-                var integration = integrations[route.CapabilityProjectName];
                 var routeId = $"{route.Method}{route.Path}".Replace("/", "_").Replace("{", "").Replace("}", "");
 
                 _ = new CfnRoute(this, $"Route{routeId}", new CfnRouteProps
@@ -361,15 +363,12 @@ namespace Infra
 
             _ = new CfnStage(this, "DefaultStage", new CfnStageProps { ApiId = httpApi.Ref, StageName = "$default", AutoDeploy = true });
 
-            foreach (var (capability, function) in apiFunctions)
+            apiFunction.AddPermission("ApiGatewayInvoke", new Permission
             {
-                function.AddPermission($"{capability.Replace("StepGo.Api.", "")}ApiGatewayInvoke", new Permission
-                {
-                    Principal = new ServicePrincipal("apigateway.amazonaws.com"),
-                    Action = "lambda:InvokeFunction",
-                    SourceArn = Fn.Join("", [$"arn:aws:execute-api:{Region}:{Account}:", httpApi.Ref, "/*/*"]),
-                });
-            }
+                Principal = new ServicePrincipal("apigateway.amazonaws.com"),
+                Action = "lambda:InvokeFunction",
+                SourceArn = Fn.Join("", [$"arn:aws:execute-api:{Region}:{Account}:", httpApi.Ref, "/*/*"]),
+            });
 
             return httpApi;
         }

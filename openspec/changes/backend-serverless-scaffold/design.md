@@ -38,7 +38,7 @@
 
 ### 2. API 層：API Gateway HTTP API + Lambda（.NET 10，Native AOT，`provided.al2023` 自訂執行環境）
 選用 HTTP API 而非 REST API：延遲更低、成本更低，且 MVP 不需要 REST API 才有的請求驗證/WAF 整合等進階功能（admin 的 IP 白名單改由 CloudFront + WAF 在前端那層處理，不需要 API Gateway REST API 的資源政策）。
-Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也非單一巨石函式）：`Orders`、`Payouts`、`RefundTickets`、`Courses`、`Teachers`、`Admin`、`Notifications`。
+所有 8 個 capability 的路由合併在同一個 Lambda 裡（見下方「再次調整」一節）：既非每個 route 一個函式，也非每個 capability 一個函式，而是單一函式內用 `MiniRouter` 依 HTTP method + path 分派給對應 capability 的 handler。
 
 **執行模型改為 Native AOT**（取代原先 `Amazon.Lambda.AspNetCoreServer.Hosting` 包裝 Minimal API 的方案）：
 - 每個 `StepGo.Api.<Capability>` 專案設定 `<PublishAot>true</PublishAot>`，以 `dotnet publish -r linux-x64` 產出原生執行檔 `bootstrap`，部署到 Lambda 的 `provided.al2023` 自訂執行環境（CDK `Runtime.PROVIDED_AL2023`），不使用託管的 `dotnet` 執行環境——因此 Lambda 執行環境版本與專案的 .NET SDK 版本（.NET 10）脫鉤，AOT 產出的是自帶執行期的原生二進位。
@@ -50,6 +50,8 @@ Lambda 依 capability 分組成數個函式（非每個 route 一個函式，也
 **衍生的專案拆分調整（相對 tasks.md 原文字面描述的偏離，實作階段記錄於此）**：Native AOT 的限制是一個編譯產出的 `bootstrap` 執行檔只能有一個進入點/事件型別，因此同一 capability 若同時要處理 HTTP API 請求與非 HTTP 事件（SQS 訊息、EventBridge 事件、EventBridge Scheduler 排程、Step Functions task），無法共用同一個 `StepGo.Api.<Capability>` 部署產物。實作時把非 HTTP 事件處理拆成獨立的 `StepGo.Worker.<Purpose>` 專案（`StepGo.Worker.PaymentNotificationConsumer`、`StepGo.Worker.PayoutBatchScheduler`、`StepGo.Worker.RefundSlaCheck`、`StepGo.Worker.NotificationDispatcher`、`StepGo.Worker.OverdueOrderScan`），與對應 capability 的 `StepGo.Api.*` 專案各自獨立部署、共用同一份 `StepGo.Application`/`StepGo.Infrastructure` 邏輯。tasks.md 1.3/9.1 提到「`StepGo.Api.Notifications` 訂閱處理」等字面描述因此對應到 `StepGo.Worker.NotificationDispatcher`，而非 `StepGo.Api.Notifications` 本身——後者只保留該 capability 的 HTTP 端點（範本管理 API 等）。
 替代方案：每個 API 路由一個獨立 Lambda——排除，函式數量會膨脹到數十個，部署與觀測成本過高，且 MVP 流量不需要這種細粒度的獨立擴縮。
 替代方案：沿用 `Amazon.Lambda.AspNetCoreServer.Hosting` 託管執行環境（非 AOT）——排除，使用者已明確要求 Lambda 端要用 Native AOT 部署。
+
+**再次調整（合併為單一 API 專案/Lambda，取代原先「每個 capability 一個 `StepGo.Api.<Capability>` 專案」）**：實作完成後檢視發現 7 個 `StepGo.Api.<Capability>` + 1 個 `StepGo.Api.Shared` 專案對這個 MVP 的流量規模而言過度切分——已經比「每個 route 一個 Lambda」溫和，但仍是「每個 capability 一個 Lambda」，冷啟動數量、CDK 資源數與部署步驟仍隨 capability 數量線性增加。改為單一 `StepGo.Api` 專案：8 個 capability 的 `MiniRouter` 路由註冊全部搬進同一個 `Program.cs`（每個 capability 一個 `<Capability>Routes.Map(router, root, contractsJson)` 靜態方法，放在 `StepGo.Api/<Capability>/` 資料夾下),編譯成單一 `bootstrap` 執行檔、部署成單一 Lambda，API Gateway 的每條路由都指向同一個 integration。`StepGo.Worker.<Purpose>`（5 個非 HTTP 事件處理）同樣合併成單一 `StepGo.Worker` 專案：每個 worker 的處理邏輯搬到 `StepGo.Worker/<Purpose>/<Purpose>Worker.cs` 的靜態方法，`Program.cs` 依 `STEPGO_WORKER_NAME` 環境變數（CDK 為每個 Lambda function 資源各設一個值）在啟動時分支呼叫對應的 `LambdaBootstrapBuilder.Create<TEvent[,TResponse]>(...)`——AWS 側仍是 5 個 Lambda function 資源（SQS/EventBridge Scheduler/Step Functions/EventBridge bus 各自需要獨立的觸發目標），但背後只有一份程式碼、一個建置產物。`StepGo.Api.Shared`（`CompositionRoot`/`MiniRouter`/Json context）維持獨立專案，因為它是 `StepGo.Api` 與 `StepGo.Worker` 兩者共用的執行期基礎設施，而非又一個依 capability 切分的專案。
 
 ### 3. 認證：Amazon Cognito，老師/學生共用一個 User Pool，Admin 獨立一個 User Pool（強制 MFA）
 - 老師/學生 User Pool：Email 或手機號碼可作登入識別（對應業務規則「手機必填、Email 選填」，Cognito 的 username 用系統內部 user id，手機/Email 存為 attribute），簽發 JWT（access token 含自訂 claim：`role`=teacher/student）。
