@@ -1,0 +1,193 @@
+name: Frontend CI/CD
+
+# Covers the root StepGo.sln (Blazor WASM apps: admin-panel, teacher-portal,
+# student-portal, marketing; shared libs; mock-api; tests) and
+# infra/StepGo.Infra (MarketingStack, TeacherPortalStack, StudentPortalStack,
+# AdminPanelStack). Backend has its own pipeline: backend-ci-cd.yml.
+#
+# Deploy trigger: pushing a git tag.
+#   frontend-dev-v*.*.*  -> deploys to dev automatically
+#   frontend-v*.*.*       -> deploys to prod, gated by the `frontend-production`
+#                            GitHub Environment's required reviewers (configure
+#                            under Settings > Environments)
+# Nobody runs `cdk deploy` locally against dev/prod — the pipeline is the only
+# path to those environments.
+#
+# NOTE: `cdk deploy` here only reconciles the S3/CloudFront/WAF resources
+# themselves — none of the four stacks wire up a BucketDeployment yet, so
+# built site assets aren't synced to S3 nor is CloudFront invalidated as part
+# of this pipeline. Add a `dotnet publish` + `aws s3 sync` + CloudFront
+# invalidation step (or a BucketDeployment construct in the stacks) once
+# that's been decided.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/**"
+      - "libs/**"
+      - "mock-api/**"
+      - "tests/**"
+      - "StepGo.sln"
+      - "infra/StepGo.Infra/**"
+      - ".github/workflows/frontend-ci-cd.yml"
+  push:
+    tags:
+      - "frontend-v*.*.*"
+      - "frontend-dev-v*.*.*"
+
+permissions:
+  id-token: write # required for AWS OIDC auth
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }} # TODO: set repo/org variable, e.g. ap-northeast-1
+
+jobs:
+  # ---------------------------------------------------------------------
+  # PR checks — build + test the frontend solution.
+  # ---------------------------------------------------------------------
+  build-and-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore StepGo.sln
+
+      - name: Format check
+        run: dotnet format StepGo.sln --verify-no-changes
+
+      - name: Build
+        run: dotnet build StepGo.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test StepGo.sln --no-build --configuration Release
+
+  # ---------------------------------------------------------------------
+  # PR checks — synth the frontend CDK stacks.
+  # ---------------------------------------------------------------------
+  infra-synth:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: cdk synth
+        working-directory: infra/StepGo.Infra
+        run: cdk synth
+
+  # ---------------------------------------------------------------------
+  # Resolve which environment a tag push targets, from the tag name.
+  # ---------------------------------------------------------------------
+  resolve-environment:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.resolve.outputs.environment }}
+    steps:
+      - id: resolve
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ "$TAG" =~ ^frontend-dev-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=dev" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" =~ ^frontend-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag '$TAG' does not match a known frontend deploy pattern (frontend-v*.*.* or frontend-dev-v*.*.*)" >&2
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------
+  # Deploy to dev — runs automatically, no manual approval.
+  # ---------------------------------------------------------------------
+  deploy-dev:
+    needs: resolve-environment
+    if: needs.resolve-environment.outputs.environment == 'dev'
+    runs-on: ubuntu-latest
+    environment: frontend-dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_FRONTEND_DEV }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      # TODO: publish each Blazor WASM app and sync wwwroot to its S3 bucket
+      # (plus a CloudFront invalidation) once that step is designed — see
+      # note at the top of this file.
+      - name: cdk deploy (dev)
+        working-directory: infra/StepGo.Infra
+        run: cdk deploy --all --require-approval never
+
+  # ---------------------------------------------------------------------
+  # Deploy to prod — gated by the `frontend-production` GitHub Environment's
+  # required reviewers (configure under Settings > Environments).
+  # ---------------------------------------------------------------------
+  deploy-prod:
+    needs: resolve-environment
+    if: needs.resolve-environment.outputs.environment == 'prod'
+    runs-on: ubuntu-latest
+    environment: frontend-production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN_FRONTEND_PROD }} # TODO: set repo/org variable
+          aws-region: ${{ env.AWS_REGION }}
+
+      # TODO: publish each Blazor WASM app and sync wwwroot to its S3 bucket
+      # (plus a CloudFront invalidation) once that step is designed — see
+      # note at the top of this file.
+      - name: cdk deploy (prod)
+        working-directory: infra/StepGo.Infra
+        run: cdk deploy --all --require-approval never
