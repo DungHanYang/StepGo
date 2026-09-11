@@ -1,7 +1,7 @@
 using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.Core;
 using StepGo.Api.Shared.Composition;
-using StepGo.Application.Orders;
+using StepGo.Orders.Application;
 
 namespace StepGo.Worker.OverdueOrderScan;
 

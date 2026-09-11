@@ -1,12 +1,12 @@
 using Moq;
-using StepGo.Application.Common;
-using StepGo.Application.Identity;
-using StepGo.Application.Orders;
-using StepGo.Application.Payouts;
-using StepGo.Domain.Courses;
-using StepGo.Domain.Orders;
-using StepGo.Domain.Payouts;
-using StepGo.Domain.SharedKernel;
+using StepGo.Shared.Application;
+using StepGo.Identity.Application;
+using StepGo.Orders.Application;
+using StepGo.Payouts.Application;
+using StepGo.Courses.Domain;
+using StepGo.Orders.Domain;
+using StepGo.Payouts.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Application.Tests.Payouts;
 
@@ -19,8 +19,8 @@ public class MarkPayoutBatchOutcomeHandlerTests
             Guid.NewGuid(), teacherId, "課程", Money.FromWholeDollars(3000), PaymentMethod.All,
             new RefundRuleSet([new RefundTier(14, 1.0m)]), new RefundRuleSet([new RefundTier(14, 1.0m)]), now.AddDays(30));
         var order = Order.PlaceForCourse(Guid.NewGuid(), course, Guid.NewGuid(), PaymentMethod.CreditCard, now);
-        var schedule = new StepGo.Domain.FeeLedger.FeeRateSchedule("v1", 0.0289m, Money.FromWholeDollars(15), 0.10m);
-        order.ConfirmPayment(PaymentMethod.CreditCard, StepGo.Domain.FeeLedger.FeeCalculationResult.Calculate(order.CoursePriceAtOrder, PaymentMethod.CreditCard, schedule), now);
+        var schedule = new StepGo.Shared.Domain.FeeLedger.FeeRateSchedule("v1", 0.0289m, Money.FromWholeDollars(15), 0.10m);
+        order.ConfirmPayment(PaymentMethod.CreditCard, StepGo.Shared.Domain.FeeLedger.FeeCalculationResult.Calculate(order.CoursePriceAtOrder, PaymentMethod.CreditCard, schedule), now);
         return order;
     }
 

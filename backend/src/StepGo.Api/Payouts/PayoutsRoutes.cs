@@ -1,11 +1,11 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.Payouts;
+using StepGo.Payouts.Application;
 using StepGo.Contracts.Json;
 using StepGo.Contracts.Payouts;
-using StepGo.Domain.Payouts;
-using StepGo.Domain.SharedKernel;
+using StepGo.Payouts.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.Payouts;
 
@@ -23,7 +23,7 @@ public static class PayoutsRoutes
         .MapGet("/teachers/{teacherId}/payout-batches", async (ctx, ct) =>
         {
             var teacherId = Guid.Parse(ctx.PathParameters["teacherId"]);
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardOwnsTeacherResource(ctx.CurrentUser, teacherId);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardOwnsTeacherResource(ctx.CurrentUser, teacherId);
 
             var batches = await root.PayoutBatchRepository.ListByTeacherAsync(teacherId, ct);
             return JsonResponses.Ok(new StepGo.Contracts.Common.PagedResultDto<PayoutBatchDto>([.. batches.Select(ToDto)], null), contractsJson.PagedResultDtoPayoutBatchDto);
@@ -34,7 +34,7 @@ public static class PayoutsRoutes
                 ?? throw new DomainException("invalid_request", "請求內容不正確。");
             var payoutBatchId = Guid.Parse(ctx.PathParameters["payoutBatchId"]);
 
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
             var handler = new MarkPayoutBatchOutcomeHandler(root.PayoutBatchRepository, root.OrderRepository, root.TeacherProfileRepository, root.Clock);
             await handler.MarkPaidAsync(payoutBatchId, request.TransferReference, ct);
             return JsonResponses.NoContent();
@@ -45,7 +45,7 @@ public static class PayoutsRoutes
                 ?? throw new DomainException("invalid_request", "請求內容不正確。");
             var payoutBatchId = Guid.Parse(ctx.PathParameters["payoutBatchId"]);
 
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
             var handler = new MarkPayoutBatchOutcomeHandler(root.PayoutBatchRepository, root.OrderRepository, root.TeacherProfileRepository, root.Clock);
             await handler.MarkBankRejectedAsync(payoutBatchId, request.Reason, ct);
             return JsonResponses.NoContent();

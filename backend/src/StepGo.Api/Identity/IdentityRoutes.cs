@@ -1,10 +1,10 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.Identity;
+using StepGo.Identity.Application;
 using StepGo.Contracts.Identity;
 using StepGo.Contracts.Json;
-using StepGo.Domain.Identity;
+using StepGo.Identity.Domain;
 
 namespace StepGo.Api.Identity;
 
@@ -15,7 +15,7 @@ public static class IdentityRoutes
         .MapPost("/users", async (ctx, ct) =>
         {
             var request = JsonResponses.Deserialize(ctx.Request.Body, contractsJson.RegisterUserRequestDto)
-                ?? throw new StepGo.Domain.SharedKernel.DomainException("invalid_request", "請求內容不正確。");
+                ?? throw new StepGo.Shared.Domain.DomainException("invalid_request", "請求內容不正確。");
 
             var handler = new RegisterUserHandler(root.UserRepository, root.Clock);
             var user = await handler.HandleAsync(new RegisterUserCommand(request.FullName, request.PhoneNumber, request.Email, MapRole(request.Role)), ct);
@@ -25,7 +25,7 @@ public static class IdentityRoutes
         .MapPost("/teachers/{teacherId}/verification", async (ctx, ct) =>
         {
             var request = JsonResponses.Deserialize(ctx.Request.Body, contractsJson.SubmitTeacherVerificationRequestDto)
-                ?? throw new StepGo.Domain.SharedKernel.DomainException("invalid_request", "請求內容不正確。");
+                ?? throw new StepGo.Shared.Domain.DomainException("invalid_request", "請求內容不正確。");
             var teacherId = Guid.Parse(ctx.PathParameters["teacherId"]);
 
             var handler = new SubmitTeacherVerificationHandler(root.TeacherProfileRepository);
@@ -38,7 +38,7 @@ public static class IdentityRoutes
         .MapPost("/teachers/{teacherId}/verification/review", async (ctx, ct) =>
         {
             var request = JsonResponses.Deserialize(ctx.Request.Body, contractsJson.ReviewTeacherVerificationRequestDto)
-                ?? throw new StepGo.Domain.SharedKernel.DomainException("invalid_request", "請求內容不正確。");
+                ?? throw new StepGo.Shared.Domain.DomainException("invalid_request", "請求內容不正確。");
             var teacherId = Guid.Parse(ctx.PathParameters["teacherId"]);
 
             var handler = new ReviewTeacherVerificationHandler(root.TeacherProfileRepository, root.ChangeLogRepository, ctx.CurrentUser, root.Clock);
@@ -52,7 +52,7 @@ public static class IdentityRoutes
             RowLevelAccessGuard.GuardOwnsTeacherResource(ctx.CurrentUser, teacherId);
 
             var profile = await root.TeacherProfileRepository.FindAsync(teacherId, ct)
-                ?? throw new StepGo.Domain.SharedKernel.DomainException("teacher_profile_not_found", "找不到該老師的身分驗證申請。");
+                ?? throw new StepGo.Shared.Domain.DomainException("teacher_profile_not_found", "找不到該老師的身分驗證申請。");
 
             return JsonResponses.Ok(ToDto(profile), contractsJson.TeacherVerificationDto);
         });
@@ -62,7 +62,7 @@ public static class IdentityRoutes
         RoleDto.Student => Role.Student,
         RoleDto.Teacher => Role.Teacher,
         RoleDto.Admin => Role.Admin,
-        _ => throw new StepGo.Domain.SharedKernel.DomainException("invalid_role", "不合法的角色。"),
+        _ => throw new StepGo.Shared.Domain.DomainException("invalid_role", "不合法的角色。"),
     };
 
     private static RoleDto MapRoleDto(Role role) => role switch
@@ -70,7 +70,7 @@ public static class IdentityRoutes
         Role.Student => RoleDto.Student,
         Role.Teacher => RoleDto.Teacher,
         Role.Admin => RoleDto.Admin,
-        _ => throw new StepGo.Domain.SharedKernel.DomainException("invalid_role", "不合法的角色。"),
+        _ => throw new StepGo.Shared.Domain.DomainException("invalid_role", "不合法的角色。"),
     };
 
     private static TeacherVerificationDto ToDto(TeacherProfile profile) => new(

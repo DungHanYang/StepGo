@@ -1,8 +1,8 @@
 using Moq;
-using StepGo.Application.Common;
-using StepGo.Application.Governance;
-using StepGo.Domain.Governance;
-using StepGo.Domain.Identity;
+using StepGo.Shared.Application;
+using StepGo.Governance.Application;
+using StepGo.Governance.Domain;
+using StepGo.Identity.Domain;
 
 namespace StepGo.Application.Tests.Governance;
 

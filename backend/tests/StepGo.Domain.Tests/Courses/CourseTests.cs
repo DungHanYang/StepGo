@@ -1,5 +1,5 @@
-using StepGo.Domain.Courses;
-using StepGo.Domain.SharedKernel;
+using StepGo.Courses.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Domain.Tests.Courses;
 

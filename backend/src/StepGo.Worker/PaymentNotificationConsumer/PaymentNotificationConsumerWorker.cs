@@ -1,9 +1,9 @@
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using StepGo.Api.Shared.Composition;
-using StepGo.Application.Orders;
-using StepGo.Domain.Courses;
-using StepGo.Infrastructure.Aws;
+using StepGo.Orders.Application;
+using StepGo.Orders.Infrastructure;
+using StepGo.Courses.Domain;
 
 namespace StepGo.Worker.PaymentNotificationConsumer;
 

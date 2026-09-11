@@ -1,7 +1,7 @@
 using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.Core;
 using StepGo.Api.Shared.Composition;
-using StepGo.Application.Payouts;
+using StepGo.Payouts.Application;
 
 namespace StepGo.Worker.PayoutBatchScheduler;
 

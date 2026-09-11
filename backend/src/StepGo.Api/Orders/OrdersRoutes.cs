@@ -1,13 +1,13 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.Orders;
+using StepGo.Orders.Application;
 using StepGo.Contracts.Courses;
 using StepGo.Contracts.Json;
 using StepGo.Contracts.Orders;
-using StepGo.Domain.Courses;
-using StepGo.Domain.Orders;
-using StepGo.Domain.SharedKernel;
+using StepGo.Courses.Domain;
+using StepGo.Orders.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.Orders;
 
@@ -30,13 +30,13 @@ public static class OrdersRoutes
             var orderId = Guid.Parse(ctx.PathParameters["orderId"]);
             var order = await root.OrderRepository.FindAsync(orderId, ct) ?? throw new DomainException("order_not_found", "找不到訂單。");
 
-            if (ctx.CurrentUser.Role == StepGo.Domain.Identity.Role.Student)
+            if (ctx.CurrentUser.Role == StepGo.Identity.Domain.Role.Student)
             {
-                StepGo.Application.Identity.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, order.StudentId);
+                StepGo.Identity.Application.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, order.StudentId);
             }
             else
             {
-                StepGo.Application.Identity.RowLevelAccessGuard.GuardOwnsTeacherResource(ctx.CurrentUser, order.TeacherId);
+                StepGo.Identity.Application.RowLevelAccessGuard.GuardOwnsTeacherResource(ctx.CurrentUser, order.TeacherId);
             }
 
             return JsonResponses.Ok(ToDto(order), contractsJson.OrderDto);
@@ -44,7 +44,7 @@ public static class OrdersRoutes
         .MapGet("/students/{studentId}/orders", async (ctx, ct) =>
         {
             var studentId = Guid.Parse(ctx.PathParameters["studentId"]);
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, studentId);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, studentId);
 
             var orders = await root.OrderRepository.ListByStudentAsync(studentId, ct);
             return JsonResponses.Ok(new StepGo.Contracts.Common.PagedResultDto<OrderDto>([.. orders.Select(ToDto)], null), contractsJson.PagedResultDtoOrderDto);

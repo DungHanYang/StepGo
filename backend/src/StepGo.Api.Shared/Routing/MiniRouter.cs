@@ -1,10 +1,9 @@
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using StepGo.Api.Shared.Json;
-using StepGo.Application.Common;
-using StepGo.Domain.Identity;
-using StepGo.Domain.SharedKernel;
-using StepGo.Infrastructure.Aws;
+using StepGo.Identity.Infrastructure;
+using StepGo.Shared.Application;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.Shared.Routing;
 

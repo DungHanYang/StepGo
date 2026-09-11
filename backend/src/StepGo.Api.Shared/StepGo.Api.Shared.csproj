@@ -1,8 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\StepGo.Application\StepGo.Application.csproj" />
-    <ProjectReference Include="..\StepGo.Infrastructure\StepGo.Infrastructure.csproj" />
+    <ProjectReference Include="..\StepGo.Shared\StepGo.Shared.csproj" />
+    <ProjectReference Include="..\StepGo.Identity\StepGo.Identity.csproj" />
+    <ProjectReference Include="..\StepGo.Courses\StepGo.Courses.csproj" />
+    <ProjectReference Include="..\StepGo.Orders\StepGo.Orders.csproj" />
+    <ProjectReference Include="..\StepGo.Payouts\StepGo.Payouts.csproj" />
+    <ProjectReference Include="..\StepGo.RefundTickets\StepGo.RefundTickets.csproj" />
+    <ProjectReference Include="..\StepGo.Governance\StepGo.Governance.csproj" />
+    <ProjectReference Include="..\StepGo.Notifications\StepGo.Notifications.csproj" />
     <ProjectReference Include="..\StepGo.Contracts\StepGo.Contracts.csproj" />
   </ItemGroup>
 

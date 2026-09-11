@@ -1,4 +1,4 @@
-using StepGo.Domain.Governance;
+using StepGo.Governance.Domain;
 
 namespace StepGo.Domain.Tests.Governance;
 
@@ -21,7 +21,7 @@ public class TermsVersionAndConsentTests
         var now = DateTimeOffset.UtcNow;
         var effectiveDate = now.AddDays(-1);
 
-        var ex = Assert.Throws<StepGo.Domain.SharedKernel.DomainException>(() =>
+        var ex = Assert.Throws<StepGo.Shared.Domain.DomainException>(() =>
             CoursePublishGovernanceGuard.GuardCanPublish(terms, teacherConsent: null, now, effectiveDate));
 
         Assert.Equal("terms_reconsent_required", ex.Code);

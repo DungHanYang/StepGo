@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\StepGo.Shared\StepGo.Shared.csproj" />
+    <ProjectReference Include="..\StepGo.Governance\StepGo.Governance.csproj" />
+    <ProjectReference Include="..\StepGo.Identity\StepGo.Identity.csproj" />
+    <ProjectReference Include="..\StepGo.Orders\StepGo.Orders.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.103.7" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

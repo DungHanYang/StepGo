@@ -1,4 +1,4 @@
-using StepGo.Domain.Notifications;
+using StepGo.Notifications.Domain;
 
 namespace StepGo.Domain.Tests.Notifications;
 

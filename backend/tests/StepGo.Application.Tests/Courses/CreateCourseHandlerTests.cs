@@ -1,12 +1,12 @@
 using Moq;
-using StepGo.Application.Common;
-using StepGo.Application.Courses;
-using StepGo.Application.Governance;
-using StepGo.Application.Identity;
-using StepGo.Domain.Courses;
-using StepGo.Domain.Governance;
-using StepGo.Domain.Identity;
-using StepGo.Domain.SharedKernel;
+using StepGo.Shared.Application;
+using StepGo.Courses.Application;
+using StepGo.Governance.Application;
+using StepGo.Identity.Application;
+using StepGo.Courses.Domain;
+using StepGo.Governance.Domain;
+using StepGo.Identity.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Application.Tests.Courses;
 

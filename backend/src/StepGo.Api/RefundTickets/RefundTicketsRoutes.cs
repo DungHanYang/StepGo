@@ -1,11 +1,11 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.RefundTickets;
+using StepGo.RefundTickets.Application;
 using StepGo.Contracts.Json;
 using StepGo.Contracts.RefundTickets;
-using StepGo.Domain.RefundTickets;
-using StepGo.Domain.SharedKernel;
+using StepGo.RefundTickets.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.RefundTickets;
 
@@ -55,7 +55,7 @@ public static class RefundTicketsRoutes
                 ?? throw new DomainException("invalid_request", "請求內容不正確。");
             var ticketId = Guid.Parse(ctx.PathParameters["ticketId"]);
 
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardIsAdmin(ctx.CurrentUser);
             var finalizer = new RefundApprovalFinalizer(root.OrderRepository, root.PaymentGatewayClient, root.EventPublisher);
             var handler = new AdminArbitrationHandler(root.RefundTicketRepository, finalizer, root.Clock);
             var ticket = await handler.HandleAsync(new AdminArbitrationCommand(

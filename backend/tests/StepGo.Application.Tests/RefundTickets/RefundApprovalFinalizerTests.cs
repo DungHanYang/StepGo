@@ -1,11 +1,11 @@
 using Moq;
-using StepGo.Application.Orders;
-using StepGo.Application.RefundTickets;
-using StepGo.Domain.Courses;
-using StepGo.Domain.FeeLedger;
-using StepGo.Domain.Orders;
-using StepGo.Domain.RefundTickets;
-using StepGo.Domain.SharedKernel;
+using StepGo.Orders.Application;
+using StepGo.RefundTickets.Application;
+using StepGo.Courses.Domain;
+using StepGo.Shared.Domain.FeeLedger;
+using StepGo.Orders.Domain;
+using StepGo.RefundTickets.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Application.Tests.RefundTickets;
 

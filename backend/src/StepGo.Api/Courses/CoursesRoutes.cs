@@ -1,11 +1,11 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.Courses;
+using StepGo.Courses.Application;
 using StepGo.Contracts.Courses;
 using StepGo.Contracts.Json;
-using StepGo.Domain.Courses;
-using StepGo.Domain.SharedKernel;
+using StepGo.Courses.Domain;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.Courses;
 

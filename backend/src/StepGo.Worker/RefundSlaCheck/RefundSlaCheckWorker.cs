@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Amazon.Lambda.Core;
 using StepGo.Api.Shared.Composition;
-using StepGo.Application.RefundTickets;
+using StepGo.RefundTickets.Application;
 
 namespace StepGo.Worker.RefundSlaCheck;
 

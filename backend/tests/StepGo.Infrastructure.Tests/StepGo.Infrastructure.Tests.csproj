@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\StepGo.Infrastructure\StepGo.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\StepGo.Shared\StepGo.Shared.csproj" />
   </ItemGroup>
 
 </Project>

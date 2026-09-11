@@ -1,10 +1,10 @@
 using StepGo.Api.Shared.Composition;
 using StepGo.Api.Shared.Json;
 using StepGo.Api.Shared.Routing;
-using StepGo.Application.Notifications;
+using StepGo.Notifications.Application;
 using StepGo.Contracts.Json;
 using StepGo.Contracts.Notifications;
-using StepGo.Domain.SharedKernel;
+using StepGo.Shared.Domain;
 
 namespace StepGo.Api.Notifications;
 
@@ -25,7 +25,7 @@ public static class NotificationsRoutes
         .MapGet("/users/{userId}/notifications", async (ctx, ct) =>
         {
             var userId = Guid.Parse(ctx.PathParameters["userId"]);
-            StepGo.Application.Identity.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, userId);
+            StepGo.Identity.Application.RowLevelAccessGuard.GuardOwnsStudentResource(ctx.CurrentUser, userId);
 
             var handler = new ListInAppNotificationsHandler(root.NotificationRecordRepository);
             var records = await handler.HandleAsync(userId, ct);

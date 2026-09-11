@@ -2,10 +2,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Amazon.Lambda.Core;
 using StepGo.Api.Shared.Composition;
-using StepGo.Application.Notifications;
-using StepGo.Domain.Orders;
-using StepGo.Domain.RefundTickets;
-using StepGo.Infrastructure.Aws;
+using StepGo.Notifications.Application;
+using StepGo.Orders.Domain;
+using StepGo.RefundTickets.Domain;
+using StepGo.Shared.Infrastructure;
 
 namespace StepGo.Worker.NotificationDispatcher;
 
